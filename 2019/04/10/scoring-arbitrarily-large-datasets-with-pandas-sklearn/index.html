@@ -84,7 +84,7 @@ Option (2) is only easy if we dealing with a regression model (and again, a rewr
 Option (3) seems fine, but it does have limits (and is expensive!).</p>
 <p>Anyway, let's see if we hack option (4) to work on a laptop.</p>
 <p>Our code looks basically like this:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
@@ -114,13 +114,13 @@ Option (3) seems fine, but it does have limits (and is expensive!).</p>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>We can make this work by splitting our data into 10, or 100, parts to limit the memory needed to read the whole CSV.
 The function is called like this:</p>
-<div class="highlight"><pre><span></span>python3 score_data.py data_part_1.csv
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">python3 score_data.py data_part_1.csv</span>
+</code></pre></div>
 
 
 <p>which writes the file <code>data_part_1_scored.csv</code>.
@@ -131,7 +131,7 @@ and this approach becomes impractical.
 <p>The fix here is to only ever read <code>N</code> rows of data at a time.
 Transform and score these <code>N</code>, write them out, and then read the next batch.
 We can accomplish this by adding a function that works like this:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main_streaming</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">main_streaming</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
     <span class="n">medians</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;X.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;clf.pkl&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">clf</span><span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -139,39 +139,39 @@ We can accomplish this by adding a function that works like this:</p>
     <span class="n">f</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span>
     <span class="n">score_header</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
     <span class="n">g</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
-    <span class="nb">buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-        <span class="nb">buffer</span> <span class="o">+=</span> <span class="n">line</span>
+        <span class="n">buffer</span> <span class="o">+=</span> <span class="n">line</span>
         <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">chunk_size</span><span class="p">:</span>
-            <span class="n">raw_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="nb">buffer</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">raw_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">buffer</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">names</span><span class="o">=</span><span class="n">score_header</span><span class="p">)</span>
             <span class="n">clean_data</span> <span class="o">=</span> <span class="n">transform_data</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">medians</span><span class="p">)</span>
             <span class="n">scores</span> <span class="o">=</span> <span class="n">apply_model</span><span class="p">(</span><span class="n">clean_data</span><span class="p">,</span> <span class="n">clf</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-            <span class="n">pred</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">pred</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
             <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="nb">buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="c1"># get the last part</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">buffer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">raw_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="nb">buffer</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">raw_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">buffer</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">names</span><span class="o">=</span><span class="n">score_header</span><span class="p">)</span>
         <span class="n">clean_data</span> <span class="o">=</span> <span class="n">transform_data</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">medians</span><span class="p">)</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="n">apply_model</span><span class="p">(</span><span class="n">clean_data</span><span class="p">,</span> <span class="n">clf</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-        <span class="n">pred</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">pred</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">g</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Now, we only ever accept chunksize=10000 rows into the python process.
 We call our new script like:</p>
-<div class="highlight"><pre><span></span>cat data_part_1.csv | python3 score_data.py &gt; data_part_1_scored.csv
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">cat data_part_1.csv | python3 score_data.py &gt; data_part_1_scored.csv</span>
+</code></pre></div>
 
 
 <p>but we also don't need to worry about the size anymore (just <code>data.csv</code> instead of <code>data_part_1.csv</code>).

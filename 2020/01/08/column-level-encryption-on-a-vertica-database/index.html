@@ -87,7 +87,7 @@ we'll turn <code>111-22-3333</code> into a long string of letters and numbers.
 We could use the decryption key on that long string to get back the original SSN.</p>
 <h2>Create the encryption script in Python</h2>
 <p>Using the <code>pycrypto</code> library, here's how we can construct a simple encryption script:</p>
-<div class="highlight"><pre><span></span><span class="c1"># encrypt_lambda.py</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># encrypt_lambda.py</span>
 
 <span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="kn">import</span> <span class="n">RSA</span>
 <span class="kn">import</span> <span class="nn">binascii</span>
@@ -115,18 +115,18 @@ We could use the decryption key on that long string to get back the original SSN
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>We can test this by first installing <code>pycrypto</code>, then:</p>
-<div class="highlight"><pre><span></span>python3 encrypt_lambda.py 30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001 111223333
-6d0eb35fd82302731c5649773b873e3a714c14af356f8dba6b07fc8ba3c1aa9fcd9b041dfb4c359574433bc0d38a14ab12f211ad1a2ef069a791b6dee006405af9e97f1012abf0458f2ae7f4557278bce4444c2a86491d304dedf63f4328ff14e53232bd64c4174a85cb9b52d00f285df80328686c10b67634424984f47d23803ceef9ddae1ab782b4816bb935e0cf28ae2dc9e76453610a3d62a0b6261703e8f6fa8100f310758a472331b8cb76024a59f93b887a8a3f9b6e4ddbcc650f8d42c2ef17f09209e7d2d007c9688a538052520c9578c5e70c7ef0479490d27f250e2915afb1e08674587bf63679651cc67ee973593f51f5d4157644d3a8ab9f14eb
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">python3 encrypt_lambda.py 30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001 111223333</span>
+<span class="err">6d0eb35fd82302731c5649773b873e3a714c14af356f8dba6b07fc8ba3c1aa9fcd9b041dfb4c359574433bc0d38a14ab12f211ad1a2ef069a791b6dee006405af9e97f1012abf0458f2ae7f4557278bce4444c2a86491d304dedf63f4328ff14e53232bd64c4174a85cb9b52d00f285df80328686c10b67634424984f47d23803ceef9ddae1ab782b4816bb935e0cf28ae2dc9e76453610a3d62a0b6261703e8f6fa8100f310758a472331b8cb76024a59f93b887a8a3f9b6e4ddbcc650f8d42c2ef17f09209e7d2d007c9688a538052520c9578c5e70c7ef0479490d27f250e2915afb1e08674587bf63679651cc67ee973593f51f5d4157644d3a8ab9f14eb</span>
+</code></pre></div>
 
 
 <p>For Vertica, we have to create the sdk classes,
 name this one <code>rsa.py</code>:</p>
-<div class="highlight"><pre><span></span><span class="c1"># rsa.py</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># rsa.py</span>
 <span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="kn">import</span> <span class="n">RSA</span>
 <span class="kn">import</span> <span class="nn">binascii</span>
 <span class="kn">import</span> <span class="nn">vertica_sdk</span>
@@ -167,30 +167,30 @@ name this one <code>rsa.py</code>:</p>
             <span class="n">return_type</span><span class="o">.</span><span class="n">addVarchar</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">createScalarFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">srv</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">encrypt</span><span class="p">()</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2>Deploy it on Vertica</h2>
 <p>Then we create the function on Vertica, using the SDK-friendly script above.</p>
-<div class="highlight"><pre><span></span>\set libfile &#39;\&#39;&#39;`pwd`&#39;/rsa.py\&#39;&#39;
-DROP LIBRARY rsalib CASCADE;
-CREATE LIBRARY rsalib AS :libfile DEPENDS &#39;/home/dbadmin/local/lib/python3.5/site-packages/&#39; LANGUAGE &#39;Python&#39;;
+<div class="highlight"><pre><span></span><code><span class="err">\</span><span class="kt">set</span> <span class="n">libfile</span> <span class="s1">&#39;\&#39;&#39;</span><span class="ss">`pwd`</span><span class="s1">&#39;/rsa.py\&#39;&#39;</span>
+<span class="k">DROP</span> <span class="n">LIBRARY</span> <span class="n">rsalib</span> <span class="k">CASCADE</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="n">LIBRARY</span> <span class="n">rsalib</span> <span class="k">AS</span> <span class="p">:</span><span class="n">libfile</span> <span class="n">DEPENDS</span> <span class="s1">&#39;/home/dbadmin/local/lib/python3.5/site-packages/&#39;</span> <span class="n">LANGUAGE</span> <span class="s1">&#39;Python&#39;</span><span class="p">;</span>
 
--- Step 2: Create functions
-CREATE FUNCTION encrypt AS NAME &#39;encrypt_factory&#39; LIBRARY rsalib;
-</pre></div>
+<span class="c1">-- Step 2: Create functions</span>
+<span class="k">CREATE</span> <span class="n">FUNCTION</span> <span class="n">encrypt</span> <span class="k">AS</span> <span class="n">NAME</span> <span class="s1">&#39;encrypt_factory&#39;</span> <span class="n">LIBRARY</span> <span class="n">rsalib</span><span class="p">;</span>
+</code></pre></div>
 
 
 <p>We can test the function directly:</p>
-<div class="highlight"><pre><span></span>select encrypt(&#39;30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001&#39;, &#39;111-53-8888&#39;);
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">select encrypt(&#39;30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001&#39;, &#39;111-53-8888&#39;);</span>
+</code></pre></div>
 
 
 <p>You can also store keys in a table:</p>
-<div class="highlight"><pre><span></span>create table public_keys (name varchar(80), key varchar(1024));
-insert into public_keys (name, key) (select &#39;andys key&#39;, &#39;30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001&#39;);
-select encrypt(pk.key, secrets.ssn) as encrypted_ssn from (select &#39;111-53-8888&#39; as ssn) secrets full outer join public_keys pk on pk.name = &#39;andys key&#39;;
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">create table public_keys (name varchar(80), key varchar(1024));</span>
+<span class="err">insert into public_keys (name, key) (select &#39;andys key&#39;, &#39;30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001&#39;);</span>
+<span class="err">select encrypt(pk.key, secrets.ssn) as encrypted_ssn from (select &#39;111-53-8888&#39; as ssn) secrets full outer join public_keys pk on pk.name = &#39;andys key&#39;;</span>
+</code></pre></div>
 
 
 <p>Now we can sleep better knowing that the data is just a little bit safer!</p>

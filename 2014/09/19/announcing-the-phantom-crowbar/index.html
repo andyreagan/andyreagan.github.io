@@ -70,16 +70,16 @@
 <ul>
 <li>phantomjs</li>
 </ul>
-<div class="highlight"><pre><span></span>brew install phantomjs
-</pre></div>
+<div class="highlight"><pre><span></span><code>brew install phantomjs
+</code></pre></div>
 
 
 <p><strong>Usage</strong></p>
 <p>Clone this repository.</p>
 <p>Run the <code>phantom-crowbar.js</code> with <code>phantomjs</code>, passing the webpage, the id of the svg element to grab, and the output filename.
 Here's the first line of test/run.sh:</p>
-<div class="highlight"><pre><span></span>phantomjs phantom-crowbar.js http://hedonometer.org timeseries test1.svg
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">phantomjs phantom-crowbar.js http://hedonometer.org timeseries test1.svg</span>
+</code></pre></div>
 
 
 <p><strong>Testing</strong></p>
@@ -88,15 +88,15 @@ Here's the first line of test/run.sh:</p>
 <li>inkscape</li>
 <li>CairoSVG</li>
 </ul>
-<div class="highlight"><pre><span></span>brew install inkscape
+<div class="highlight"><pre><span></span><code>brew install inkscape
 pip install CairoSVG
-</pre></div>
+</code></pre></div>
 
 
 <p>Run tests with </p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> <span class="nb">test</span>
 . run.sh
-</pre></div>
+</code></pre></div>
 
 
 <p>Inkscape will throw a lot of warnings.

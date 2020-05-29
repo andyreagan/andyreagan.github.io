@@ -71,7 +71,7 @@ Here’s how to do it:</p>
 <p>Say I want to group by months, but not all of the months will have data.
 Here I’ll iterate over the known month range, and fill in as I go.
 Starting with a DataFrame contain the columns BP_ID, CAL_YR, CAL_MO, and COMM_AMT_FYC (with potentially many records (or 0!) per month), we do this:</p>
-<div class="highlight"><pre><span></span><span class="n">start</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">start</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">start</span>
 <span class="n">month</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">case_count</span> <span class="o">=</span> <span class="p">[]</span>
@@ -83,7 +83,7 @@ Starting with a DataFrame contain the columns BP_ID, CAL_YR, CAL_MO, and COMM_AM
     <span class="n">fyc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">month_data</span><span class="o">.</span><span class="n">COMM_AMT_FYC</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">year</span><span class="o">+</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">month</span><span class="o">/</span><span class="mi">12</span><span class="p">)),((</span><span class="n">d</span><span class="o">.</span><span class="n">month</span><span class="p">)</span> <span class="o">%</span> <span class="mi">12</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">g</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;BP_ID&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">:</span> <span class="n">month</span><span class="p">,</span> <span class="s2">&quot;case_count&quot;</span><span class="p">:</span> <span class="n">case_count</span><span class="p">,</span> <span class="s2">&quot;fyc&quot;</span><span class="p">:</span> <span class="n">fyc</span><span class="p">}))</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>It seems inefficient, but it should get the job done.

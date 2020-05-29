@@ -70,36 +70,36 @@ To go all the way to pdf, you'll also need inkscape.</p>
 Since they're aren't many dependencies all the way down, start by getting phantomjs installed, then the phantom-crowbar.</p>
 <h2>Installing phantom-crowbar</h2>
 <p>For the phantomjs, I prefer to use homebrew:</p>
-<div class="highlight"><pre><span></span>brew update
+<div class="highlight"><pre><span></span><code>brew update
 brew upgrade
 brew install phantomjs
-</pre></div>
+</code></pre></div>
 
 
 <p>Then to get the crowbar, clone the git repository.</p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> ~
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~
 git clone https://github.com/andyreagan/phantom-crowbar
-</pre></div>
+</code></pre></div>
 
 
 <p>To use it system-wide, I use the bash alias:</p>
-<div class="highlight"><pre><span></span><span class="nb">alias</span> phantom-crowbar<span class="o">=</span><span class="s2">&quot;/usr/local/bin/phantomjs ~/phantom-crowbar/phantom-crowbar.js&quot;</span>
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="nb">alias</span> phantom-crowbar<span class="o">=</span><span class="s2">&quot;/usr/local/bin/phantomjs ~/phantom-crowbar/phantom-crowbar.js&quot;</span>
+</code></pre></div>
 
 
 <p>Without too much detail, I recommend adding this to your <code>~/.bash_profile</code> so that it's loaded every time you start a terminal session.</p>
 <h2>Installing inkscape</h2>
 <p>You only need inkscape if you want to go from svg to pdf (and there are other ways too), but this one is easy with, again, homebrew.</p>
-<div class="highlight"><pre><span></span>brew install inkscape
-</pre></div>
+<div class="highlight"><pre><span></span><code>brew install inkscape
+</code></pre></div>
 
 
 <h2>Installing labMTsimple</h2>
 <p>There are two ways to get it: using pip of cloning the git repo.
 If you're not sure, use pip.
 I think pip makes it easier to keep it up to date, etc.</p>
-<div class="highlight"><pre><span></span>pip install labMTsimple
-</pre></div>
+<div class="highlight"><pre><span></span><code>pip install labMTsimple
+</code></pre></div>
 
 
 <h2>Making your first shift</h2>
@@ -107,16 +107,16 @@ I think pip makes it easier to keep it up to date, etc.</p>
 If you went with pip, see that file on <a href="https://github.com/andyreagan/labMT-simple/blob/master/examples/example.py">github</a>.</p>
 <p>The basic idea is to generate the word vectors, and then pass them to <code>shiftHtml()</code>.
 In a little bit more detail, the key pieces are:</p>
-<div class="highlight"><pre><span></span><span class="c1"># load the module</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># load the module</span>
 <span class="kn">from</span> <span class="nn">labMTsimple.storyLab</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># get word, and word score frequency vectors</span>
-<span class="n">labMT</span><span class="p">,</span><span class="n">labMTvector</span><span class="p">,</span><span class="n">labMTwordList</span> <span class="o">=</span> <span class="n">emotionFileReader</span><span class="p">(</span><span class="n">stopval</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">returnVector</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">labMT</span><span class="p">,</span><span class="n">labMTvector</span><span class="p">,</span><span class="n">labMTwordList</span> <span class="o">=</span> <span class="n">emotionFileReader</span><span class="p">(</span><span class="n">stopval</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">returnVector</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># see the example file, but assuming there are two strings to score</span>
 <span class="c1"># named &quot;saturday&quot; and &quot;tuesday&quot;, generate their word frequency vectors</span>
-<span class="n">saturdayValence</span><span class="p">,</span><span class="n">saturdayFvec</span> <span class="o">=</span> <span class="n">emotion</span><span class="p">(</span><span class="n">saturday</span><span class="p">,</span><span class="n">labMT</span><span class="p">,</span><span class="n">shift</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">happsList</span><span class="o">=</span><span class="n">labMTvector</span><span class="p">)</span>
-<span class="n">tuesdayValence</span><span class="p">,</span><span class="n">tuesdayFvec</span> <span class="o">=</span> <span class="n">emotion</span><span class="p">(</span><span class="n">tuesday</span><span class="p">,</span><span class="n">labMT</span><span class="p">,</span><span class="n">shift</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">happsList</span><span class="o">=</span><span class="n">labMTvector</span><span class="p">)</span>
+<span class="n">saturdayValence</span><span class="p">,</span><span class="n">saturdayFvec</span> <span class="o">=</span> <span class="n">emotion</span><span class="p">(</span><span class="n">saturday</span><span class="p">,</span><span class="n">labMT</span><span class="p">,</span><span class="n">shift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">happsList</span><span class="o">=</span><span class="n">labMTvector</span><span class="p">)</span>
+<span class="n">tuesdayValence</span><span class="p">,</span><span class="n">tuesdayFvec</span> <span class="o">=</span> <span class="n">emotion</span><span class="p">(</span><span class="n">tuesday</span><span class="p">,</span><span class="n">labMT</span><span class="p">,</span><span class="n">shift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">happsList</span><span class="o">=</span><span class="n">labMTvector</span><span class="p">)</span>
 
 <span class="c1"># apply the traditional lens to the frequency vectors</span>
 <span class="c1"># this sets the frequency of words with score between</span>
@@ -127,7 +127,7 @@ In a little bit more detail, the key pieces are:</p>
 <span class="c1"># generate an html file</span>
 <span class="c1"># and make a static directory</span>
 <span class="n">shiftHtml</span><span class="p">(</span><span class="n">labMTvector</span><span class="p">,</span><span class="n">labMTwordList</span><span class="p">,</span><span class="n">tuesdayStoppedVec</span><span class="p">,</span><span class="n">saturdayStoppedVec</span><span class="p">,</span><span class="s2">&quot;wordshift.html&quot;</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>That last call actually does quite a few things, in detail:</p>
@@ -139,9 +139,9 @@ In a little bit more detail, the key pieces are:</p>
 </ol>
 <p>Phew! We've made the html file. You can open it directly in Chrome (or your browser of choice...IE not tested).</p>
 <p>The optional, final step is to make the svg and/or pdf:</p>
-<div class="highlight"><pre><span></span>phantom-crowbar wordshift.html shiftsvg wordshift.svg
+<div class="highlight"><pre><span></span><code>phantom-crowbar wordshift.html shiftsvg wordshift.svg
 inkscape -f wordshift.svg -A wordshift.pdf
-</pre></div>
+</code></pre></div>
 
 
 <p>Finally, check out wordshift.pdf for the file!

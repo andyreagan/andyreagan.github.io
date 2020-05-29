@@ -113,10 +113,10 @@ https://twittercommunity.com/t/is-the-sample-streaming-api-truly-random/14942</l
 <p>If we find that the centroids for the "places" are close to the exact geo location, we can start using those for the pullTweets database.</p>
 <h2>Analysis of "places" Tweets</h2>
 <p>Okay so here are the most recent numbers. these are the fields that we're looking for:</p>
-<div class="highlight"><pre><span></span>tweet[&quot;coordinates&quot;] (ref: https://dev.twitter.com/overview/api/tweets#obj-coordinates)
-tweet[&quot;geo&quot;] --- this was the old place for coordinates
-tweet[&quot;place&quot;] (ref: https://dev.twitter.com/overview/api/places)
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">tweet[&quot;coordinates&quot;] (ref: https://dev.twitter.com/overview/api/tweets#obj-coordinates)</span>
+<span class="err">tweet[&quot;geo&quot;] --- this was the old place for coordinates</span>
+<span class="err">tweet[&quot;place&quot;] (ref: https://dev.twitter.com/overview/api/places)</span>
+</code></pre></div>
 
 
 <p>I did a parse for:</p>
@@ -127,30 +127,30 @@ tweet[&quot;place&quot;] (ref: https://dev.twitter.com/overview/api/places)
 <li>tweets that contain only the places field: "place-only".</li>
 </ol>
 <p>Did this for both the spritzer and the main stream, here are the numbers from <code>wc</code> (the first number is the count of Tweets):</p>
-<div class="highlight"><pre><span></span>2016-02-15-00-00-any.gz
-7815  305189 23191117
+<div class="highlight"><pre><span></span><code><span class="mi">2016</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="k">any</span><span class="p">.</span><span class="n">gz</span>
+<span class="mi">7815</span>  <span class="mi">305189</span> <span class="mi">23191117</span>
 
-2016-02-15-00-00-any-spritzer.gz
-43128 1679248 127526514
+<span class="mi">2016</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="k">any</span><span class="o">-</span><span class="n">spritzer</span><span class="p">.</span><span class="n">gz</span>
+<span class="mi">43128</span> <span class="mi">1679248</span> <span class="mi">127526514</span>
 
-2016-02-15-00-00-coordinates.gz
-1029   37231 2942433
+<span class="mi">2016</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="n">coordinates</span><span class="p">.</span><span class="n">gz</span>
+<span class="mi">1029</span>   <span class="mi">37231</span> <span class="mi">2942433</span>
 
-2016-02-15-00-00-coordinates-only.gz
-5     180   11608
+<span class="mi">2016</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="n">coordinates</span><span class="o">-</span><span class="k">only</span><span class="p">.</span><span class="n">gz</span>
+<span class="mi">5</span>     <span class="mi">180</span>   <span class="mi">11608</span>
 
-2016-02-15-00-00-coordinates-only-spritzer.gz
-30     773   69684
+<span class="mi">2016</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="n">coordinates</span><span class="o">-</span><span class="k">only</span><span class="o">-</span><span class="n">spritzer</span><span class="p">.</span><span class="n">gz</span>
+<span class="mi">30</span>     <span class="mi">773</span>   <span class="mi">69684</span>
 
-2016-02-15-00-00-coordinates-spritzer.gz
-5655  207164 16125655
+<span class="mi">2016</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="n">coordinates</span><span class="o">-</span><span class="n">spritzer</span><span class="p">.</span><span class="n">gz</span>
+<span class="mi">5655</span>  <span class="mi">207164</span> <span class="mi">16125655</span>
 
-2016-02-15-00-00-place-only.gz
-6786  267958 20248684
+<span class="mi">2016</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="n">place</span><span class="o">-</span><span class="k">only</span><span class="p">.</span><span class="n">gz</span>
+<span class="mi">6786</span>  <span class="mi">267958</span> <span class="mi">20248684</span>
 
-2016-02-15-00-00-place-only-spritzer.gz
-37473 1472084 111400859
-</pre></div>
+<span class="mi">2016</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="n">place</span><span class="o">-</span><span class="k">only</span><span class="o">-</span><span class="n">spritzer</span><span class="p">.</span><span class="n">gz</span>
+<span class="mi">37473</span> <span class="mi">1472084</span> <span class="mi">111400859</span>
+</code></pre></div>
 
 
 <p>Total in the spritzer is 46643 and total in the 10% feed is 398616.</p>

@@ -65,22 +65,22 @@
     <p>If you're unfamiliar with git, start by reading this: <a href="http://tom.preston-werner.com/2009/05/19/the-git-parable.html">the git parable</a>. It was recommended to my by Prof. Jim Bagrow, and I wasted a lot of time trying to understand git before reading it.</p>
 <p>Now, we're going to use git (and the git hosting site: github) to version control and share our project. First things first, if you don't want to share your code to world right away, since you're a student go ahead and grab the <a href="http://andyreagan.github.io/2016/01/12/using-github-pages-for-a-project/">github student pack</a> (thanks Mark for pointing this out). Among other things, it includes 5 free private repositories hosted on github.</p>
 <p>Getting right to it, if you're not using git already in your project:</p>
-<div class="highlight"><pre><span></span>git init
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">git init</span>
+</code></pre></div>
 
 
 <p>and then go ahead and just add everything (but don't include your huge (&gt;50MB) data files).</p>
 <p>Do your first commit, connect to github, and push your master branch up to github. If that's unclear, there are better explanations on the web than any I could offer (see the parable above).</p>
 <p>Now, create a new branch like this:</p>
-<div class="highlight"><pre><span></span>git checkout --orphan gh-pages
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">git checkout --orphan gh-pages</span>
+</code></pre></div>
 
 
 <p>I found that here: <a href="http://bitflop.com/tutorials/how-to-create-a-new-and-empty-branch-in-git.html">random git help</a>.</p>
 <p>And carefully remove everything in it that you don't want on the website version. (Keep stuff you're sharing, and don't remove stuff not tracked by git!). I won't fully recommend this command: <code>\rm -rf *</code>. Now, commit that branch, and push it to github:</p>
-<div class="highlight"><pre><span></span>git commit -am &quot;first commit of gh-pages branch
-git push origin gh-pages
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">git commit -am &quot;first commit of gh-pages branch</span>
+<span class="err">git push origin gh-pages</span>
+</code></pre></div>
 
 
 <p>(Assuming you added github as origin).</p>

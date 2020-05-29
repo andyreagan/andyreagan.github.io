@@ -69,28 +69,28 @@
 
 <p>In the great tradition of stealing, most of my setup is inspired by (read: copied from) my PhD Advisor <a href="http://uvm.edu/pdodds/">Peter Dodds</a>. Next, we’ll take a look at the project directories themselves.
 For projects that I have worked on, the strategies employed are varied (of course), but the best structure I have found has a division of labour like this:</p>
-<div class="highlight"><pre><span></span>.
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">.</span>
+</code></pre></div>
 
 
 <p>The root directory for the project. Inside here are all of the relevant folders. Don’t set up a git repo up here, that’s one thing that have the code/paper/etc in separate folders is going to help with.</p>
-<div class="highlight"><pre><span></span>bin/
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">bin/</span>
+</code></pre></div>
 
 
 <p>For all of the code. If it’s Python, R, MATLAB, Perl, Julia, a Jupyter notebook…it belongs here. Now that the code is in it’s own folder, you can keep it under a clean version control, share with colleagues, and publish it to github for #openscience!</p>
-<div class="highlight"><pre><span></span>paper/
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">paper/</span>
+</code></pre></div>
 
 
 <p>All of the tex files!</p>
-<div class="highlight"><pre><span></span>data/
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">data/</span>
+</code></pre></div>
 
 
 <p>The data. The code can look for <code>../data</code> to get everything it needs. Some caveats here: it’s often large (not to be included in GitHub), and not always in this directory. Code and data aren’t easy (or always sensible) to separate: YMMV.</p>
-<div class="highlight"><pre><span></span>figures/
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">figures/</span>
+</code></pre></div>
 
 
 <p>Written to by the scripts, and read from for the paper. Also, tables go here! You might as well call it “shared”.

@@ -82,24 +82,24 @@ but I can search my own data easily using Python.</p>
 <h2>Load up your data.</h2>
 <p>This part is simple,
 and to make things even easier I'll use Pandas.</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;activities.csv&quot;</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Then we can pull out all of the activies with type Run,
 that contain the stroller tag, and sum up the miles all like this:</p>
-<div class="highlight"><pre><span></span>run = df[&quot;Activity Type&quot;].str.contains(&quot;Run&quot;)
-stroller = df[&quot;Activity Name&quot;].str.contains(&quot;#stroller&quot;)
-miles = (df
-    .loc[run &amp; stroller, :]  # filter
-    .loc[:, &#39;Distance&#39;]  # select
-    .astype(&#39;float&#39;)  # convert dtype
-    .sum()/1.609  # sum and convert to miles
-)
-miles
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">run = df[&quot;Activity Type&quot;].str.contains(&quot;Run&quot;)</span>
+<span class="err">stroller = df[&quot;Activity Name&quot;].str.contains(&quot;#stroller&quot;)</span>
+<span class="err">miles = (df</span>
+<span class="err">    .loc[run &amp; stroller, :]  # filter</span>
+<span class="err">    .loc[:, &#39;Distance&#39;]  # select</span>
+<span class="err">    .astype(&#39;float&#39;)  # convert dtype</span>
+<span class="err">    .sum()/1.609  # sum and convert to miles</span>
+<span class="err">)</span>
+<span class="err">miles</span>
+</code></pre></div>
 
 
 <p>Let's break that down: first, we select out two filters (type Run and stroller in the title),
@@ -109,8 +109,8 @@ The last step converts km into miles.
 I had actually first written it in one line,
 as below,
 but thought the above would be clearer.</p>
-<div class="highlight"><pre><span></span>df.loc[df[&quot;Activity Type&quot;].str.contains(&quot;Run&quot;) &amp; df[&quot;Activity Name&quot;].str.contains(&quot;#stroller&quot;), :].Distance.astype(&#39;float&#39;).sum()/1.609
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">df.loc[df[&quot;Activity Type&quot;].str.contains(&quot;Run&quot;) &amp; df[&quot;Activity Name&quot;].str.contains(&quot;#stroller&quot;), :].Distance.astype(&#39;float&#39;).sum()/1.609</span>
+</code></pre></div>
 
 
 <p>All told, by the end of 2019 I'll have logged 857 miles with my little man.</p>

@@ -65,35 +65,35 @@
     <p>If reading the <a href="http://julia.readthedocs.org/">documentation</a> is confusing, making any for-loop into a parallel loop is rediculously easy.
 Just add the parallel macro!
 If it's code that needs to execute before moving on, just pass an operator to to macro.</p>
-<div class="highlight"><pre><span></span><span class="c"># non-parallel loop</span>
+<div class="highlight"><pre><span></span><code><span class="c"># non-parallel loop</span>
 <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">100</span>
     <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="n">j</span> <span class="o">=</span> <span class="n">my_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="n">some_function</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
 <span class="k">end</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>and this becomes</p>
-<div class="highlight"><pre><span></span><span class="c"># parallel loop</span>
+<div class="highlight"><pre><span></span><code><span class="c"># parallel loop</span>
 <span class="nd">@parallel</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">100</span>
     <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="n">j</span> <span class="o">=</span> <span class="n">my_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="n">some_function</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
 <span class="k">end</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>, you're done!
 If you find that the code moves on too quickly, just add an operator to force it to wait:</p>
-<div class="highlight"><pre><span></span><span class="c"># parallel loop</span>
+<div class="highlight"><pre><span></span><code><span class="c"># parallel loop</span>
 <span class="n">my_zero_result</span> <span class="o">=</span> <span class="nd">@parallel</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">100</span>
     <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="n">j</span> <span class="o">=</span> <span class="n">my_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="n">some_function</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
     <span class="mi">0</span>
 <span class="k">end</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Julia!</p>

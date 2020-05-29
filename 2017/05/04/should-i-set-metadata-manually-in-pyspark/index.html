@@ -63,7 +63,7 @@
   <br>
   <div class="entry-content">
     <p>Well, let’s do a simple test and find out if it speeds up the process of one-hot encoding a variable in our data. There are other reasons to set it, and we’ll get to those. Starting with the very helpful code snippet from <a href="https://github.com/awesome-spark/spark-gotchas/blob/master/06_data_preparation.md">spark-gotchas</a>:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Column</span>
@@ -86,47 +86,47 @@
 <span class="n">df_with_meta</span><span class="o">.</span><span class="n">schema</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">metadata</span> <span class="o">==</span> <span class="n">meta</span>
 
 <span class="c1">## True</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>First, I will write functions to do a one hot encoding with and without metadata. Without metadata:</p>
-<div class="highlight"><pre><span></span>def testWithoutMetadata(df):
-    OHEncoder = OneHotEncoder(inputCol=&quot;label&quot;,
-                              outputCol=&quot;label_OH&quot;)
+<div class="highlight"><pre><span></span><code><span class="n">def</span> <span class="n">testWithoutMetadata</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">OHEncoder</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">inputCol</span><span class="o">=</span><span class="ss">&quot;label&quot;</span><span class="p">,</span>
+                              <span class="n">outputCol</span><span class="o">=</span><span class="ss">&quot;label_OH&quot;</span><span class="p">)</span>
 
-    df_transformed = OHEncoder.transform(df)
-</pre></div>
+    <span class="n">df_transformed</span> <span class="o">=</span> <span class="n">OHEncoder</span><span class="p">.</span><span class="k">transform</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre></div>
 
 
 <p>And with metadata:</p>
-<div class="highlight"><pre><span></span>def testMetadata(df):
-    meta = {&quot;ml_attr&quot;: {&quot;name&quot;: &quot;label_with_meta&quot;,
-      &quot;type&quot;: &quot;nominal&quot;,
-      &quot;vals&quot;: [&quot;0&quot;,&quot;1&quot;,&quot;2&quot;]}}
-    OHEncoderMeta = OneHotEncoder(inputCol=&quot;label_with_meta&quot;,
-                                  outputCol=&quot;label_OH_with_meta&quot;)
+<div class="highlight"><pre><span></span><code><span class="n">def</span> <span class="n">testMetadata</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="err">{</span><span class="ss">&quot;ml_attr&quot;</span><span class="p">:</span> <span class="err">{</span><span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;label_with_meta&quot;</span><span class="p">,</span>
+      <span class="ss">&quot;type&quot;</span><span class="p">:</span> <span class="ss">&quot;nominal&quot;</span><span class="p">,</span>
+      <span class="ss">&quot;vals&quot;</span><span class="p">:</span> <span class="p">[</span><span class="ss">&quot;0&quot;</span><span class="p">,</span><span class="ss">&quot;1&quot;</span><span class="p">,</span><span class="ss">&quot;2&quot;</span><span class="p">]</span><span class="err">}}</span>
+    <span class="n">OHEncoderMeta</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">inputCol</span><span class="o">=</span><span class="ss">&quot;label_with_meta&quot;</span><span class="p">,</span>
+                                  <span class="n">outputCol</span><span class="o">=</span><span class="ss">&quot;label_OH_with_meta&quot;</span><span class="p">)</span>
 
-    df_with_meta = df.withColumn(&quot;label_with_meta&quot;,                    
-                                 col(&quot;label&quot;).withMeta(&quot;&quot;, meta))
-    df_with_meta_transformed = OHEncoderMeta.transform(df_with_meta)
-</pre></div>
+    <span class="n">df_with_meta</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">withColumn</span><span class="p">(</span><span class="ss">&quot;label_with_meta&quot;</span><span class="p">,</span>                    
+                                 <span class="n">col</span><span class="p">(</span><span class="ss">&quot;label&quot;</span><span class="p">).</span><span class="n">withMeta</span><span class="p">(</span><span class="ss">&quot;&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">))</span>
+    <span class="n">df_with_meta_transformed</span> <span class="o">=</span> <span class="n">OHEncoderMeta</span><span class="p">.</span><span class="k">transform</span><span class="p">(</span><span class="n">df_with_meta</span><span class="p">)</span>
+</code></pre></div>
 
 
 <p>You can see how in the above, I used the withMeta function from above.
 Now, the tests:</p>
-<div class="highlight"><pre><span></span><span class="c">%%timeit -n 5 -r 5</span>
+<div class="highlight"><pre><span></span><code><span class="c">%%timeit -n 5 -r 5</span>
 <span class="nb">size</span> <span class="p">=</span> <span class="mi">100000</span>
-<span class="n">df</span> <span class="p">=</span> <span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">zip</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">int</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">size</span><span class="p">)),</span><span class="n">map</span><span class="p">(</span><span class="n">int</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="nb">size</span><span class="p">)))),[</span>&quot;<span class="n">id</span>&quot;<span class="p">,</span> &quot;<span class="n">label</span>&quot;<span class="p">])</span>
+<span class="n">df</span> <span class="p">=</span> <span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">zip</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">int</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">size</span><span class="p">)),</span><span class="n">map</span><span class="p">(</span><span class="n">int</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="nb">size</span><span class="p">)))),[</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="s">&quot;label&quot;</span><span class="p">])</span>
 <span class="n">testWithoutMetadata</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>and</p>
-<div class="highlight"><pre><span></span><span class="c">%%timeit -n 5 -r 5</span>
+<div class="highlight"><pre><span></span><code><span class="c">%%timeit -n 5 -r 5</span>
 <span class="nb">size</span> <span class="p">=</span> <span class="mi">100000</span>
-<span class="n">df</span> <span class="p">=</span> <span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">zip</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">int</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">size</span><span class="p">)),</span><span class="n">map</span><span class="p">(</span><span class="n">int</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="nb">size</span><span class="p">)))),[</span>&quot;<span class="n">id</span>&quot;<span class="p">,</span> &quot;<span class="n">label</span>&quot;<span class="p">])</span>
+<span class="n">df</span> <span class="p">=</span> <span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">zip</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">int</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">size</span><span class="p">)),</span><span class="n">map</span><span class="p">(</span><span class="n">int</span><span class="p">,</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="nb">size</span><span class="p">)))),[</span><span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="s">&quot;label&quot;</span><span class="p">])</span>
 <span class="n">testMetadata</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>The speed difference for 100,000 data points: 4.66s to 4.16s. A half second speedup on a single executor. In essence, this amounts to how long it too spark to look up the range on the column for which we didn’t provide metadata (check the scala). Was it worth it? Probably not.</p>

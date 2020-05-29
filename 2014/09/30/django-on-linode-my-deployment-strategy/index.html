@@ -79,24 +79,24 @@ This lasted a long time.
 To edit code on the server...it was edited live, through emacs (requiring root acess and port 22 open (at least only ssh keys)) and the django development server was restarted to show changes.
 Static files we're collected, they were just edited in place, since this created another step in the way of editing.
 Everything for the app was in <code>/usr/share/nginx/wiki/mysite</code> due to some terrible folder creation.</p>
-<div class="highlight"><pre><span></span>hedonometer.org -&gt; nginx -&gt; django
-</pre></div>
+<div class="highlight"><pre><span></span><code>hedonometer.org -&gt; nginx -&gt; django
+</code></pre></div>
 
 
 <p>Too many times the site went down due to typos while editing, so I moved to having two separate folders, one served by nginx through dev.hedonometer.org, and the production through hedonometer.org.
 This worked well enough, but the code was still edited on the server, in place, and the security was still lacking.
 The files were now separated out in <code>/usr/share/nginx/dev</code>, <code>/usr/share/nginx/prod</code>, <code>/usr/share/nginx/data</code>.</p>
-<div class="highlight"><pre><span></span>hedonometer.org -&gt; nginx -&gt; django
+<div class="highlight"><pre><span></span><code>hedonometer.org -&gt; nginx -&gt; django
 dev.hedonometer.org -&gt; nginx -&gt; django
 hedonometer.org/data -&gt; nginx -&gt; /usr/share/nginx/data
-</pre></div>
+</code></pre></div>
 
 
 <p>Then along came uWSGI. This got us away from the django development server, a good step forward...but we were just running two uwsgi servers from root.</p>
-<div class="highlight"><pre><span></span>hedonometer.org -&gt; nginx -&gt; uwsgi -&gt; django
+<div class="highlight"><pre><span></span><code>hedonometer.org -&gt; nginx -&gt; uwsgi -&gt; django
 dev.hedonometer.org -&gt; nginx -&gt; uwsgi -&gt; django
 hedonometer.org/data -&gt; nginx -&gt; /usr/share/nginx/data
-</pre></div>
+</code></pre></div>
 
 
 <p>With a great leap, I spawned uWSGI in emporer mode, created user accounts with empty git repositories for each version of the site, and could push the site up through git, where uwsgi would restart with post commit hook, static files would be collected, etc.
@@ -117,23 +117,23 @@ Then:</p>
 I've pulled these settings together from a lot of different places, mainly the docs for each service, and I also want to acknowledge that I found a <a href="http://bradenmacdonald.com/blog/2013/hosting-django-apps-ubuntu-nginx-uwsgi">blog post by Braden MacDonald</a> that has a very similar strategy.
 All of this can be accomplised with a long bash script, which I'll post someday, and here is the blow by blow:</p>
 <p>Since you followed the linode security guide, log in to your user account on the linode. For me, this is <code>user0</code>.</p>
-<div class="highlight"><pre><span></span>ssh user0@hedonometer.org
+<div class="highlight"><pre><span></span><code>ssh user0@hedonometer.org
 su root
-</pre></div>
+</code></pre></div>
 
 
 <p>We're going to create an app called <code>storybreaker</code>, and serve it at <code>storybreaker.hedonometer.org</code>. First, make it a database:</p>
-<div class="highlight"><pre><span></span>echo &quot;create database storybreaker&quot; | mysql --user=root --password=<span class="cp">${</span><span class="n">DJ_DB_PASSWORD</span><span class="cp">}</span>
-</pre></div>
+<div class="highlight"><pre><span></span><code>echo &quot;create database storybreaker&quot; | mysql --user=root --password=<span class="cp">${</span><span class="n">DJ_DB_PASSWORD</span><span class="cp">}</span>
+</code></pre></div>
 
 
 <p>Create a user account:</p>
-<div class="highlight"><pre><span></span>useradd -d /home/storybreaker -G www-data -m -U -s /bin/bash storybreaker
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">useradd -d /home/storybreaker -G www-data -m -U -s /bin/bash storybreaker</span>
+</code></pre></div>
 
 
 <p>Log into that user account and make the git repo.</p>
-<div class="highlight"><pre><span></span>su storybreaker <span class="c1"># log in as storybreaker</span>
+<div class="highlight"><pre><span></span><code>su storybreaker <span class="c1"># log in as storybreaker</span>
 <span class="nb">cd</span>
 mkdir .ssh <span class="o">&amp;&amp;</span> chmod <span class="m">700</span> .ssh <span class="o">&amp;&amp;</span> touch .ssh/authorized_keys
 mkdir <span class="nv">$USER</span>.git
@@ -142,11 +142,11 @@ git init --bare
 <span class="nb">cd</span> ..
 mkdir storybreaker
 mkdir uwsgi
-</pre></div>
+</code></pre></div>
 
 
 <p>Now, while you're in as <code>storybreaker</code>, edit the post recieve hook in <code>~/storybreaker.git/hooks/post-recieve</code> to do some stuff:</p>
-<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="nb">export</span> <span class="nv">GIT_WORK_TREE</span><span class="o">=</span>/home/storybreaker/storybreaker
 git checkout -f
 
@@ -164,11 +164,11 @@ cp config<span class="o">{</span>.base,.tmp<span class="o">}</span>
 <span class="nb">echo</span> <span class="s2">&quot;env = DJ_DB_PORT=</span><span class="si">${</span><span class="nv">DJ_DB_PORT</span><span class="si">}</span><span class="s2">&quot;</span> &gt;&gt; config.tmp
 <span class="nb">echo</span> <span class="s2">&quot;env = DJ_STATIC_ROOT=</span><span class="si">${</span><span class="nv">DJ_STATIC_ROOT</span><span class="si">}</span><span class="s2">&quot;</span> &gt;&gt; config.tmp
 cp config<span class="o">{</span>.tmp,<span class="o">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>where the <code>~/uwsgi/config.base</code> looks like:</p>
-<div class="highlight"><pre><span></span><span class="o">[</span>uwsgi<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><span class="o">[</span>uwsgi<span class="o">]</span>
 
 <span class="c1"># setting from braden</span>
 <span class="nv">socket</span> <span class="o">=</span> /home/storybreaker/uwsgi/socket
@@ -183,12 +183,12 @@ chmod-socket <span class="o">=</span> <span class="m">666</span>
 
 <span class="nv">pidfile2</span> <span class="o">=</span> /home/storybreaker/uwsgi/pid
 <span class="nv">daemonize</span> <span class="o">=</span> /home/storybreaker/uwsgi/log
-</pre></div>
+</code></pre></div>
 
 
 <p>Make sure to get a newline at the end of the <code>config.base</code>.</p>
 <p>And the <code>.env</code> file storying the settings for the app looks like (make sure this is sourced in <code>~/.bashrc</code>:</p>
-<div class="highlight"><pre><span></span><span class="c1"># /home/storybreaker/.env</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># /home/storybreaker/.env</span>
 <span class="nb">export</span> <span class="nv">DJ_SECRET_KEY</span><span class="o">=</span><span class="s2">&quot;not telling&quot;</span>
 <span class="nb">export</span> <span class="nv">DJ_DEBUG</span><span class="o">=</span>FALSE
 <span class="nb">export</span> <span class="nv">DJ_DB_ENGINE</span><span class="o">=</span>django.db.backends.mysql
@@ -198,26 +198,26 @@ chmod-socket <span class="o">=</span> <span class="m">666</span>
 <span class="nb">export</span> <span class="nv">DJ_DB_HOST</span><span class="o">=</span><span class="m">127</span>.0.0.1
 <span class="nb">export</span> <span class="nv">DJ_DB_PORT</span><span class="o">=</span><span class="m">3306</span>
 <span class="nb">export</span> <span class="nv">DJ_STATIC_ROOT</span><span class="o">=</span>/home/storybreaker/storybreaker/mysite/static
-</pre></div>
+</code></pre></div>
 
 
 <p>So now you can see what the post recieve hook does: copy over the files, collect static, and make a new config file for uWSGI.
 Once this new config file is copied over, the server will restart, because we're about to link to it the folder that the uWSGI emporer is watching.</p>
 <p>Copy over the ssh keys to their account:</p>
-<div class="highlight"><pre><span></span>cat ~/.ssh/authorized_keys &gt;&gt; /home/storybreaker/.ssh/authorized_keys
-</pre></div>
+<div class="highlight"><pre><span></span><code>cat ~/.ssh/authorized_keys &gt;&gt; /home/storybreaker/.ssh/authorized_keys
+</code></pre></div>
 
 
 <p>Now is a good time to push up the app, test the database connection, and install the requirements in the <code>virtualenv</code>.
 To push from the local repo:</p>
-<div class="highlight"><pre><span></span><span class="c1"># locally</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># locally</span>
 git remote add linode storybreaker@hedonometer.org:storybreaker.git
 git push linode master
-</pre></div>
+</code></pre></div>
 
 
 <p>I store the requirements in a file called <code>requirements.txt</code>, and so setting up from here (under the storybreaker user) looks like:</p>
-<div class="highlight"><pre><span></span><span class="c1"># as storybreaker</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># as storybreaker</span>
 env <span class="c1"># check the the DJ_ settings are in the environment</span>
 <span class="nb">cd</span> ~/storybreaker
 ./manage.py dbshell <span class="c1"># make sure we can log into the db</span>
@@ -225,12 +225,12 @@ env <span class="c1"># check the the DJ_ settings are in the environment</span>
 virtualenv pyenv <span class="c1"># set up virtualenv</span>
 . pyenv/bin/activate
 pip install -r requirements.txt
-</pre></div>
+</code></pre></div>
 
 
 <p>Now, if everything worked, we just need to create and link a nginx configuration, and link the uwsgi configuration.
 The nginx config file:</p>
-<div class="highlight"><pre><span></span><span class="c1"># the upstream component nginx needs to connect to</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># the upstream component nginx needs to connect to</span>
 upstream storybreaker <span class="o">{</span>
     server unix:///home/storybreaker/uwsgi/socket<span class="p">;</span> <span class="c1"># for a file socket</span>
 <span class="o">}</span>
@@ -266,27 +266,27 @@ server <span class="o">{</span>
         include /home/storybreaker/uwsgi_params<span class="p">;</span> <span class="c1"># the uwsgi_params file you installed</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</pre></div>
+</code></pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="c1"># link this config</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># link this config</span>
 ln -s /home/storybreaker/nginx.conf /etc/nginx/sites-enabled/storybreaker
-</pre></div>
+</code></pre></div>
 
 
-<div class="highlight"><pre><span></span><span class="c1"># from root, copy over this file we made</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># from root, copy over this file we made</span>
 mv /home/panometer/uwsgi/config /etc/uwsgi/panometer.ini
 <span class="c1"># double check that they own this</span>
 chown storbreaker:www-data /etc/uwsgi/panometer.ini
 <span class="c1"># as panometer, make a link</span>
 su panometer
 ln -s /etc/uwsgi/panometer.ini ~/uwsgi/config
-</pre></div>
+</code></pre></div>
 
 
 <p>Finally, just restart nginx and it should be working!</p>
-<div class="highlight"><pre><span></span>nginx -s reload
-</pre></div>
+<div class="highlight"><pre><span></span><code>nginx -s reload
+</code></pre></div>
 
 
 <h2>Things I'm looking to do</h2>

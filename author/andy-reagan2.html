@@ -46,6 +46,20 @@
 
 <ol id="post-list">
         <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2019/04/15/boston-marathon-2019/" rel="bookmark" title="Permalink to Boston Marathon 2019">Boston Marathon 2019</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2019-04-15T00:00:00+02:00"> Mon 15 April 2019 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/2292189157/embed/4cb5a296f8edaa8b8c76b4bc15d7d91084a8c8fb'></iframe>
+
+<p>What a day! Congrats to all the finishers.
+I count myself very grateful to be at the start line of this one,
+with my wife at 39 weeks pregnant.
+Didn't have the run that I had hoped out there,
+wrote some checks that my legs couldn't cash with a first …</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
                 <header> <h2 class="entry-title"><a href="/2019/04/10/scoring-arbitrarily-large-datasets-with-pandas-sklearn/" rel="bookmark" title="Permalink to Scoring arbitrarily large datasets with Pandas + Sklearn">Scoring arbitrarily large datasets with Pandas + Sklearn</a></h2> </header>
                 <footer class="post-info">
                     <abbr class="published" title="2019-04-10T00:00:00+02:00"> Wed 10 April 2019 </abbr>
@@ -75,11 +89,11 @@ it's clear that I've gone backwards and I should at least be using spell checkin
                 </footer><!-- /.post-info -->
 		<br>
                 <div class="entry-content"> <p>For coercing pandas date times (stored as numpy datetime):</p>
-<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;&lt;M8[ns]&#39;</span><span class="p">)]:</span>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;&lt;M8[ns]&#39;</span><span class="p">)]:</span>
     <span class="c1"># https://stackoverflow.com/questions/32827169/python-reduce-precision-pandas-timestamp-dataframe</span>
     <span class="c1"># apply(lambda x: x.replace(microsecond=0))</span>
     <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;datetime64[s]&#39;</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>For coercing python datetime (here, a datetime.date, there …</p> </div><!-- /.entry-content -->
@@ -159,16 +173,6 @@ With the weather, Olson on my mind, and the huge crowds, parts of the race were 
                 </footer><!-- /.post-info -->
 		<br>
                 <div class="entry-content"> <p>As a grad student trying to understand the emotional content of some unreadably large collection of texts, a typical night in grad school can often go something like this: You’re up late at night planning a new research study, thinking about trying some of this fancy sentiment-based text analysis …</p> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2017/11/08/linking-files-from-github-in-codepen/" rel="bookmark" title="Permalink to Linking files from GitHub in CodePen">Linking files from GitHub in CodePen</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2017-11-08T00:00:00+01:00"> Wed 08 November 2017 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>In the course I teach at UC Berkeley in the MIDS program, we use CodePen to build interactive web graphics.
-There are a host of reasons to use CodePen, but setting that aside for now, let's talk about how to host data files for CodePen.
-CodePen lacks a way for …</p> </div><!-- /.entry-content -->
         </article></li>
 </ol><!-- /#posts-list -->
 <p class="paginator">

@@ -70,53 +70,53 @@ so here I'll focus on setting up a development environment for building a simple
 <p>For the local setup, we'll be using https://github.com/jbfavre/docker-vertica/.
 I'm going to focus on the CentOS version, since it is most similar to Amazon's RHEL images.
 To get started (on OSX, you need the Docker client first):</p>
-<div class="highlight"><pre><span></span>docker pull jbfavre/vertica:9.2.0-7_centos-7
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">docker pull jbfavre/vertica:9.2.0-7_centos-7</span>
+</code></pre></div>
 
 
 <p>Also take a second to get <a href="https://www.python.org/downloads/release/python-351/">Python 3.5.1 here</a>.
 Those are the two steps that require the most bandwidth!</p>
 <p>Now, run that thing:</p>
-<div class="highlight"><pre><span></span>docker run -p 5433:5433 jbfavre/vertica:9.2.0-7_centos-7
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">docker run -p 5433:5433 jbfavre/vertica:9.2.0-7_centos-7</span>
+</code></pre></div>
 
 
 <p>Grab the name of the running container from <code>docker ps</code> command, and set it to <code>$DOCKER_NAME</code>, and copy in our Python source:</p>
-<div class="highlight"><pre><span></span>DOCKER_NAME=suspicious_chatelet
-docker cp Downloads/Python-3.5.1.tgz $DOCKER_NAME:/home/dbadmin/
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">DOCKER_NAME=suspicious_chatelet</span>
+<span class="err">docker cp Downloads/Python-3.5.1.tgz $DOCKER_NAME:/home/dbadmin/</span>
+</code></pre></div>
 
 
 <p>Phew! We're done with the parts that are specific to a local setup.
 If you're working on a server somewhere, copy up the <code>Python-3.5.1.tgz</code>
 and put it at <code>/home/dbadmin/Python-3.5.1.tgz</code>.
 For good measure (i.e., if you copied with the root user) make sure it's owned by <code>dbadmin</code>:</p>
-<div class="highlight"><pre><span></span>chown dbadmin /home/dbadmin/Python-3.5.1.tgz
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">chown dbadmin /home/dbadmin/Python-3.5.1.tgz</span>
+</code></pre></div>
 
 
 <p>As root, do</p>
-<div class="highlight"><pre><span></span>yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel</span>
+</code></pre></div>
 
 
 <p>Grab a coffee.</p>
 <p>Switch to <code>dbadmin</code> user and do:</p>
-<div class="highlight"><pre><span></span>cd /home/dbadmin/Python-3.5.1
-./configure
-make
-make install
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">cd /home/dbadmin/Python-3.5.1</span>
+<span class="err">./configure</span>
+<span class="err">make</span>
+<span class="err">make install</span>
+</code></pre></div>
 
 
 <p>Probably another coffee for that one!</p>
 <p>If you run the above as <code>dbadmin</code>, which you should, skip the <code>make install</code> line.
 Or only do that last line as <code>root</code>.</p>
 <p>Maybe still as root, though again this should be fine (and preferable) as dbadmin user in the <code>/home/dbadmin</code> directory. If you used root for anything above other than <code>make install</code>, you might need to keep <code>root</code> user active. Here goes:</p>
-<div class="highlight"><pre><span></span>Python-3.5.1/python -m venv pyenv
-pyenv/bin/pip install -U pip
-pyenv/bin/pip install requirements.txt
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">Python-3.5.1/python -m venv pyenv</span>
+<span class="err">pyenv/bin/pip install -U pip</span>
+<span class="err">pyenv/bin/pip install requirements.txt</span>
+</code></pre></div>
 
 
 <p>If you're within a firewall, you might need <code>--index-url=[your company's artifactory]</code> for the pip install lines.
@@ -124,20 +124,20 @@ What is the <code>requirements.txt</code> line? All of the packages that your fu
 just like the requirements file from any python package.</p>
 <p>Finally you should be able to execute the SQL needed to build your function!
 Put your code in <code>myfunction.py</code> and then you can run <code>vsql</code> as dbadmin, and do:</p>
-<div class="highlight"><pre><span></span>\set libfile &#39;\&#39;&#39;`pwd`&#39;/myfunction.py\&#39;&#39;
-DROP LIBRARY mylib CASCADE;
+<div class="highlight"><pre><span></span><code><span class="err">\</span><span class="kt">set</span> <span class="n">libfile</span> <span class="s1">&#39;\&#39;&#39;</span><span class="ss">`pwd`</span><span class="s1">&#39;/myfunction.py\&#39;&#39;</span>
+<span class="k">DROP</span> <span class="n">LIBRARY</span> <span class="n">mylib</span> <span class="k">CASCADE</span><span class="p">;</span>
 
-CREATE LIBRARY mylib AS :libfile DEPENDS &#39;/home/dbadmin/pyenv/lib/python3.5/site-packages/&#39; LANGUAGE &#39;Python&#39;;
-CREATE FUNCTION myfunction AS NAME &#39;myfunction_factory&#39; LIBRARY mylib;
-</pre></div>
+<span class="k">CREATE</span> <span class="n">LIBRARY</span> <span class="n">mylib</span> <span class="k">AS</span> <span class="p">:</span><span class="n">libfile</span> <span class="n">DEPENDS</span> <span class="s1">&#39;/home/dbadmin/pyenv/lib/python3.5/site-packages/&#39;</span> <span class="n">LANGUAGE</span> <span class="s1">&#39;Python&#39;</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="n">FUNCTION</span> <span class="n">myfunction</span> <span class="k">AS</span> <span class="n">NAME</span> <span class="s1">&#39;myfunction_factory&#39;</span> <span class="n">LIBRARY</span> <span class="n">mylib</span><span class="p">;</span>
+</code></pre></div>
 
 
 <p>If you run into permissions issues having done all of the Python stuff as <code>root</code>,
 you can get the function to build by opening up the virtual environment permissions
 using these commands (as <code>root</code> in <code>/home/dbadmin</code>):</p>
-<div class="highlight"><pre><span></span>find pyenv -type f -exec chmod 666 {} \;
-find . -type d -exec chmod 777 {} \;
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">find pyenv -type f -exec chmod 666 {} \;</span>
+<span class="err">find . -type d -exec chmod 777 {} \;</span>
+</code></pre></div>
 
 
 <p>Cheers!

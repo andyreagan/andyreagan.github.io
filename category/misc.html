@@ -46,6 +46,24 @@
 
 <ol id="post-list">
         <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2020/05/29/great-expectations-of-vertica/" rel="bookmark" title="Permalink to Great Expectations of Vertica">Great Expectations of Vertica</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-05-29T00:00:00+02:00"> Fri 29 May 2020 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>First run Vertica:</p>
+<div class="highlight"><pre><span></span><code><span class="err">docker run -p 5433:5433 -e DATABASE_PASSWORD=&#39;foo123&#39; jbfavre/vertica:9.2.0-7_debian-8</span>
+</code></pre></div>
+
+
+<p>Confirm that you can connect to it, and create a schema called npi_data:</p>
+<div class="highlight"><pre><span></span><code><span class="err">echo &#39;create schema npi_data&#39; | vsql -p 5433 -h localhost -U dbadmin -d docker -w foo123</span>
+</code></pre></div>
+
+
+<p>Now, GE uses Sqlachemy, so let's …</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
                 <header> <h2 class="entry-title"><a href="/2020/01/08/column-level-encryption-on-a-vertica-database/" rel="bookmark" title="Permalink to Column level encryption on a Vertica Database">Column level encryption on a Vertica Database</a></h2> </header>
                 <footer class="post-info">
                     <abbr class="published" title="2020-01-08T00:00:00+01:00"> Wed 08 January 2020 </abbr>
@@ -152,20 +170,6 @@ and am hopeful of many adventures to come.</p> </div><!-- /.entry-content -->
 <p><img src="/images/2019-04-22-welcome-abel/20190422_170854.jpg" class="img-responsive"></p>
 <p>Olson loves his little brother, seen here at a little over a month old:</p>
 <p><img src="/images/2019-04-22-welcome-abel/20190527_191950.jpg" class="img-responsive"></p> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2019/04/15/boston-marathon-2019/" rel="bookmark" title="Permalink to Boston Marathon 2019">Boston Marathon 2019</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2019-04-15T00:00:00+02:00"> Mon 15 April 2019 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/2292189157/embed/4cb5a296f8edaa8b8c76b4bc15d7d91084a8c8fb'></iframe>
-
-<p>What a day! Congrats to all the finishers.
-I count myself very grateful to be at the start line of this one,
-with my wife at 39 weeks pregnant.
-Didn't have the run that I had hoped out there,
-wrote some checks that my legs couldn't cash with a first …</p> </div><!-- /.entry-content -->
         </article></li>
 </ol><!-- /#posts-list -->
 <p class="paginator">

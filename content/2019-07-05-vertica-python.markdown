@@ -42,7 +42,11 @@ For good measure (i.e., if you copied with the root user) make sure it's owned b
 chown dbadmin /home/dbadmin/Python-3.5.1.tgz
 ```
 
-As root, do
+As root,
+install all of the dependencies that you need for Python.
+WARNING: these may not be everything that YOU need
+(see alternative dependencies in an install like [this](https://gist.github.com/Sunlighter/87bbd2cd80971c7c0d4763ec1b5ea548))
+or rely on the `python3` that is available with the `yum` installer directly.
 ```
 yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel
 ```

@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>andy reagan - Andy Reagan</title><link>/</link><description></description><lastBuildDate>Fri, 29 May 2020 00:00:00 +0200</lastBuildDate><item><title>Great Expectations of Vertica</title><link>/2020/05/29/great-expectations-of-vertica/</link><description>&lt;p&gt;First run Vertica:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;docker run -p 5433:5433 -e DATABASE_PASSWORD=&amp;#39;foo123&amp;#39; jbfavre/vertica:9.2.0-7_debian-8&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+<rss version="2.0"><channel><title>andy reagan - Andy Reagan</title><link>/</link><description></description><lastBuildDate>Tue, 15 Sep 2020 00:00:00 +0200</lastBuildDate><item><title>Observable with local files and Flask</title><link>/2020/09/15/observable-with-local-files-and-flask/</link><description>&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
+While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).
+One of these is relying on locally accessible data …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Tue, 15 Sep 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-09-15:/2020/09/15/observable-with-local-files-and-flask/</guid><category>misc</category></item><item><title>Boston Marathon 2020: Take 2</title><link>/2020/09/13/boston-marathon-2020-take-2/</link><description>&lt;p&gt;The COVID-19 pandemic not only delayed the Boston Marathon until September,
+but cancelled it entirely.
+The organizers moved to a virtual format, and of course, I had to do it.&lt;/p&gt;
+&lt;p&gt;On Strava:&lt;/p&gt;
+&lt;iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/4053907192/embed/c9bf0ea1cb144408c8fd94db612134f6dacb80d5'&gt;&lt;/iframe&gt;
 
-
-&lt;p&gt;Confirm that you can connect to it, and create a schema called npi_data:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;echo &amp;#39;create schema npi_data&amp;#39; | vsql -p 5433 -h localhost -U dbadmin -d docker -w foo123&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Now, GE uses Sqlachemy, so let's …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Fri, 29 May 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-05-29:/2020/05/29/great-expectations-of-vertica/</guid><category>misc</category></item><item><title>Column level encryption on a Vertica Database</title><link>/2020/01/08/column-level-encryption-on-a-vertica-database/</link><description>&lt;p&gt;Vertica is a very powerful analytics database,
+&lt;p&gt;And if you don’t get motion sick, and want to hear me complain about running with a …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Sun, 13 Sep 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-09-13:/2020/09/13/boston-marathon-2020-take-2/</guid><category>misc</category></item><item><title>Great Expectations of Vertica</title><link>/2020/05/29/great-expectations-of-vertica/</link><description>&lt;p&gt;Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
+While data validation and such have been compared to Data Science's "janitorial work",
+others argue that it's really part of the analysis.
+Either way,
+I've had enough headaches with analysis being wrong …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Fri, 29 May 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-05-29:/2020/05/29/great-expectations-of-vertica/</guid><category>misc</category></item><item><title>So You Want A Road Bike</title><link>/2020/05/29/so-you-want-a-road-bike/</link><description>&lt;p&gt;It's been years since I felt I was "deeply" involved in the cycling world,
+having biked across the country in 2010 and spent most of my college weekends racing or just riding bikes (wow, I graduated almost 8 years ago!).&lt;/p&gt;
+&lt;p&gt;That said, some of the things that I remember seem …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Fri, 29 May 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-05-29:/2020/05/29/so-you-want-a-road-bike/</guid><category>misc</category></item><item><title>Boston Marathon 2020: From a Basement Near You</title><link>/2020/04/20/boston-marathon-2020-from-a-basement-near-you/</link><description>&lt;p&gt;The COVID-19 pandemic has led to the cancellation of most events,
+including the Boston Marathon (which made it through the 1918 flu and 2 world wars).
+Alas, I couldn't let my half-assed training go to "waste",
+so I took to the basement.&lt;/p&gt;
+&lt;p&gt;I'd already taken the time off from work …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Mon, 20 Apr 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-04-20:/2020/04/20/boston-marathon-2020-from-a-basement-near-you/</guid><category>misc</category></item><item><title>4 Years of Running</title><link>/2020/02/26/4-years-of-running/</link><description>&lt;p&gt;Well, somehow I have managed to run 10 minutes every day for the past 4 years.
+It has been a wild adventure for many days, and at times boring.&lt;/p&gt;
+&lt;p&gt;Guess I'll just keep running.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Wed, 26 Feb 2020 00:00:00 +0100</pubDate><guid isPermaLink="false">tag:None,2020-02-26:/2020/02/26/4-years-of-running/</guid><category>misc</category></item><item><title>Column level encryption on a Vertica Database</title><link>/2020/01/08/column-level-encryption-on-a-vertica-database/</link><description>&lt;p&gt;Vertica is a very powerful analytics database,
 and security is important!
 You might need to store sensitive data,
 like SSN,

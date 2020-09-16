@@ -1,33 +1,274 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>andy reagan - Andy Reagan</title><link href="/" rel="alternate"></link><link href="/feeds/andy-reagan.atom.xml" rel="self"></link><id>/</id><updated>2020-05-29T00:00:00+02:00</updated><entry><title>Great Expectations of Vertica</title><link href="/2020/05/29/great-expectations-of-vertica/" rel="alternate"></link><published>2020-05-29T00:00:00+02:00</published><updated>2020-05-29T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-05-29:/2020/05/29/great-expectations-of-vertica/</id><summary type="html">&lt;p&gt;First run Vertica:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>andy reagan - Andy Reagan</title><link href="/" rel="alternate"></link><link href="/feeds/andy-reagan.atom.xml" rel="self"></link><id>/</id><updated>2020-09-15T00:00:00+02:00</updated><entry><title>Observable with local files and Flask</title><link href="/2020/09/15/observable-with-local-files-and-flask/" rel="alternate"></link><published>2020-09-15T00:00:00+02:00</published><updated>2020-09-15T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-15:/2020/09/15/observable-with-local-files-and-flask/</id><summary type="html">&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
+While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).
+One of these is relying on locally accessible data …&lt;/p&gt;</summary><content type="html">&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
+While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).
+One of these is relying on locally accessible data: Observable runs in &lt;em&gt;your browser&lt;/em&gt;, so it can access local files if you serve them or an entire local webapp or API.
+Here, we'll connect an observable front-end to a both some simple file-serving web servers and to a Python Flask server running on my laptop to demonstrate how this is possible.&lt;/p&gt;
+&lt;h2&gt;Basic Flask setup&lt;/h2&gt;
+&lt;p&gt;For more details, follow along with the &lt;a href="https://flask.palletsprojects.com/en/1.1.x/quickstart/"&gt;Flask quickstart&lt;/a&gt;.
+We'll start with the hello world app there:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# hello.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;
+&lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="nd"&gt;@app.route&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hello_world&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Hello, World!&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Which we run in debug mode with&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;FLASK_ENV=development FLASK_APP=hello.py flask run&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;skip the &lt;code&gt;FLASK_ENV&lt;/code&gt; option if you don't want debug mode.
+Now that's not doing much for us,
+so let's make a API:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;flask&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;
+&lt;span class="n"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Flask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="nd"&gt;@app.route&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hello_world&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Hello, World!&amp;#39;&lt;/span&gt;
+
+&lt;span class="nd"&gt;@app.route&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/api/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nd"&gt;@app.route&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/api/&amp;lt;filename&amp;gt;/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;api&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="c1"&gt;# you could go load a file&lt;/span&gt;
+        &lt;span class="c1"&gt;# json.loads(Path(filename).read_text())&lt;/span&gt;
+        &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;data&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]}&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="c1"&gt;# maybe go query a database?&lt;/span&gt;
+        &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;query_result&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]}&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# we just need to return the dict object&lt;/span&gt;
+    &lt;span class="c1"&gt;# flask will return dict objects as json responses&lt;/span&gt;
+    &lt;span class="c1"&gt;# (and turn string returns, like hello_world(), into reponse bodies with default params)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Cool, now we have an API in Flask.
+In the response hear, it set the &lt;code&gt;Content-Type: application/json&lt;/code&gt; (rather than the standard HTML page of &lt;code&gt;Content-Type: text/html; charset=utf-8&lt;/code&gt;, FWIW I just copied both of those from the Network tab of Chrome's Inspector tool).
+Of course you could do anything you want inside of &lt;code&gt;api()&lt;/code&gt; or &lt;code&gt;hello_world()&lt;/code&gt; functions,
+like run a &lt;a href="https://www.tensorflow.org/"&gt;Tensorflow model&lt;/a&gt; on some data that was just uploaded via POST request,
+and return the score from the model as an JSON "API" response.&lt;/p&gt;
+&lt;h2&gt;CORS&lt;/h2&gt;
+&lt;p&gt;The first thing we'll have to think about is &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"&gt;Cross-Origin Resource Sharing&lt;/a&gt;.
+Web browsers protect users by not allowing a website to host the content of a different site unless that site specifically allows it.
+That means that I can't run githubb.com, show the github.com site's pages, and collect all of the details entered through my proxy site.
+The github.com pages come back with headers that don't explicitly allow my site, githubb.com, and so it's not allowed (this operates as a white list).&lt;/p&gt;
+&lt;p&gt;All this to say that our local site that hosting files will need to allow specifically &lt;code&gt;observablehq.com&lt;/code&gt; to use them!
+We can be a little more relaxed and just allow any site to use our locally hosted files, by allowing &lt;code&gt;*&lt;/code&gt; if we want (these are only visible on our computer).&lt;/p&gt;
+&lt;p&gt;Options for &lt;a href="https://flask.palletsprojects.com/en/1.1.x/quickstart/#about-responses"&gt;CORS with Flask&lt;/a&gt;:
+- Just return &lt;code&gt;(response, {'Access-Control-Allow-Origin', 'observablehq.com'})&lt;/code&gt;.
+- Or if you're included the status, &lt;code&gt;(response, 200, {'Access-Control-Allow-Origin', '*'})&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For our hello world, that would be:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;def hello_world():&lt;/span&gt;
+&lt;span class="err"&gt;    return &amp;#39;Hello, World!&amp;#39;, 200, {&amp;#39;Access-Control-Allow-Origin&amp;#39;: &amp;#39;*&amp;#39;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Options for CORS just serving files with node &lt;a href="https://www.npmjs.com/package/http-server"&gt;http-server&lt;/a&gt;:
+- Just set the &lt;code&gt;--cors&lt;/code&gt; flag.&lt;/p&gt;
+&lt;p&gt;For CORS just serving files with &lt;code&gt;python3 -m http.server&lt;/code&gt;, there is &lt;a href="https://stackoverflow.com/a/21957017/2577988"&gt;no simple option&lt;/a&gt;.
+You can wrap the simple server, but at this point, I'd recommend just using one of the two above.
+Since we don't need to allow &lt;code&gt;*&lt;/code&gt; and we're setting the header directly, we'll just allow Observable.
+The &lt;a href="https://docs.python.org/3/library/http.server.html"&gt;Python http.server documentation&lt;/a&gt; shows us how we can do it (note, this is a bit simpler than the solution provided in the SO post linked to above):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;http.server&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HTTPServer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SimpleHTTPRequestHandler&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CORSRequestHandler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SimpleHTTPRequestHandler&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;end_headers&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;send_header&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Access-Control-Allow-Origin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;observablehq.com&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;SimpleHTTPRequestHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end_headers&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;httpd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;HTTPServer&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;CORSRequestHandler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;httpd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;serve_forever&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;SSL&lt;/h2&gt;
+&lt;p&gt;Again for our own good, most browsers won't allow a site running in HTTPS mode (a site that served content encrypted by SSL) to load assets from HTTP endpoints.
+If they did, it might look like a site is secure with the "lock" icon, all while it's making unencrypted transactions with our data under the hood.
+Observable is only serving on HTTPS, so we also need to serve with HTTPS.&lt;/p&gt;
+&lt;p&gt;Flask, http-server, and Python3's simple server all serve without SSL by default.
+For any of these, we can wrap them in &lt;a href="https://ngrok.com/"&gt;ngrok&lt;/a&gt;.
+This is probably the simplest solution for development:
+- Go create an account at &lt;a href="https://ngrok.com/"&gt;ngrok&lt;/a&gt;.
+- Download the executable for your platform.
+- &lt;code&gt;mv ngrok /usr/local/bin&lt;/code&gt; (or somewhere on your &lt;code&gt;PATH&lt;/code&gt;).
+- Set you authtoken: &lt;code&gt;ngrok authtoken 1h3V...&lt;/code&gt;.
+- Run it: &lt;code&gt;ngrok http 8080&lt;/code&gt;, using the port of the service you want to expose.&lt;/p&gt;
+&lt;p&gt;Done! Only the final step is necessary each time you want to use it.&lt;/p&gt;
+&lt;p&gt;To get started with SSL in any other option,
+first we can generate a local key pair by &lt;a href=""&gt;following instructions here&lt;/a&gt;.
+First, I create a file &lt;code&gt;domains.ext&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;authorityKeyIdentifier&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;keyid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;issuer&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;basicConstraints&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nl"&gt;CA&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="k"&gt;FALSE&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;keyUsage&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;digitalSignature&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;nonRepudiation&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;keyEncipherment&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;dataEncipherment&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;subjectAltName&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;@alt_names&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;alt_names&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;DNS&lt;/span&gt;&lt;span class="mf"&gt;.1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;DNS&lt;/span&gt;&lt;span class="mf"&gt;.2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;fake1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;local&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;DNS&lt;/span&gt;&lt;span class="mf"&gt;.3&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;fake2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;local&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then run the following 5 commands:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj &amp;quot;/C=US/CN=W209-CA&amp;quot;&lt;/span&gt;
+&lt;span class="err"&gt;openssl x509 -outform pem -in RootCA.pem -out RootCA.crt&lt;/span&gt;
+&lt;span class="err"&gt;openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj &amp;quot;/C=US/ST=Massachusetts/L=Amherst/O=Example-Certificates/CN=localhost.local&amp;quot;&lt;/span&gt;
+&lt;span class="err"&gt;openssl x509 -req -sha256 -days 90 -in localhost.csr -CA RootCA.pem -CAkey RootCA.key -CAcreateserial -extfile domains.ext -out localhost.crt&lt;/span&gt;
+&lt;span class="err"&gt;open RootCA.crt&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The last command opens the cert in Mac's Keychain Access.
+You need to double click the new key,
+open the "Trust" section,
+and always trust this CA.&lt;/p&gt;
+&lt;p&gt;Options for SSL just serving files with node &lt;a href="https://www.npmjs.com/package/http-server"&gt;http-server&lt;/a&gt;:
+- We can just set the &lt;code&gt;--ssl/S&lt;/code&gt; flag, and pass cert/key with &lt;code&gt;--cert&lt;/code&gt; and &lt;code&gt;--key&lt;/code&gt; options.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;http-server -S --cert localhost.crt --key localhost.key&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Options for SSL with Python's simple server (&lt;a href="https://blog.anvileight.com/posts/simple-python-http-server/#python-3-x-1"&gt;ref&lt;/a&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;http.server&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HTTPServer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SimpleHTTPRequestHandler&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;ssl&lt;/span&gt;
+
+
+&lt;span class="n"&gt;httpd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;HTTPServer&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4443&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;SimpleHTTPRequestHandler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;httpd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ssl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wrap_socket&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;httpd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;keyfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;localhost.key&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;certfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;localhost.crt&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;server_side&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;httpd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;serve_forever&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Or we can switch to using Python &lt;a href=""&gt;Twisted&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;twistd -no web --path&lt;/span&gt;
+&lt;span class="err"&gt;# with SSL&lt;/span&gt;
+&lt;span class="err"&gt;twistd -no web --path –https=443 -c cert.pem -k key.pem&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Flask from the CLI:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;FLASK_ENV=development FLASK_APP=hello.py flask run --cert localhost.crt --key localhost.key&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There is an option to generate self-signed cert on the fly,
+but it didn't work for me (&lt;code&gt;NET::ERR_CERT_AUTHORITY_INVALID&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;FLASK_ENV=development FLASK_APP=hello.py flask run --cert=adhoc&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;All together&lt;/h2&gt;
+&lt;p&gt;The simplest solution for files:
+we can serve local files to Observable with two lines (and the &lt;code&gt;ngrok&lt;/code&gt; setup) with just:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;http-server --cors&lt;/span&gt;
+&lt;span class="err"&gt;ngrok http 8080&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and then pointing Observable to the ngrok https &lt;a href="https://stackoverflow.com/questions/176264/what-is-the-difference-between-a-uri-a-url-and-a-urn"&gt;URI&lt;/a&gt; it gives you.
+It should be clear how to combine any of the CORS solutions with ngrok for https.
+To combine the CORS and SSL, with the self signed certs: first generate the certs as above, then:&lt;/p&gt;
+&lt;h3&gt;Node simple server (http-server)&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;http-server --cors -S --cert localhost.crt --key localhost.key&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Python simple server&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;http.server&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HTTPServer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SimpleHTTPRequestHandler&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;ssl&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CORSRequestHandler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SimpleHTTPRequestHandler&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;end_headers&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;send_header&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Access-Control-Allow-Origin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;observablehq.com&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;SimpleHTTPRequestHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end_headers&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;httpd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;HTTPServer&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;CORSRequestHandler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;httpd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ssl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wrap_socket&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;httpd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;keyfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;localhost.key&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;certfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;localhost.crt&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;server_side&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;httpd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;serve_forever&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then run from the command line&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;python3 script.py&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Flask&lt;/h3&gt;
+&lt;p&gt;Already done!
+Just take &lt;code&gt;hello.py&lt;/code&gt; with the CORS headers,
+and run it with the certs passed in.&lt;/p&gt;
+&lt;p&gt;Or you can run &lt;code&gt;python hello.py&lt;/code&gt; and set the certs inside the script:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;if __name__ == &amp;#39;__main__&amp;#39;:&lt;/span&gt;
+&lt;span class="err"&gt;    app.run(debug=True, ssl_context=(&amp;#39;localhost.crt&amp;#39;, &amp;#39;localhost.key&amp;#39;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Connect to Observerable&lt;/h1&gt;
+&lt;p&gt;The last part is just fun now.
+Spin up an Observable notebook,
+import d3 (&lt;code&gt;d3 = require("d3@6")&lt;/code&gt;),
+and load our Flask API:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;d3.json(&amp;quot;https://localhost:5000/api/&amp;quot;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="misc"></category></entry><entry><title>Boston Marathon 2020: Take 2</title><link href="/2020/09/13/boston-marathon-2020-take-2/" rel="alternate"></link><published>2020-09-13T00:00:00+02:00</published><updated>2020-09-13T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-13:/2020/09/13/boston-marathon-2020-take-2/</id><summary type="html">&lt;p&gt;The COVID-19 pandemic not only delayed the Boston Marathon until September,
+but cancelled it entirely.
+The organizers moved to a virtual format, and of course, I had to do it.&lt;/p&gt;
+&lt;p&gt;On Strava:&lt;/p&gt;
+&lt;iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/4053907192/embed/c9bf0ea1cb144408c8fd94db612134f6dacb80d5'&gt;&lt;/iframe&gt;
+
+&lt;p&gt;And if you don’t get motion sick, and want to hear me complain about running with a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The COVID-19 pandemic not only delayed the Boston Marathon until September,
+but cancelled it entirely.
+The organizers moved to a virtual format, and of course, I had to do it.&lt;/p&gt;
+&lt;p&gt;On Strava:&lt;/p&gt;
+&lt;iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/4053907192/embed/c9bf0ea1cb144408c8fd94db612134f6dacb80d5'&gt;&lt;/iframe&gt;
+
+&lt;p&gt;And if you don’t get motion sick, and want to hear me complain about running with a vest, here you go:&lt;/p&gt;
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/EEW8Hw3Z8IQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;</content><category term="misc"></category></entry><entry><title>Great Expectations of Vertica</title><link href="/2020/05/29/great-expectations-of-vertica/" rel="alternate"></link><published>2020-05-29T00:00:00+02:00</published><updated>2020-05-29T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-05-29:/2020/05/29/great-expectations-of-vertica/</id><summary type="html">&lt;p&gt;Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
+While data validation and such have been compared to Data Science's "janitorial work",
+others argue that it's really part of the analysis.
+Either way,
+I've had enough headaches with analysis being wrong …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
+While data validation and such have been compared to Data Science's "janitorial work",
+others argue that it's really part of the analysis.
+Either way,
+I've had enough headaches with analysis being wrong and pipelines breaking downstream that
+checking data at the source for some basic consistency is worth it.
+The team at GE &lt;a href="https://github.com/superconductive/ge_tutorials"&gt;has tutorials for file backend and for postgres&lt;/a&gt;,
+so let's try with Vertica via sqlalchemy.&lt;/p&gt;
+&lt;p&gt;Now, first run Vertica:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;docker run -p 5433:5433 -e DATABASE_PASSWORD=&amp;#39;foo123&amp;#39; jbfavre/vertica:9.2.0-7_debian-8&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Confirm that you can connect to it, and create a schema called npi_data:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;echo &amp;#39;create schema npi_data&amp;#39; | vsql -p 5433 -h localhost -U dbadmin -d docker -w foo123&lt;/span&gt;
+&lt;p&gt;Confirm that you can connect to it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;echo &amp;quot;select &amp;#39;hello&amp;#39;;&amp;quot; | vsql -p 5433 -h localhost -U dbadmin -d docker -w foo123&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Now, GE uses Sqlachemy, so let's …&lt;/p&gt;</summary><content type="html">&lt;p&gt;First run Vertica:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;docker run -p 5433:5433 -e DATABASE_PASSWORD=&amp;#39;foo123&amp;#39; jbfavre/vertica:9.2.0-7_debian-8&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Confirm that you can connect to it, and create a schema called npi_data:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;echo &amp;#39;create schema npi_data&amp;#39; | vsql -p 5433 -h localhost -U dbadmin -d docker -w foo123&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Now, GE uses Sqlachemy, so let's get a valid connection string.
-We'll rely on &lt;/p&gt;
-&lt;p&gt;Here's how to do the installs right in your global Python (no virtualenv) as installed via the OSX installer (as a "Framework"):&lt;/p&gt;
+&lt;p&gt;Now, GE uses Sqlachemy, so let's get a valid connection string using &lt;a href="https://github.com/bluelabsio/sqlalchemy-vertica-python/"&gt;sqlachemy-vertica-python&lt;/a&gt;.
+First, here's how to do the installs in your global Python (no virtualenv) as installed via the OSX installer (as a "Framework"):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8 -m pip install -U pip&lt;/span&gt;
-&lt;span class="err"&gt;/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8 -m pip install great_expectations sqlalchemy sqlalchemy-vertica-python ipython&lt;/span&gt;
+&lt;span class="err"&gt;/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8 -m pip install great_expectations sqlalchemy sqlalchemy-vertica-python vertica-python pandas ipython&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;I like ipython, so you can use it to test the connection. Test it, in ipython:&lt;/p&gt;
+&lt;p&gt;I use ipython, so you can use it to test the connection. Test it, in ipython:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# /Library/Frameworks/Python.framework/Versions/3.8/bin/ipython&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sqlalchemy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;sa&lt;/span&gt;
 &lt;span class="n"&gt;engine&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sa&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_engine&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;vertica+vertica_python://dbadmin:foo123@localhost:5433/docker&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -35,17 +276,180 @@ We'll rely on &lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Go ahead and load the example file from GE's tutorial to the databse:&lt;/p&gt;
+&lt;p&gt;Go ahead and load the example file from GE's tutorial to the database,
+this may be the hardest part.
+There is code here to load the NPI data file from an older version of the tutorial,
+and the currently uncommented code below works for &lt;a href="https://github.com/superconductive/ge_tutorials"&gt;the most recent tutorial&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
-&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;my_data/npidata_pfile_20200511-20200517.csv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;vertica_python&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;math&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;floor&lt;/span&gt;
+
+&lt;span class="c1"&gt;# older one:&lt;/span&gt;
+&lt;span class="c1"&gt;# df = pd.read_csv(&amp;quot;data/npidata_pfile_20200511-20200517.csv&amp;quot;)&lt;/span&gt;
+&lt;span class="c1"&gt;# newest:&lt;/span&gt;
+&lt;span class="n"&gt;dtypes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;vendor_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;str&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;rate_code_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;str&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;store_and_fwd_flag&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;str&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;payment_type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;str&amp;#39;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;data/yellow_tripdata_sample_2019-01.csv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dtypes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;vertica_to_pandas_dtype&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dtype_string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;column_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;Parse pandas data types and convert to valid Vertica data types.&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;float&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dtype_string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;or&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;int&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dtype_string&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;numeric&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column_name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;datetime&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;varchar({0})&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;floor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;column_name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;str&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.5&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+
+&lt;span class="n"&gt;columns_with_types&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;vertica_to_pandas_dtype&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dtypes&lt;/span&gt;&lt;span class="p"&gt;)}&lt;/span&gt;
+&lt;span class="n"&gt;column_name_listing&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;columns_with_types&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keys&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="n"&gt;column_with_dtype_listing&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{0} {1}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;columns_with_types&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;()])&lt;/span&gt;
+
+&lt;span class="n"&gt;conn_info&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;host&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;127.0.0.1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;user&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dbadmin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;foo123&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;database&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;docker&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;use_prepared_statements&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;vertica_python&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;conn_info&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="c1"&gt;# older table&lt;/span&gt;
+    &lt;span class="c1"&gt;# cur.execute(&amp;#39;CREATE TABLE npidata_pfile_20200511_20200517 ({0});&amp;#39;.format(column_with_dtype_listing))&lt;/span&gt;
+    &lt;span class="c1"&gt;# yellowcab table:&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;CREATE TABLE if not exists yellow_tripdata_sample_2019_01 ({0});&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column_with_dtype_listing&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="c1"&gt;# copy the schema to a second table (so many ways to do this, just one)&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;SELECT * INTO yellow_tripdata_staging FROM (select * from yellow_tripdata_sample_2019_01 limit 10) x;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# we could have limited to 0 rows, but let&amp;#39;s truncate those 10 instead&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;TRUNCATE TABLE yellow_tripdata_staging;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;commit;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# with open(&amp;quot;data/yellow_tripdata_sample_2019-01.csv&amp;quot;, &amp;quot;rb&amp;quot;) as f:&lt;/span&gt;
+    &lt;span class="c1"&gt;#     cur.copy(&amp;quot;COPY yellow_tripdata_sample_2019_01 ({0}) from stdin DELIMITER &amp;#39;,&amp;#39; &amp;quot;.format(column_name_listing),  f)&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;COPY yellow_tripdata_sample_2019_01 ({0}) from LOCAL &amp;#39;{1}&amp;#39; DELIMITER &amp;#39;,&amp;#39; &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column_name_listing&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;data/yellow_tripdata_sample_2019-01.csv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;COPY yellow_tripdata_staging ({0}) from LOCAL &amp;#39;{1}&amp;#39; DELIMITER &amp;#39;,&amp;#39; &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;column_name_listing&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;data/yellow_tripdata_sample_2019-02.csv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="c1"&gt;# spot check that the data looks okay in the database&lt;/span&gt;
+&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;vertica_python&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;conn_info&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;select count(*) from yellow_tripdata_sample_2019_01;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fetchall&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;select count(*) from yellow_tripdata_staging;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fetchall&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;select * from yellow_tripdata_sample_2019_01 limit 1;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fetchall&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;select * from yellow_tripdata_staging limit 1;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cur&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fetchall&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Now we can run through the GE tutorial, using a database.
 You have the connection string above, so you'll chose the database option, (the "other", it might still be option 6),
-and create the sample expectations of this table.&lt;/p&gt;
-&lt;p&gt;Cool!&lt;/p&gt;</content><category term="misc"></category></entry><entry><title>Column level encryption on a Vertica Database</title><link href="/2020/01/08/column-level-encryption-on-a-vertica-database/" rel="alternate"></link><published>2020-01-08T00:00:00+01:00</published><updated>2020-01-08T00:00:00+01:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-01-08:/2020/01/08/column-level-encryption-on-a-vertica-database/</id><summary type="html">&lt;p&gt;Vertica is a very powerful analytics database,
+and create the sample expectations of this table.&lt;/p&gt;</content><category term="misc"></category></entry><entry><title>So You Want A Road Bike</title><link href="/2020/05/29/so-you-want-a-road-bike/" rel="alternate"></link><published>2020-05-29T00:00:00+02:00</published><updated>2020-05-29T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-05-29:/2020/05/29/so-you-want-a-road-bike/</id><summary type="html">&lt;p&gt;It's been years since I felt I was "deeply" involved in the cycling world,
+having biked across the country in 2010 and spent most of my college weekends racing or just riding bikes (wow, I graduated almost 8 years ago!).&lt;/p&gt;
+&lt;p&gt;That said, some of the things that I remember seem …&lt;/p&gt;</summary><content type="html">&lt;p&gt;It's been years since I felt I was "deeply" involved in the cycling world,
+having biked across the country in 2010 and spent most of my college weekends racing or just riding bikes (wow, I graduated almost 8 years ago!).&lt;/p&gt;
+&lt;p&gt;That said, some of the things that I remember seem to remain true.
+The most important thing about bike shopping is you: what do you want to do?
+So, let's start there:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a LBS recommended i go with a new Jamis Quest Sport ($699)
+i want it for 10-20 mile bike rides a couple times a week through town or bike path.
+know anything about that brand of bike? think it's a good bet?
+or should/could i go with something more basic?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;So yeah a lot of good questions.
+The most important thing is what you want to do with it.
+Not to offend, while Jamis I have heard of,
+they’re not one of the big brands or anything
+(from what comes off the top of my head, they make lower end stuff?).&lt;/p&gt;
+&lt;p&gt;The biggest brands are Trek, and Specialized probably.
+I ride a Specialized road bike I picked up used,
+and I’ve had Treks before too.
+The other biggest brand I can think of is Cannondale.
+And now more come to mind,
+I’ve seen good prices for Canyon,
+they’re DTC
+(no shops).
+All four of these make bikes ridden in the Tour de France,
+as well as more entry level stuff.&lt;/p&gt;
+&lt;p&gt;As for deciding on the kind of bike:
+- Frame. You’re not going to see much different on bikes &amp;lt;1000, likely all aluminum (and I wouldn’t get a carbon bike under 1000, optimizing for the wrong thing).
+    - Geometry of frame. The biggest question (full road bike, or more city-bike style).
+- Wheels. Everything will be pretty "basic", I wouldn’t see too much here. The width that fits in the frame is a big determinant of ride quality.
+    - Road bikes go as narrow as “23c” and they used to be even narrower.
+    - I ride 28s on my road bike because it’s not really any slower, they’re the biggest that fit in the frame I have, and they’re comfier.
+    - Anything up to 40 or even 50 would be good for cruising around (I’d take a 50c out on a road ride, and they’d be sweet on a gravel ride).
+- Brakes: rim vs disc. It used to be only disc on mountain bikes, only rim brakes on road. Over the past 2/3 years all the road bikes are going disc. The stopping power won’t make a big difference for you, but discs are better. FWIW, my road bike is older, it has rim brakes, they’re great. It’s not a big selling point really. I’d want discs for my next bike, which will probably be a “gravel bike” (a road bike that takes up to 50c tires with disc brakes).
+- Drivetrain. This is the shifters on the handlebars, and then on the front/back, and the gears. Huge differences in price and quality on these...this will be the biggest difference on a 1000 vs 2500 bike (likely same frame). Putting the top end drivetrain on the same frame would be like 3k more. They go crazy at the high end, fully electronic (which I’m not convinced I would go for...I rode a prototype way back in 2010 and they were awesome, and now they’re mainstream but...I like bikes being purely mechanical).&lt;/p&gt;
+&lt;p&gt;There are two big drivetrain brands,
+you want one of them.
+Shimano and SRAM.
+It used to be Shimano and Campagnalo (italian…).
+SRAM is newer,
+I was an early adopter in 2008ish and I like them.
+People get really sentimental about these (some still swear by “Campy”).
+Each SRAM/Shimano will have 4 levels:
+basic, intermediate, high end.
+I’ve never even owned the high end,
+but still ride a mix of basic and intermediate parts.
+They each also make stuff cheaper than their 4 signature levels
+(and now, each has electronic version of the top &lt;em&gt;2&lt;/em&gt;).
+If you can go for the entry level for either brand,
+that’s a good bet.
+Shimano is “tiagra/105/ultegra/dura-ace” and their lowest-&amp;gt;highest and SRAM is apex/rival/force/red.
+Apex is the “cheaper” one but I think it’s still probably okay.&lt;/p&gt;
+&lt;p&gt;The first bike that comes up on canyon’s site:
+&lt;a href="https://www.canyon.com/en-us/road-bikes-us/race-bikes/ultimate/canyon-ultimate-cf-slx-disc-9.0-etap/2413.html?dwvar_2413_pv_rahmenfarbe=BU%2FBK"&gt;Canyon Ultimate CF SLX Disc 9.0 ETAP&lt;/a&gt;.
+Full road,
+carbon,
+disk brakes
+(some room for gravel width tires…everything is going that way),
+…and sram red electronic.
+It’s 7500!&lt;/p&gt;
+&lt;p&gt;The cheapest on their site:
+&lt;a href="https://www.canyon.com/en-us/endurace-al-disc-6.0/50006354.html"&gt;Endurace AL Disc 6.0&lt;/a&gt;.
+A bit more of a gravel/relaxed geometry:
+28 tires,
+nice wheels,
+disc brakes,
+aluminum frame.
+It has Shimano tiagra,
+which is their basic below 105.&lt;/p&gt;
+&lt;p&gt;Let me say because people get hung up on this: aluminum vs carbon is the very least important thing.
+But what about aluminum vs. steel?
+Aluminum is lighter and stiff,
+steel is more “comfortable”.
+I wish I’d ridden steel across the country rather than aluminum.
+But blindfolded, maybe you couldn’t tell the difference on a smooth road.
+My dream bike is steel or ti (not carbon).
+Some beautiful handmade steel race bikes out there (see &lt;a href="https://fireflybicycles.com/"&gt;Firefly&lt;/a&gt;).&lt;/p&gt;</content><category term="misc"></category></entry><entry><title>Boston Marathon 2020: From a Basement Near You</title><link href="/2020/04/20/boston-marathon-2020-from-a-basement-near-you/" rel="alternate"></link><published>2020-04-20T00:00:00+02:00</published><updated>2020-04-20T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-04-20:/2020/04/20/boston-marathon-2020-from-a-basement-near-you/</id><summary type="html">&lt;p&gt;The COVID-19 pandemic has led to the cancellation of most events,
+including the Boston Marathon (which made it through the 1918 flu and 2 world wars).
+Alas, I couldn't let my half-assed training go to "waste",
+so I took to the basement.&lt;/p&gt;
+&lt;p&gt;I'd already taken the time off from work …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The COVID-19 pandemic has led to the cancellation of most events,
+including the Boston Marathon (which made it through the 1918 flu and 2 world wars).
+Alas, I couldn't let my half-assed training go to "waste",
+so I took to the basement.&lt;/p&gt;
+&lt;p&gt;I'd already taken the time off from work,
+so the hardest part of the whole marathon was going to be convincing my wife to get up earlier
+with the kids while I wasn't working after taking care of them all night.
+Turns out, that very well might have been the hardest part,
+but she still supports many of my hair-brained ideas (see more later under "Sam Saves the Marathon").&lt;/p&gt;
+&lt;p&gt;All-in-all, it was a lot of fun running on Zoom with lots of friends and family dialed in,
+but I'm not sure I want to do it again!
+The finish time was 2:50:50,
+a big PR!
+With only two wimpy fans blowing on me,
+I started to overheat about halfway through.
+My wife, Sam, saved me (with encouragement to ask her from Mr Connery!)
+by setting up a big ol' box fan.&lt;/p&gt;
+&lt;p&gt;Here's the finish where you can sort-of see the distance and time:&lt;/p&gt;
+&lt;p&gt;&lt;img src="/images/2020-04-20-virtual-boston-marathon-1.png" class="img-responsive"&gt;&lt;/p&gt;</content><category term="misc"></category></entry><entry><title>4 Years of Running</title><link href="/2020/02/26/4-years-of-running/" rel="alternate"></link><published>2020-02-26T00:00:00+01:00</published><updated>2020-02-26T00:00:00+01:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-02-26:/2020/02/26/4-years-of-running/</id><content type="html">&lt;p&gt;Well, somehow I have managed to run 10 minutes every day for the past 4 years.
+It has been a wild adventure for many days, and at times boring.&lt;/p&gt;
+&lt;p&gt;Guess I'll just keep running.&lt;/p&gt;</content><category term="misc"></category></entry><entry><title>Column level encryption on a Vertica Database</title><link href="/2020/01/08/column-level-encryption-on-a-vertica-database/" rel="alternate"></link><published>2020-01-08T00:00:00+01:00</published><updated>2020-01-08T00:00:00+01:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-01-08:/2020/01/08/column-level-encryption-on-a-vertica-database/</id><summary type="html">&lt;p&gt;Vertica is a very powerful analytics database,
 and security is important!
 You might need to store sensitive data,
 like SSN,
@@ -161,12 +565,12 @@ name this one &lt;code&gt;rsa.py&lt;/code&gt;:&lt;/p&gt;
 
 &lt;h2&gt;Deploy it on Vertica&lt;/h2&gt;
 &lt;p&gt;Then we create the function on Vertica, using the SDK-friendly script above.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="kt"&gt;set&lt;/span&gt; &lt;span class="n"&gt;libfile&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;\&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="ss"&gt;`pwd`&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/rsa.py\&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="n"&gt;libfile&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\&amp;#39;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;`pwd`&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/rsa.py&lt;/span&gt;&lt;span class="se"&gt;\&amp;#39;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
 &lt;span class="k"&gt;DROP&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;rsalib&lt;/span&gt; &lt;span class="k"&gt;CASCADE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;rsalib&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;libfile&lt;/span&gt; &lt;span class="n"&gt;DEPENDS&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/home/dbadmin/local/lib/python3.5/site-packages/&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;LANGUAGE&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Python&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;rsalib&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;libfile&lt;/span&gt; &lt;span class="n"&gt;DEPENDS&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/home/dbadmin/local/lib/python3.5/site-packages/&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;LANGUAGE&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Python&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="c1"&gt;-- Step 2: Create functions&lt;/span&gt;
-&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;encrypt&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="n"&gt;NAME&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;encrypt_factory&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;rsalib&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;encrypt&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="k"&gt;NAME&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;encrypt_factory&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;rsalib&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
@@ -176,9 +580,9 @@ name this one &lt;code&gt;rsa.py&lt;/code&gt;:&lt;/p&gt;
 
 
 &lt;p&gt;You can also store keys in a table:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;create table public_keys (name varchar(80), key varchar(1024));&lt;/span&gt;
-&lt;span class="err"&gt;insert into public_keys (name, key) (select &amp;#39;andys key&amp;#39;, &amp;#39;30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001&amp;#39;);&lt;/span&gt;
-&lt;span class="err"&gt;select encrypt(pk.key, secrets.ssn) as encrypted_ssn from (select &amp;#39;111-53-8888&amp;#39; as ssn) secrets full outer join public_keys pk on pk.name = &amp;#39;andys key&amp;#39;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="n"&gt;table&lt;/span&gt; &lt;span class="n"&gt;public_keys&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="n"&gt;varchar&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt; &lt;span class="n"&gt;varchar&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;span class="n"&gt;insert&lt;/span&gt; &lt;span class="n"&gt;into&lt;/span&gt; &lt;span class="n"&gt;public_keys&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;andys key&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;select&lt;/span&gt; &lt;span class="n"&gt;encrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;secrets&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ssn&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;encrypted_ssn&lt;/span&gt; &lt;span class="n"&gt;from&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;111-53-8888&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;ssn&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;secrets&lt;/span&gt; &lt;span class="n"&gt;full&lt;/span&gt; &lt;span class="n"&gt;outer&lt;/span&gt; &lt;span class="n"&gt;join&lt;/span&gt; &lt;span class="n"&gt;public_keys&lt;/span&gt; &lt;span class="n"&gt;pk&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt; &lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;andys key&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
@@ -330,8 +734,8 @@ Those are the two steps that require the most bandwidth!&lt;/p&gt;
 
 
 &lt;p&gt;Grab the name of the running container from &lt;code&gt;docker ps&lt;/code&gt; command, and set it to &lt;code&gt;$DOCKER_NAME&lt;/code&gt;, and copy in our Python source:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;DOCKER_NAME=suspicious_chatelet&lt;/span&gt;
-&lt;span class="err"&gt;docker cp Downloads/Python-3.5.1.tgz $DOCKER_NAME:/home/dbadmin/&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;DOCKER_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;suspicious_chatelet&lt;/span&gt;
+&lt;span class="n"&gt;docker&lt;/span&gt; &lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="n"&gt;Downloads&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Python&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;3.5&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="n"&gt;tgz&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;DOCKER_NAME&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dbadmin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
@@ -343,7 +747,11 @@ For good measure (i.e., if you copied with the root user) make sure it's owned b
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;As root, do&lt;/p&gt;
+&lt;p&gt;As root,
+install all of the dependencies that you need for Python.
+WARNING: these may not be everything that YOU need
+(see alternative dependencies in an install like &lt;a href="https://gist.github.com/Sunlighter/87bbd2cd80971c7c0d4763ec1b5ea548"&gt;this&lt;/a&gt;)
+or rely on the &lt;code&gt;python3&lt;/code&gt; that is available with the &lt;code&gt;yum&lt;/code&gt; installer directly.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
@@ -372,11 +780,11 @@ What is the &lt;code&gt;requirements.txt&lt;/code&gt; line? All of the packages 
 just like the requirements file from any python package.&lt;/p&gt;
 &lt;p&gt;Finally you should be able to execute the SQL needed to build your function!
 Put your code in &lt;code&gt;myfunction.py&lt;/code&gt; and then you can run &lt;code&gt;vsql&lt;/code&gt; as dbadmin, and do:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="kt"&gt;set&lt;/span&gt; &lt;span class="n"&gt;libfile&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;\&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="ss"&gt;`pwd`&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/myfunction.py\&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="n"&gt;libfile&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\&amp;#39;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;`pwd`&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/myfunction.py&lt;/span&gt;&lt;span class="se"&gt;\&amp;#39;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
 &lt;span class="k"&gt;DROP&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;mylib&lt;/span&gt; &lt;span class="k"&gt;CASCADE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;mylib&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;libfile&lt;/span&gt; &lt;span class="n"&gt;DEPENDS&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/home/dbadmin/pyenv/lib/python3.5/site-packages/&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;LANGUAGE&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Python&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;myfunction&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="n"&gt;NAME&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;myfunction_factory&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;mylib&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;mylib&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;libfile&lt;/span&gt; &lt;span class="n"&gt;DEPENDS&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/home/dbadmin/pyenv/lib/python3.5/site-packages/&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;LANGUAGE&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Python&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;myfunction&lt;/span&gt; &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="k"&gt;NAME&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;myfunction_factory&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt; &lt;span class="n"&gt;mylib&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1124,46 +1532,46 @@ Now, the tests:&lt;/p&gt;
 
 
 &lt;p&gt;Expanding on this idea, we’ll end up with a directory that looks just like the first academic paper directory I ever encountered, one laid out by &lt;a href="http://www.uvm.edu/pdodds/"&gt;Peter Dodds&lt;/a&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;bmc-mathphys.bst&lt;/span&gt;
-&lt;span class="err"&gt;bmcart.cls&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs-EPJ-supp.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs-EPJ.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs-dissertation-supplementary.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs-dissertation.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs-revtex4.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.abs.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.acknowledgments.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.author.EPJ.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.author.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.biblio.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.body.captions.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.body.figures.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.body.nocite.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.body.nofigures.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.body.tables.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.body.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.coverletter.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.inputs.txt&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.kwd.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.nbooks.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.settings.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.SOM.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.SVD-all.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.SVD.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.construction.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.extras.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.networks.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.null.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.prediction.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.ringsort.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.stories.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.wards-all.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.supplementary.wards.tex&lt;/span&gt;
-&lt;span class="err"&gt;emotional-arcs.title.tex&lt;/span&gt;
-&lt;span class="err"&gt;everything.bib&lt;/span&gt;
-&lt;span class="err"&gt;makefile&lt;/span&gt;
-&lt;span class="err"&gt;unsrtabbrv.bst&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;bmc&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mathphys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bst&lt;/span&gt;
+&lt;span class="n"&gt;bmcart&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cls&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;EPJ&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;supp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;EPJ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dissertation&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dissertation&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;revtex4&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;abs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;acknowledgments&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;author&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;EPJ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;author&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;biblio&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;captions&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figures&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nocite&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nofigures&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tables&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;coverletter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inputs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;txt&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;kwd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nbooks&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SOM&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SVD&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SVD&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;construction&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extras&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;networks&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;null&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;prediction&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ringsort&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stories&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wards&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;supplementary&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wards&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;emotional&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;arcs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;
+&lt;span class="n"&gt;everything&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bib&lt;/span&gt;
+&lt;span class="n"&gt;makefile&lt;/span&gt;
+&lt;span class="n"&gt;unsrtabbrv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bst&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1465,31 +1873,31 @@ Damnit!&lt;/p&gt;
 But, you need it to.
 Here is my super ugly solution: use the &lt;code&gt;.git/hooks/pre-commit&lt;/code&gt; and &lt;code&gt;post-commit&lt;/code&gt; to replace the links with the files, commit, then replaces the files back with the links!
 Only problem now is that &lt;code&gt;git&lt;/code&gt; thinks that the mode has changed between every commit...too bad.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;# .git/hooks/pre-commit&lt;/span&gt;
-&lt;span class="err"&gt;#!/bin/sh&lt;/span&gt;
-&lt;span class="err"&gt;LINKED_DIR=/Users/andyreagan/work/2015/07-hedotools/js&lt;/span&gt;
-&lt;span class="err"&gt;cd $GIT_DIR&lt;/span&gt;
-&lt;span class="err"&gt;cd ..&lt;/span&gt;
-&lt;span class="err"&gt;for FILE in d3.andy.js hedotools.init.js hedotools.shifter.js topojson.js urllib.js&lt;/span&gt;
-&lt;span class="err"&gt;do&lt;/span&gt;
-&lt;span class="err"&gt;\rm js/$FILE&lt;/span&gt;
-&lt;span class="err"&gt;cp $LINKED_DIR/$FILE js&lt;/span&gt;
-&lt;span class="err"&gt;git add js/$FILE&lt;/span&gt;
-&lt;span class="err"&gt;done&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# .git/hooks/pre-commit&lt;/span&gt;
+&lt;span class="c1"&gt;#!/bin/sh&lt;/span&gt;
+&lt;span class="n"&gt;LINKED_DIR&lt;/span&gt;&lt;span class="o"&gt;=/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;andyreagan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;work&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2015&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;07&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;GIT_DIR&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="o"&gt;..&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;d3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;andy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shifter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;topojson&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;urllib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;span class="n"&gt;do&lt;/span&gt;
+\&lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="n"&gt;js&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt;
+&lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;LINKED_DIR&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="n"&gt;js&lt;/span&gt;
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt; &lt;span class="n"&gt;js&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt;
+&lt;span class="n"&gt;done&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;hooks&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;commit&lt;/span&gt;
-&lt;span class="o"&gt;#!/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;
-&lt;span class="n"&gt;LINKED_DIR&lt;/span&gt;&lt;span class="o"&gt;=/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;andyreagan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;work&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2015&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;07&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
-&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;GIT_DIR&lt;/span&gt;
-&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="p"&gt;..&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# .git/hooks/post-commit&lt;/span&gt;
+&lt;span class="c1"&gt;#!/bin/sh&lt;/span&gt;
+&lt;span class="n"&gt;LINKED_DIR&lt;/span&gt;&lt;span class="o"&gt;=/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;andyreagan&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;work&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2015&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;07&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;GIT_DIR&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="o"&gt;../&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
 
-&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;copy&lt;/span&gt; &lt;span class="n"&gt;over&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;d3&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;andy&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shifter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;topojson&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;urllib&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
-&lt;span class="k"&gt;do&lt;/span&gt;
-&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt;
-&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;LINKED_DIR&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt;
+&lt;span class="c1"&gt;# now, copy over the files&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;d3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;andy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;hedotools&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shifter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;topojson&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="n"&gt;urllib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;span class="n"&gt;do&lt;/span&gt;
+\&lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt;
+&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;LINKED_DIR&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="n"&gt;FILE&lt;/span&gt;
 &lt;span class="n"&gt;done&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="misc"></category></entry><entry><title>Light at the end of the tunnel</title><link href="/2015/05/03/light-at-the-end-of-the-tunnel/" rel="alternate"></link><published>2015-05-03T00:00:00+02:00</published><updated>2015-05-03T00:00:00+02:00</updated><author><name>andy reagan</name></author><id>tag:None,2015-05-03:/2015/05/03/light-at-the-end-of-the-tunnel/</id><summary type="html">&lt;p&gt;With the semester nearing an end (one final exam taken, two presentations to give next week)...professor Bagrow sums up how I feel:&lt;/p&gt;
 &lt;blockquote class="twitter-tweet" lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;Is there a thing like jet lag but for the semester? Feel like I could sleep for a month!&lt;/p&gt;&amp;mdash; Jim Bagrow (@bagrow) &lt;a href="https://twitter.com/bagrow/status/594217499652009985"&gt;May 1, 2015&lt;/a&gt;&lt;/blockquote&gt;

@@ -77,31 +77,31 @@ Damnit!</p>
 But, you need it to.
 Here is my super ugly solution: use the <code>.git/hooks/pre-commit</code> and <code>post-commit</code> to replace the links with the files, commit, then replaces the files back with the links!
 Only problem now is that <code>git</code> thinks that the mode has changed between every commit...too bad.</p>
-<div class="highlight"><pre><span></span><code><span class="err"># .git/hooks/pre-commit</span>
-<span class="err">#!/bin/sh</span>
-<span class="err">LINKED_DIR=/Users/andyreagan/work/2015/07-hedotools/js</span>
-<span class="err">cd $GIT_DIR</span>
-<span class="err">cd ..</span>
-<span class="err">for FILE in d3.andy.js hedotools.init.js hedotools.shifter.js topojson.js urllib.js</span>
-<span class="err">do</span>
-<span class="err">\rm js/$FILE</span>
-<span class="err">cp $LINKED_DIR/$FILE js</span>
-<span class="err">git add js/$FILE</span>
-<span class="err">done</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .git/hooks/pre-commit</span>
+<span class="c1">#!/bin/sh</span>
+<span class="n">LINKED_DIR</span><span class="o">=/</span><span class="n">Users</span><span class="o">/</span><span class="n">andyreagan</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="mi">2015</span><span class="o">/</span><span class="mi">07</span><span class="o">-</span><span class="n">hedotools</span><span class="o">/</span><span class="n">js</span>
+<span class="n">cd</span> <span class="o">$</span><span class="n">GIT_DIR</span>
+<span class="n">cd</span> <span class="o">..</span>
+<span class="k">for</span> <span class="n">FILE</span> <span class="ow">in</span> <span class="n">d3</span><span class="o">.</span><span class="n">andy</span><span class="o">.</span><span class="n">js</span> <span class="n">hedotools</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">js</span> <span class="n">hedotools</span><span class="o">.</span><span class="n">shifter</span><span class="o">.</span><span class="n">js</span> <span class="n">topojson</span><span class="o">.</span><span class="n">js</span> <span class="n">urllib</span><span class="o">.</span><span class="n">js</span>
+<span class="n">do</span>
+\<span class="n">rm</span> <span class="n">js</span><span class="o">/$</span><span class="n">FILE</span>
+<span class="n">cp</span> <span class="o">$</span><span class="n">LINKED_DIR</span><span class="o">/$</span><span class="n">FILE</span> <span class="n">js</span>
+<span class="n">git</span> <span class="n">add</span> <span class="n">js</span><span class="o">/$</span><span class="n">FILE</span>
+<span class="n">done</span>
 </code></pre></div>
 
 
-<div class="highlight"><pre><span></span><code><span class="o">#</span> <span class="p">.</span><span class="n">git</span><span class="o">/</span><span class="n">hooks</span><span class="o">/</span><span class="n">post</span><span class="o">-</span><span class="k">commit</span>
-<span class="o">#!/</span><span class="n">bin</span><span class="o">/</span><span class="n">sh</span>
-<span class="n">LINKED_DIR</span><span class="o">=/</span><span class="n">Users</span><span class="o">/</span><span class="n">andyreagan</span><span class="o">/</span><span class="k">work</span><span class="o">/</span><span class="mi">2015</span><span class="o">/</span><span class="mi">07</span><span class="o">-</span><span class="n">hedotools</span><span class="o">/</span><span class="n">js</span>
-<span class="n">cd</span> <span class="err">$</span><span class="n">GIT_DIR</span>
-<span class="n">cd</span> <span class="p">..</span><span class="o">/</span><span class="n">js</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .git/hooks/post-commit</span>
+<span class="c1">#!/bin/sh</span>
+<span class="n">LINKED_DIR</span><span class="o">=/</span><span class="n">Users</span><span class="o">/</span><span class="n">andyreagan</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="mi">2015</span><span class="o">/</span><span class="mi">07</span><span class="o">-</span><span class="n">hedotools</span><span class="o">/</span><span class="n">js</span>
+<span class="n">cd</span> <span class="o">$</span><span class="n">GIT_DIR</span>
+<span class="n">cd</span> <span class="o">../</span><span class="n">js</span>
 
-<span class="o">#</span> <span class="n">now</span><span class="p">,</span> <span class="k">copy</span> <span class="n">over</span> <span class="n">the</span> <span class="n">files</span>
-<span class="k">for</span> <span class="n">FILE</span> <span class="k">in</span> <span class="n">d3</span><span class="p">.</span><span class="n">andy</span><span class="p">.</span><span class="n">js</span> <span class="n">hedotools</span><span class="p">.</span><span class="n">init</span><span class="p">.</span><span class="n">js</span> <span class="n">hedotools</span><span class="p">.</span><span class="n">shifter</span><span class="p">.</span><span class="n">js</span> <span class="n">topojson</span><span class="p">.</span><span class="n">js</span> <span class="n">urllib</span><span class="p">.</span><span class="n">js</span>
-<span class="k">do</span>
-<span class="err">\</span><span class="n">rm</span> <span class="err">$</span><span class="n">FILE</span>
-<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="err">$</span><span class="n">LINKED_DIR</span><span class="o">/</span><span class="err">$</span><span class="n">FILE</span> <span class="err">$</span><span class="n">FILE</span>
+<span class="c1"># now, copy over the files</span>
+<span class="k">for</span> <span class="n">FILE</span> <span class="ow">in</span> <span class="n">d3</span><span class="o">.</span><span class="n">andy</span><span class="o">.</span><span class="n">js</span> <span class="n">hedotools</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">js</span> <span class="n">hedotools</span><span class="o">.</span><span class="n">shifter</span><span class="o">.</span><span class="n">js</span> <span class="n">topojson</span><span class="o">.</span><span class="n">js</span> <span class="n">urllib</span><span class="o">.</span><span class="n">js</span>
+<span class="n">do</span>
+\<span class="n">rm</span> <span class="o">$</span><span class="n">FILE</span>
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">$</span><span class="n">LINKED_DIR</span><span class="o">/$</span><span class="n">FILE</span> <span class="o">$</span><span class="n">FILE</span>
 <span class="n">done</span>
 </code></pre></div>
   </div><!-- /.entry-content -->

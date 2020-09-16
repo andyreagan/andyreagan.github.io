@@ -46,22 +46,72 @@
 
 <ol id="post-list">
         <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2020/09/15/observable-with-local-files-and-flask/" rel="bookmark" title="Permalink to Observable with local files and Flask">Observable with local files and Flask</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-09-15T00:00:00+02:00"> Tue 15 September 2020 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>We're relying heavily on <a href="https://observablehq.com/@berkeleyvis">Observable</a> for the most recent edition of Berkeley MIDS W209: Information Visualization.
+While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).
+One of these is relying on locally accessible data …</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2020/09/13/boston-marathon-2020-take-2/" rel="bookmark" title="Permalink to Boston Marathon 2020: Take 2">Boston Marathon 2020: Take 2</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-09-13T00:00:00+02:00"> Sun 13 September 2020 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>The COVID-19 pandemic not only delayed the Boston Marathon until September,
+but cancelled it entirely.
+The organizers moved to a virtual format, and of course, I had to do it.</p>
+<p>On Strava:</p>
+<iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/4053907192/embed/c9bf0ea1cb144408c8fd94db612134f6dacb80d5'></iframe>
+
+<p>And if you don’t get motion sick, and want to hear me complain about running with a …</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
                 <header> <h2 class="entry-title"><a href="/2020/05/29/great-expectations-of-vertica/" rel="bookmark" title="Permalink to Great Expectations of Vertica">Great Expectations of Vertica</a></h2> </header>
                 <footer class="post-info">
                     <abbr class="published" title="2020-05-29T00:00:00+02:00"> Fri 29 May 2020 </abbr>
                 </footer><!-- /.post-info -->
 		<br>
-                <div class="entry-content"> <p>First run Vertica:</p>
-<div class="highlight"><pre><span></span><code><span class="err">docker run -p 5433:5433 -e DATABASE_PASSWORD=&#39;foo123&#39; jbfavre/vertica:9.2.0-7_debian-8</span>
-</code></pre></div>
-
-
-<p>Confirm that you can connect to it, and create a schema called npi_data:</p>
-<div class="highlight"><pre><span></span><code><span class="err">echo &#39;create schema npi_data&#39; | vsql -p 5433 -h localhost -U dbadmin -d docker -w foo123</span>
-</code></pre></div>
-
-
-<p>Now, GE uses Sqlachemy, so let's …</p> </div><!-- /.entry-content -->
+                <div class="entry-content"> <p>Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
+While data validation and such have been compared to Data Science's "janitorial work",
+others argue that it's really part of the analysis.
+Either way,
+I've had enough headaches with analysis being wrong …</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2020/05/29/so-you-want-a-road-bike/" rel="bookmark" title="Permalink to So You Want A Road Bike">So You Want A Road Bike</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-05-29T00:00:00+02:00"> Fri 29 May 2020 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>It's been years since I felt I was "deeply" involved in the cycling world,
+having biked across the country in 2010 and spent most of my college weekends racing or just riding bikes (wow, I graduated almost 8 years ago!).</p>
+<p>That said, some of the things that I remember seem …</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2020/04/20/boston-marathon-2020-from-a-basement-near-you/" rel="bookmark" title="Permalink to Boston Marathon 2020: From a Basement Near You">Boston Marathon 2020: From a Basement Near You</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-04-20T00:00:00+02:00"> Mon 20 April 2020 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>The COVID-19 pandemic has led to the cancellation of most events,
+including the Boston Marathon (which made it through the 1918 flu and 2 world wars).
+Alas, I couldn't let my half-assed training go to "waste",
+so I took to the basement.</p>
+<p>I'd already taken the time off from work …</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2020/02/26/4-years-of-running/" rel="bookmark" title="Permalink to 4 Years of Running">4 Years of Running</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-02-26T00:00:00+01:00"> Wed 26 February 2020 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>Well, somehow I have managed to run 10 minutes every day for the past 4 years.
+It has been a wild adventure for many days, and at times boring.</p>
+<p>Guess I'll just keep running.</p> </div><!-- /.entry-content -->
         </article></li>
         <li class="paper nostyle"><article class="hentry">
                 <header> <h2 class="entry-title"><a href="/2020/01/08/column-level-encryption-on-a-vertica-database/" rel="bookmark" title="Permalink to Column level encryption on a Vertica Database">Column level encryption on a Vertica Database</a></h2> </header>
@@ -114,66 +164,9 @@ and spent the afternoon with my wife and kiddos.</p> </div><!-- /.entry-content 
                 <div class="entry-content"> <p>PR Baby! Boston bound for 2020.</p>
 <iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/2691066468/embed/2e0692df9dc12cf1f22e8c6c538c26950a48ce70'></iframe> </div><!-- /.entry-content -->
         </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2019/08/22/mexico-with-the-boys/" rel="bookmark" title="Permalink to Mexico with the boys">Mexico with the boys</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2019-08-22T00:00:00+02:00"> Thu 22 August 2019 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>Hard to believe,
-but I snuck out of family responsibilities
-and went to Mexico for 5 days for a bachelor party!</p>
-<p>A great time was had.</p> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2019/08/17/exploring-the-science-behind-the-yasso-800/" rel="bookmark" title="Permalink to Exploring the science behind the Yasso 800">Exploring the science behind the Yasso 800</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2019-08-17T00:00:00+02:00"> Sat 17 August 2019 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>If you haven't heard of them,
-<a href="https://www.runnersworld.com/race-training/the-real-history-of-the-yasso-800s">Yasso 800s</a> comprise a infamous running workout that touts itself to predict your marathon time.
-The name was coined by Amby Burfoot,
-paying homage to Runner's World editor Bart Yasso.</p>
-<p>While even Yasso himself has professed <a href="https://www.runnersworld.com/runners-stories/a20810642/yasso-800s-make-no-sense/">he had no idea</a> why the math worked …</p> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2019/07/05/developing-python-on-vertica/" rel="bookmark" title="Permalink to Developing Python on Vertica">Developing Python on Vertica</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2019-07-05T00:00:00+02:00"> Fri 05 July 2019 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>Vertica is a very powerful analytics database,
-and we can easily extend functionality now by building in Python functions.
-This is great and all,
-so here I'll focus on setting up a development environment for building a simple UDx.</p>
-<p>The <a href="https://www.vertica.com/docs/9.2.x/HTML/Content/Authoring/ExtendingVertica/UDx/DevEnvironment.htm">documentation from Vertica</a> is not super specific, so this may …</p> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2019/07/01/wisdom/" rel="bookmark" title="Permalink to Wisdom">Wisdom</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2019-07-01T00:00:00+02:00"> Mon 01 July 2019 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>This month I turn 30 years old and what a wild ride it has been!
-I am very grateful for everyone who has been with me for my journey,
-and am hopeful of many adventures to come.</p> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2019/04/22/welcome-abel-francis/" rel="bookmark" title="Permalink to Welcome Abel Francis">Welcome Abel Francis</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2019-04-22T00:00:00+02:00"> Mon 22 April 2019 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>Abel Francis was born in the afternoon of April 22nd, 2019, at nearly nine pounds!</p>
-<p>Mom and baby are happy and healthy, here's the little man shortly after birth:</p>
-<p><img src="/images/2019-04-22-welcome-abel/20190422_170854.jpg" class="img-responsive"></p>
-<p>Olson loves his little brother, seen here at a little over a month old:</p>
-<p><img src="/images/2019-04-22-welcome-abel/20190527_191950.jpg" class="img-responsive"></p> </div><!-- /.entry-content -->
-        </article></li>
 </ol><!-- /#posts-list -->
 <p class="paginator">
-    Page 1 / 29
+    Page 1 / 30
         <a href="/index2.html">&raquo;</a>
 </p>
 </div>

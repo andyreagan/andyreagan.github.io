@@ -82,8 +82,8 @@ Those are the two steps that require the most bandwidth!</p>
 
 
 <p>Grab the name of the running container from <code>docker ps</code> command, and set it to <code>$DOCKER_NAME</code>, and copy in our Python source:</p>
-<div class="highlight"><pre><span></span><code><span class="err">DOCKER_NAME=suspicious_chatelet</span>
-<span class="err">docker cp Downloads/Python-3.5.1.tgz $DOCKER_NAME:/home/dbadmin/</span>
+<div class="highlight"><pre><span></span><code><span class="n">DOCKER_NAME</span><span class="o">=</span><span class="n">suspicious_chatelet</span>
+<span class="n">docker</span> <span class="n">cp</span> <span class="n">Downloads</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span><span class="mf">3.5</span><span class="o">.</span><span class="mf">1.</span><span class="n">tgz</span> <span class="o">$</span><span class="n">DOCKER_NAME</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">dbadmin</span><span class="o">/</span>
 </code></pre></div>
 
 
@@ -95,7 +95,11 @@ For good measure (i.e., if you copied with the root user) make sure it's owned b
 </code></pre></div>
 
 
-<p>As root, do</p>
+<p>As root,
+install all of the dependencies that you need for Python.
+WARNING: these may not be everything that YOU need
+(see alternative dependencies in an install like <a href="https://gist.github.com/Sunlighter/87bbd2cd80971c7c0d4763ec1b5ea548">this</a>)
+or rely on the <code>python3</code> that is available with the <code>yum</code> installer directly.</p>
 <div class="highlight"><pre><span></span><code><span class="err">yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel</span>
 </code></pre></div>
 
@@ -124,11 +128,11 @@ What is the <code>requirements.txt</code> line? All of the packages that your fu
 just like the requirements file from any python package.</p>
 <p>Finally you should be able to execute the SQL needed to build your function!
 Put your code in <code>myfunction.py</code> and then you can run <code>vsql</code> as dbadmin, and do:</p>
-<div class="highlight"><pre><span></span><code><span class="err">\</span><span class="kt">set</span> <span class="n">libfile</span> <span class="s1">&#39;\&#39;&#39;</span><span class="ss">`pwd`</span><span class="s1">&#39;/myfunction.py\&#39;&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="err">\</span><span class="k">set</span> <span class="n">libfile</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="n">`pwd`</span><span class="s1">&#39;/myfunction.py</span><span class="se">\&#39;</span><span class="s1">&#39;</span>
 <span class="k">DROP</span> <span class="n">LIBRARY</span> <span class="n">mylib</span> <span class="k">CASCADE</span><span class="p">;</span>
 
-<span class="k">CREATE</span> <span class="n">LIBRARY</span> <span class="n">mylib</span> <span class="k">AS</span> <span class="p">:</span><span class="n">libfile</span> <span class="n">DEPENDS</span> <span class="s1">&#39;/home/dbadmin/pyenv/lib/python3.5/site-packages/&#39;</span> <span class="n">LANGUAGE</span> <span class="s1">&#39;Python&#39;</span><span class="p">;</span>
-<span class="k">CREATE</span> <span class="n">FUNCTION</span> <span class="n">myfunction</span> <span class="k">AS</span> <span class="n">NAME</span> <span class="s1">&#39;myfunction_factory&#39;</span> <span class="n">LIBRARY</span> <span class="n">mylib</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="n">LIBRARY</span> <span class="n">mylib</span> <span class="k">AS</span> <span class="o">:</span><span class="n">libfile</span> <span class="n">DEPENDS</span> <span class="s1">&#39;/home/dbadmin/pyenv/lib/python3.5/site-packages/&#39;</span> <span class="k">LANGUAGE</span> <span class="s1">&#39;Python&#39;</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">myfunction</span> <span class="k">AS</span> <span class="k">NAME</span> <span class="s1">&#39;myfunction_factory&#39;</span> <span class="n">LIBRARY</span> <span class="n">mylib</span><span class="p">;</span>
 </code></pre></div>
 
 

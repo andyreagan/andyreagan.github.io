@@ -7,7 +7,12 @@ The organizers moved to a virtual format, and of course, I had to do it.&lt;/p&g
 &lt;p&gt;On Strava:&lt;/p&gt;
 &lt;iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/4053907192/embed/c9bf0ea1cb144408c8fd94db612134f6dacb80d5'&gt;&lt;/iframe&gt;
 
-&lt;p&gt;And if you don’t get motion sick, and want to hear me complain about running with a …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Sun, 13 Sep 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-09-13:/2020/09/13/boston-marathon-2020-take-2/</guid><category>misc</category></item><item><title>Great Expectations of Vertica</title><link>/2020/05/29/great-expectations-of-vertica/</link><description>&lt;p&gt;Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
+&lt;p&gt;And if you don’t get motion sick, and want to hear me complain about running with a …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Sun, 13 Sep 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-09-13:/2020/09/13/boston-marathon-2020-take-2/</guid><category>misc</category></item><item><title>Atom vs RStudio</title><link>/2020/06/08/atom-vs-rstudio/</link><description>&lt;p&gt;Let's talk about workflow.&lt;/p&gt;
+&lt;p&gt;Most R users that I know use RStudio.&lt;/p&gt;
+&lt;p&gt;Most programmers that I know use a text editor like Emacs,
+or use what is embedded into an IDE like PyCharm or IntelliJ.
+https://jstaf.github.io/2018/03/25/atom-ide.html&lt;/p&gt;
+&lt;p&gt;There are some things to like …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Andy Reagan</dc:creator><pubDate>Mon, 08 Jun 2020 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:None,2020-06-08:/2020/06/08/atom-vs-rstudio/</guid><category>misc</category></item><item><title>Great Expectations of Vertica</title><link>/2020/05/29/great-expectations-of-vertica/</link><description>&lt;p&gt;Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
 While data validation and such have been compared to Data Science's "janitorial work",
 others argue that it's really part of the analysis.
 Either way,

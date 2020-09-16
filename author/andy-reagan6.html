@@ -46,6 +46,21 @@
 
 <ol id="post-list">
         <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2015/07/20/make-every-for-loop-parallel-in-julia/" rel="bookmark" title="Permalink to Make every for-loop parallel in Julia">Make every for-loop parallel in Julia</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2015-07-20T00:00:00+02:00"> Mon 20 July 2015 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>If reading the <a href="http://julia.readthedocs.org/">documentation</a> is confusing, making any for-loop into a parallel loop is rediculously easy.
+Just add the parallel macro!
+If it's code that needs to execute before moving on, just pass an operator to to macro.</p>
+<div class="highlight"><pre><span></span><code><span class="c"># non-parallel loop</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">100</span>
+    <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">my_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">some_function …</span></code></pre></div> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
                 <header> <h2 class="entry-title"><a href="/2015/07/09/cross-repository-version-control-using-symbolic-links/" rel="bookmark" title="Permalink to Cross repository version control, using symbolic links">Cross repository version control, using symbolic links</a></h2> </header>
                 <footer class="post-info">
                     <abbr class="published" title="2015-07-09T00:00:00+02:00"> Thu 09 July 2015 </abbr>
@@ -148,16 +163,6 @@ I'm …</p> </div><!-- /.entry-content -->
 <p><img src="/images/2014-10-14-ode-run/odeexam.jpg" class="img-responsive"></p>
 <p>Leg 3:</p>
 <iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='http://www.strava.com/activities/207403240/embed/a45e94e634501143eaab8154cc6feb6930c3e239'></iframe> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2014/10/02/developing-with-hedonometerorg/" rel="bookmark" title="Permalink to Developing with hedonometer.org">Developing with hedonometer.org</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2014-10-02T00:00:00+02:00"> Thu 02 October 2014 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>~This is a draft.~</p>
-<p>Edit: 2019-12-30 this <em>was</em> a draft, I'm just going to publish it.</p>
-<p>Long story short, you'll need to clone the git repository on bitbucket (if you don't have a bitbucket account let me know and I'll move it to github, they're the same kind of thing …</p> </div><!-- /.entry-content -->
         </article></li>
 </ol><!-- /#posts-list -->
 <p class="paginator">

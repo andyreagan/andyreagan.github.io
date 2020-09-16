@@ -239,7 +239,82 @@ The organizers moved to a virtual format, and of course, I had to do it.&lt;/p&g
 &lt;iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/4053907192/embed/c9bf0ea1cb144408c8fd94db612134f6dacb80d5'&gt;&lt;/iframe&gt;
 
 &lt;p&gt;And if you don’t get motion sick, and want to hear me complain about running with a vest, here you go:&lt;/p&gt;
-&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/EEW8Hw3Z8IQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;</content><category term="misc"></category></entry><entry><title>Great Expectations of Vertica</title><link href="/2020/05/29/great-expectations-of-vertica/" rel="alternate"></link><published>2020-05-29T00:00:00+02:00</published><updated>2020-05-29T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-05-29:/2020/05/29/great-expectations-of-vertica/</id><summary type="html">&lt;p&gt;Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/EEW8Hw3Z8IQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;</content><category term="misc"></category></entry><entry><title>Atom vs RStudio</title><link href="/2020/06/08/atom-vs-rstudio/" rel="alternate"></link><published>2020-06-08T00:00:00+02:00</published><updated>2020-06-08T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-06-08:/2020/06/08/atom-vs-rstudio/</id><summary type="html">&lt;p&gt;Let's talk about workflow.&lt;/p&gt;
+&lt;p&gt;Most R users that I know use RStudio.&lt;/p&gt;
+&lt;p&gt;Most programmers that I know use a text editor like Emacs,
+or use what is embedded into an IDE like PyCharm or IntelliJ.
+https://jstaf.github.io/2018/03/25/atom-ide.html&lt;/p&gt;
+&lt;p&gt;There are some things to like …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Let's talk about workflow.&lt;/p&gt;
+&lt;p&gt;Most R users that I know use RStudio.&lt;/p&gt;
+&lt;p&gt;Most programmers that I know use a text editor like Emacs,
+or use what is embedded into an IDE like PyCharm or IntelliJ.
+https://jstaf.github.io/2018/03/25/atom-ide.html&lt;/p&gt;
+&lt;p&gt;There are some things to like about RStudio (especially once you &lt;a href="https://www.r-bloggers.com/a-perfect-rstudio-layout/"&gt;get the layout right&lt;/a&gt;),
+but it's a still a primarily &lt;em&gt;point-and-click&lt;/em&gt; experience.
+I want to be able to do text editor things that should never need a mouse:
+open and close files,
+comment out lines,
+edit many lines of text at the same time.
+At the same time I want to be able to do IDE things without excessive (or any) pointing and clicking around:
+run bits of code,
+run entire scripts,
+view the contents of dataframes,
+find where functions are defined.
+All of this is possible in &lt;strong&gt;Atom using Hydrogen&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Let's run through a few examples of what this looks like in day-to-day use,
+and then I'll share the nitty gritty on getting Atom+Hydrogen set up (it's not &lt;em&gt;quite&lt;/em&gt; as streamlined as just downloading RStudio).&lt;/p&gt;
+&lt;h2&gt;Create a file and start the editor&lt;/h2&gt;
+&lt;p&gt;First, we need a file. Start in the project directory.&lt;/p&gt;
+&lt;h3&gt;Atom&lt;/h3&gt;
+&lt;p&gt;Start Atom with &lt;code&gt;atom .&lt;/code&gt; or jump through the file creation with &lt;code&gt;atom scratch.R&lt;/code&gt;. If you just opened Atom with &lt;code&gt;atom .&lt;/code&gt; (which I usually do), just &lt;code&gt;^x ^f&lt;/code&gt;, type the path (let's just create &lt;code&gt;scratch.R&lt;/code&gt;) and start typing. So far, we've spent a few seconds at the keyboard to create the file and type out &lt;code&gt;x = 10&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;RStudio&lt;/h3&gt;
+&lt;p&gt;We can start RStudio the same way, &lt;code&gt;RStudio .&lt;/code&gt;, and create the new file with &lt;code&gt;Command+N&lt;/code&gt;.
+We can give it the filename by saving, &lt;code&gt;Command+s&lt;/code&gt;. If the file already existed, we'd need to click the Files pane, navigate to it, and click the filename.
+Click on the file, and type in &lt;code&gt;x = 10&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Run code&lt;/h2&gt;
+&lt;p&gt;Now let's go ahead and start running code.&lt;/p&gt;
+&lt;h3&gt;Atom&lt;/h3&gt;
+&lt;p&gt;To start the kernel first: Command+P, start typing "start" and hit enter to &lt;code&gt;Hydrogen: Start Local Kernel&lt;/code&gt;.
+You'll have to hit enter again to select "R" and then boom, you &lt;code&gt;10&lt;/code&gt; printed after.
+You could also just Shift+Enter on the line &lt;code&gt;x=10&lt;/code&gt; and Atom will go ahead and start the kernel for you (you'll still need to hit enter to confirm "R").&lt;/p&gt;
+&lt;h3&gt;RStudio&lt;/h3&gt;
+&lt;p&gt;This is about the same, Shift+Enter and your code runs in "Console" pane.&lt;/p&gt;
+&lt;h2&gt;Write more code&lt;/h2&gt;
+&lt;p&gt;This where RStudio and Atom really get different.
+In Atom, with &lt;code&gt;atomic-emacs&lt;/code&gt;,
+I can do all of the following things from the keyboard:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Grab a block of code to indent, edit in multi-line mode, or comment it out.&lt;ul&gt;
+&lt;li&gt;In Rstudio, you could select with the mouse and use the menu or a keyboard shortcut to comment lines, or auto-indent lines.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Move the cursor forward by whole words, and/or select parts of code this way.&lt;ul&gt;
+&lt;li&gt;Again, this is a point and click in R.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I guess this is really the biggest differentiator for me in Atom:
+the ability to manipulate raw text very quickly and easily,
+without any clicking around or selecting things.
+Making tasks that take 15 seconds only take 3 seconds (like executing a specific part of a line, or block of code) adds up!&lt;/p&gt;
+&lt;h2&gt;Setting up Hydrogen&lt;/h2&gt;
+&lt;p&gt;You still need base R,
+and then to &lt;a href="https://github.com/IRkernel/IRkernel"&gt;install the IRKernel&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In one line:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;Rscript -e &amp;#39;install.packages(&amp;quot;IRkernel&amp;quot;, repos=&amp;quot;http://cran.us.r-project.org&amp;quot;); IRkernel::installspec(name = &amp;quot;ir351&amp;quot;, displayname = &amp;quot;R 3.5.1&amp;quot;);&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install the following Atom packages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;https://atom.io/packages/atom-language-r&lt;/li&gt;
+&lt;li&gt;https://atom.io/packages/hydrogen&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And in the Atom settings for Hydrogen,
+under "language mapping",
+set &lt;code&gt;{"ir351": "R"}&lt;/code&gt;.
+You may not need to set this, I didn't need to, but just in case.&lt;/p&gt;
+&lt;p&gt;Enjoy whichever editor you're using :)&lt;/p&gt;</content><category term="misc"></category></entry><entry><title>Great Expectations of Vertica</title><link href="/2020/05/29/great-expectations-of-vertica/" rel="alternate"></link><published>2020-05-29T00:00:00+02:00</published><updated>2020-05-29T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-05-29:/2020/05/29/great-expectations-of-vertica/</id><summary type="html">&lt;p&gt;Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
 While data validation and such have been compared to Data Science's "janitorial work",
 others argue that it's really part of the analysis.
 Either way,

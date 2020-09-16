@@ -113,7 +113,7 @@ This is probably the simplest solution for development:
 Done! Only the final step is necessary each time you want to use it.
 
 To get started with SSL in any other option,
-first we can generate a local key pair by [following instructions here]().
+first we can generate a local key pair by [following instructions here](https://gist.github.com/cecilemuller/9492b848eb8fe46d462abeb26656c4f8).
 First, I create a file `domains.ext`:
 
     authorityKeyIdentifier=keyid,issuer
@@ -157,11 +157,11 @@ Options for SSL with Python's simple server ([ref](https://blog.anvileight.com/p
 
     httpd.serve_forever()
 
-Or we can switch to using Python [Twisted]():
+Or we can switch to using Python [Twisted](https://twistedmatrix.com/trac/):
 
     twistd -no web --path
     # with SSL
-    twistd -no web --path –https=443 -c cert.pem -k key.pem
+    twistd -no web --path –https=443 -c localhost.crt -k localhost.key
 
 Flask from the CLI:
 
@@ -221,7 +221,7 @@ Or you can run `python hello.py` and set the certs inside the script:
     if __name__ == '__main__':
         app.run(debug=True, ssl_context=('localhost.crt', 'localhost.key'))
 
-# Connect to Observerable
+## Connect to Observable
 
 The last part is just fun now.
 Spin up an Observable notebook,

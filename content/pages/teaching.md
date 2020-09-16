@@ -1,5 +1,23 @@
 Title: Teaching
 
+## Summer 2020 ##
+
+UC Berkeley Data Visualization and Communication (MIDS W209)
+
+</div>
+<div class="paper">
+
+## Spring 2020 ##
+
+UC Berkeley Data Visualization and Communication (MIDS W209).
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">🎉🎉 An amazing collection of the work by my students this past semester at <a href="https://twitter.com/BerkeleyData?ref_src=twsrc%5Etfw">@BerkeleyData</a> 🎉🎉<br><br>I&#39;ll post a few details of each project in a thread here.</p>&mdash; Andy Reagan (@andyreagan) <a href="https://twitter.com/andyreagan/status/1294118281792692224?ref_src=twsrc%5Etfw">August 14, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Amin Fardi, Kirk Duval, and Yuchen Cheng built a tool to explore and better understand how oil curtailment impracts production (with less demand for oil, which wells get shut down to maximize total future extraction?). Demo here: <a href="https://t.co/BzwCKsPSUc">https://t.co/BzwCKsPSUc</a> <a href="https://t.co/ucxIQszaFV">pic.twitter.com/ucxIQszaFV</a></p>&mdash; Andy Reagan (@andyreagan) <a href="https://twitter.com/andyreagan/status/1294120843618942978?ref_src=twsrc%5Etfw">August 14, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">James Wall, Curtis Lin, and Satua Thiruvallur boldly answer the question: which is the greatest generation in the NBA&#39;s history? You&#39;ll have to find out for yourself here: <a href="https://t.co/EZoS10Rggf">https://t.co/EZoS10Rggf</a> <a href="https://t.co/acRQVwobWj">pic.twitter.com/acRQVwobWj</a></p>&mdash; Andy Reagan (@andyreagan) <a href="https://twitter.com/andyreagan/status/1294131037052653570?ref_src=twsrc%5Etfw">August 14, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+</div>
+<div class="paper">
+
 ## Fall 2019 ##
 
 UC Berkeley Data Visualization and Communication (MIDS W209): [course homepage](https://learn.datascience.berkeley.edu)

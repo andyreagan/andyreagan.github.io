@@ -2,7 +2,14 @@ Title: Great Expectations of Vertica
 Author: Andy Reagan
 Date: 2020-05-29
 
-Stuff about why you might want to use a tool like Great Expectations...
+Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
+While data validation and such have been compared to Data Science's "janitorial work",
+others argue that it's really part of the analysis.
+Either way,
+I've had enough headaches with analysis being wrong and pipelines breaking downstream that
+checking data at the source for some basic consistency is worth it.
+The team at GE [has tutorials for file backend and for postgres](https://github.com/superconductive/ge_tutorials),
+so let's try with Vertica via sqlalchemy.
 
 Now, first run Vertica:
 
@@ -59,29 +66,39 @@ and the currently uncommented code below works for [the most recent tutorial](ht
     column_with_dtype_listing = ','.join(['{0} {1}'.format(k, v) for k, v in columns_with_types.items()])
 
     conn_info = {'host': '127.0.0.1',
-         'user': 'dbadmin',
-         'password': 'foo123',
-         'database': 'docker',
-         'use_prepared_statements': False,
-     }
+        'user': 'dbadmin',
+        'password': 'foo123',
+        'database': 'docker',
+        'use_prepared_statements': False,
+    }
 
-     with vertica_python.connect(**conn_info) as connection:
-         cur = connection.cursor()
+    with vertica_python.connect(**conn_info) as connection:
+        cur = connection.cursor()
+        # older table
+        # cur.execute('CREATE TABLE npidata_pfile_20200511_20200517 ({0});'.format(column_with_dtype_listing))
+        # yellowcab table:
+        cur.execute('CREATE TABLE if not exists yellow_tripdata_sample_2019_01 ({0});'.format(column_with_dtype_listing))
+        # copy the schema to a second table (so many ways to do this, just one)
+        cur.execute('SELECT * INTO yellow_tripdata_staging FROM (select * from yellow_tripdata_sample_2019_01 limit 10) x;')
+        # we could have limited to 0 rows, but let's truncate those 10 instead
+        cur.execute('TRUNCATE TABLE yellow_tripdata_staging;')
+        cur.execute("commit;")
+        # with open("data/yellow_tripdata_sample_2019-01.csv", "rb") as f:
+        #     cur.copy("COPY yellow_tripdata_sample_2019_01 ({0}) from stdin DELIMITER ',' ".format(column_name_listing),  f)
+        cur.execute("COPY yellow_tripdata_sample_2019_01 ({0}) from LOCAL '{1}' DELIMITER ',' ".format(column_name_listing, "data/yellow_tripdata_sample_2019-01.csv"))
+        cur.execute("COPY yellow_tripdata_staging ({0}) from LOCAL '{1}' DELIMITER ',' ".format(column_name_listing, "data/yellow_tripdata_sample_2019-02.csv"))
 
-         # older table
-         # cur.execute('CREATE TABLE npidata_pfile_20200511_20200517 ({0});'.format(column_with_dtype_listing))
-         # yellowcab table:
-         cur.execute('CREATE TABLE yellow_tripdata_sample_2019_01 ({0});'.format(column_with_dtype_listing))
-         # copy the schema to a second table (so many ways to do this, just one)
-         cur.execute('SELECT * INTO yellow_tripdata_staging FROM select * from yellow_tripdata_sample_2019_01 limit 10;')
-         # we could have limited to 0 rows, but let's truncate those 10 instead
-         cur.execute('TRUNCATE TABLE yellow_tripdata_staging;')
-         cur.execute("commit;")
-
-         # with open("data/yellow_tripdata_sample_2019-01.csv", "rb") as f:
-         #     cur.copy("COPY yellow_tripdata_sample_2019_01 ({0}) from stdin DELIMITER ',' ".format(column_name_listing),  f)
-         cur.execute("COPY yellow_tripdata_sample_2019_01 ({0}) from LOCAL '{2}' DELIMITER ',' ".format(column_name_listing, "data/yellow_tripdata_sample_2019-01.csv"))
-         cur.execute("COPY yellow_tripdata_staging ({0}) from LOCAL '{2}' DELIMITER ',' ".format(column_name_listing, "data/yellow_tripdata_sample_2019-02.csv"))
+    # spot check that the data looks okay in the database
+    with vertica_python.connect(**conn_info) as connection:
+        cur = connection.cursor()
+        cur.execute('select count(*) from yellow_tripdata_sample_2019_01;')
+        print(cur.fetchall())
+        cur.execute('select count(*) from yellow_tripdata_staging;')
+        print(cur.fetchall())
+        cur.execute('select * from yellow_tripdata_sample_2019_01 limit 1;')
+        print(cur.fetchall())
+        cur.execute('select * from yellow_tripdata_staging limit 1;')
+        print(cur.fetchall())
 
 
 Now we can run through the GE tutorial, using a database.

@@ -22,6 +22,6 @@ I started to overheat about halfway through.
 My wife, Sam, saved me (with encouragement to ask her from Mr Connery!)
 by setting up a big ol' box fan.
 
-Here a few screen grabs from the event:
+Here's the finish where you can sort-of see the distance and time:
 
-
+<img src="/images/2020-04-20-virtual-boston-marathon-1.png" class="img-responsive">

@@ -16,7 +16,6 @@ Then I use the tool `ghp-import` to move content to `master` branch.
 
 Repeat step 4, as necessary.
 
-
 ## Publishing changes
 
 There are two scripts here which will get the job done.
@@ -24,7 +23,7 @@ First the editing, as above:
 
 ```
 git checkout gh-pages
-./generate.sh
+make generate
 ```
 
 and repeat until the site is looking fresh locally.
@@ -37,5 +36,5 @@ Then push the local gh-pages (`git push origin gh-pages`), and local master to g
 The master will be both copied from `content/` and pushed when you run:
 
 ```
-./publish.sh
+make publish
 ```

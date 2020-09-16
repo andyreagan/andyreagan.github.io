@@ -45,14 +45,14 @@ so let's make a API:&lt;/p&gt;
         &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;query_result&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]}&lt;/span&gt;
 
     &lt;span class="c1"&gt;# we just need to return the dict object&lt;/span&gt;
-    &lt;span class="c1"&gt;# flask will return dict objects as json responses&lt;/span&gt;
-    &lt;span class="c1"&gt;# (and turn string returns, like hello_world(), into reponse bodies with default params)&lt;/span&gt;
+    &lt;span class="c1"&gt;# flask will treat returned dict objects as json responses&lt;/span&gt;
+    &lt;span class="c1"&gt;# (flask will treat returned strings, like from hello_world(), as response bodies with default headers and content type)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Cool, now we have an API in Flask.
-In the response hear, it set the &lt;code&gt;Content-Type: application/json&lt;/code&gt; (rather than the standard HTML page of &lt;code&gt;Content-Type: text/html; charset=utf-8&lt;/code&gt;, FWIW I just copied both of those from the Network tab of Chrome's Inspector tool).
+In the response header, it set the &lt;code&gt;Content-Type: application/json&lt;/code&gt; (rather than the standard HTML page type of &lt;code&gt;Content-Type: text/html; charset=utf-8&lt;/code&gt;; FWIW I just copied both of those from the Network tab of Chrome's Inspector tool).
 Of course you could do anything you want inside of &lt;code&gt;api()&lt;/code&gt; or &lt;code&gt;hello_world()&lt;/code&gt; functions,
 like run a &lt;a href="https://www.tensorflow.org/"&gt;Tensorflow model&lt;/a&gt; on some data that was just uploaded via POST request,
 and return the score from the model as an JSON "API" response.&lt;/p&gt;

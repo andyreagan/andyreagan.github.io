@@ -105,7 +105,7 @@ This is probably the simplest solution for development:
 - Run it: &lt;code&gt;ngrok http 8080&lt;/code&gt;, using the port of the service you want to expose.&lt;/p&gt;
 &lt;p&gt;Done! Only the final step is necessary each time you want to use it.&lt;/p&gt;
 &lt;p&gt;To get started with SSL in any other option,
-first we can generate a local key pair by &lt;a href=""&gt;following instructions here&lt;/a&gt;.
+first we can generate a local key pair by &lt;a href="https://gist.github.com/cecilemuller/9492b848eb8fe46d462abeb26656c4f8"&gt;following instructions here&lt;/a&gt;.
 First, I create a file &lt;code&gt;domains.ext&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;authorityKeyIdentifier&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;keyid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;issuer&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;span class="n"&gt;basicConstraints&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nl"&gt;CA&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="k"&gt;FALSE&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
@@ -152,10 +152,10 @@ and always trust this CA.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Or we can switch to using Python &lt;a href=""&gt;Twisted&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;Or we can switch to using Python &lt;a href="https://twistedmatrix.com/trac/"&gt;Twisted&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;twistd -no web --path&lt;/span&gt;
 &lt;span class="err"&gt;# with SSL&lt;/span&gt;
-&lt;span class="err"&gt;twistd -no web --path –https=443 -c cert.pem -k key.pem&lt;/span&gt;
+&lt;span class="err"&gt;twistd -no web --path –https=443 -c localhost.crt -k localhost.key&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
@@ -220,7 +220,7 @@ and run it with the certs passed in.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;Connect to Observerable&lt;/h1&gt;
+&lt;h2&gt;Connect to Observable&lt;/h2&gt;
 &lt;p&gt;The last part is just fun now.
 Spin up an Observable notebook,
 import d3 (&lt;code&gt;d3 = require("d3@6")&lt;/code&gt;),

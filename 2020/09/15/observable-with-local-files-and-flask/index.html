@@ -166,7 +166,7 @@ This is probably the simplest solution for development:
 - Run it: <code>ngrok http 8080</code>, using the port of the service you want to expose.</p>
 <p>Done! Only the final step is necessary each time you want to use it.</p>
 <p>To get started with SSL in any other option,
-first we can generate a local key pair by <a href="">following instructions here</a>.
+first we can generate a local key pair by <a href="https://gist.github.com/cecilemuller/9492b848eb8fe46d462abeb26656c4f8">following instructions here</a>.
 First, I create a file <code>domains.ext</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">authorityKeyIdentifier</span><span class="o">=</span><span class="n">keyid</span><span class="p">,</span><span class="n">issuer</span><span class="w"></span>
 <span class="n">basicConstraints</span><span class="o">=</span><span class="nl">CA</span><span class="p">:</span><span class="k">FALSE</span><span class="w"></span>
@@ -213,10 +213,10 @@ and always trust this CA.</p>
 </code></pre></div>
 
 
-<p>Or we can switch to using Python <a href="">Twisted</a>:</p>
+<p>Or we can switch to using Python <a href="https://twistedmatrix.com/trac/">Twisted</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="err">twistd -no web --path</span>
 <span class="err"># with SSL</span>
-<span class="err">twistd -no web --path –https=443 -c cert.pem -k key.pem</span>
+<span class="err">twistd -no web --path –https=443 -c localhost.crt -k localhost.key</span>
 </code></pre></div>
 
 
@@ -281,7 +281,7 @@ and run it with the certs passed in.</p>
 </code></pre></div>
 
 
-<h1>Connect to Observerable</h1>
+<h2>Connect to Observable</h2>
 <p>The last part is just fun now.
 Spin up an Observable notebook,
 import d3 (<code>d3 = require("d3@6")</code>),

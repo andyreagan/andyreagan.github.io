@@ -47,12 +47,12 @@ so let's make a API:
             d = {'query_result': ['a', 'b', 'c']}
 
         # we just need to return the dict object
-        # flask will return dict objects as json responses
-        # (and turn string returns, like hello_world(), into reponse bodies with default params)
+        # flask will treat returned dict objects as json responses
+        # (flask will treat returned strings, like from hello_world(), as response bodies with default headers and content type)
         return d
 
 Cool, now we have an API in Flask.
-In the response hear, it set the `Content-Type: application/json` (rather than the standard HTML page of `Content-Type: text/html; charset=utf-8`, FWIW I just copied both of those from the Network tab of Chrome's Inspector tool).
+In the response header, it set the `Content-Type: application/json` (rather than the standard HTML page type of `Content-Type: text/html; charset=utf-8`; FWIW I just copied both of those from the Network tab of Chrome's Inspector tool).
 Of course you could do anything you want inside of `api()` or `hello_world()` functions,
 like run a [Tensorflow model](https://www.tensorflow.org/) on some data that was just uploaded via POST request,
 and return the score from the model as an JSON "API" response.

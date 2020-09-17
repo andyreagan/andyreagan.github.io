@@ -126,3 +126,5 @@ In both cases (Cython/Numba),
 you have to be careful about which datatypes you're using (no dicts or pandas!).
 I think that it would be possible to make the Cython + Numpy loop just as fast
 as vectorized numpy if you are [smarter about how to integrate them](https://cython.readthedocs.io/en/latest/src/userguide/memoryviews.html#memoryviews).
+
+All of the code, including the Cython, is available here: [https://github.com/andyreagan/vectorizing-matters](https://github.com/andyreagan/vectorizing-matters).

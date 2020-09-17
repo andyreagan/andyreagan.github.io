@@ -65,20 +65,20 @@
     <p>I come from the world of MATLAB and numerical computing,
 where for loops are shorn and vectors are king.
 During my PhD at UVM,
-Professor Lakoba's Numerical Analysis class was one of the most challenging courses I took
+<a href="http://www.cems.uvm.edu/~tlakoba/">Professor Lakoba</a>'s Numerical Analysis class was one of the most challenging courses I took
 and the deep knowledge of numerical code still sticks with me.
 My favorite example of a vectorization is when a colleague shared his Lorenz 96 code with me,
 after writing a really cool paper about it that footnoted the massive amount of computation involved.
 Well, vectorizing the inner loop was about 4x faster,
 so now the footnote is a just a carbon footprint.</p>
 <p>Fast numerical code is what makes machine learning even possible these days,
-though I'm not sure how many of the kids these days can write a QR decomposition in C.
-I'm kidding, because I don't know how to, but I sure as heck could write it in MATLAB (at one point)
+though I'm not sure how many of the kids these days can write a <a href="https://www.academia.edu/4902724/Numerical_Recipes_in_C_The_Art_of_Scientific_Computing_2nd_Ed_William_H_Press">QR decomposition in C</a>.
+I'm kidding, because I haven't done it, but I sure as heck could write it in MATLAB (at one point)
 or in Numpy or Julia now (I'll stick to just magrittr and dplyr in R).
 A lot of the work I do at MassMutual is fundamentally numerical computation,
 and the difference of a pipeline that takes hours, even minutes from one that takes seconds is a big deal.
 Seconds means we can iterate, try more options, and move faster.
-Still, a lot of numerical code is written in pure Python,
+Still, a lot of numerical code is written in pure Python (no Cython, no Numba),
 for the <em>flexibility</em>.
 I'm going to argue that this is a bad idea!
 Here's a paraphrased email from a colleague:</p>
@@ -138,10 +138,12 @@ Here's the non-vectorized version in Python:</p>
 </code></pre></div>
 
 
-<p>This last one returns a different type of thing,
-a list of dicts...not two arrays.
-We can also import Pandas to stuff results into,
-which gives us one more option for iteration:</p>
+<p>This one above returns a different type of thing,
+a list of dicts...not two arrays.</p>
+<p>We can also import Pandas to stuff results into for all three of the above (so they're consistent outputs, we could save to excel, etc).
+If we have Pandas loaded,
+we could use an empty dataframe for iteration,
+so one more option:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="n">years</span> <span class="o">=</span> <span class="mi">10</span>

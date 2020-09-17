@@ -1,26 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>andy reagan - Andy Reagan</title><link href="/" rel="alternate"></link><link href="/feeds/andy-reagan.atom.xml" rel="self"></link><id>/</id><updated>2020-09-17T00:00:00+02:00</updated><entry><title>Vectorizing code matters</title><link href="/2020/09/17/vectorizing-code-matters/" rel="alternate"></link><published>2020-09-17T00:00:00+02:00</published><updated>2020-09-17T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-17:/2020/09/17/vectorizing-code-matters/</id><summary type="html">&lt;p&gt;I come from the world of MATLAB and numerical computing,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>andy reagan - Andy Reagan</title><link href="/" rel="alternate"></link><link href="/feeds/andy-reagan.atom.xml" rel="self"></link><id>/</id><updated>2020-09-18T00:00:00+02:00</updated><entry><title>Accessing the D3 documentation for older versions</title><link href="/2020/09/18/accessing-the-d3-documentation-for-older-versions/" rel="alternate"></link><published>2020-09-18T00:00:00+02:00</published><updated>2020-09-18T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-18:/2020/09/18/accessing-the-d3-documentation-for-older-versions/</id><summary type="html">&lt;p&gt;D3 moves fast:&lt;/p&gt;
+&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;Whew, D3 6.0 is out! Here are the detailed release notes, hot off the press. 😅 &lt;a href="https://t.co/XJMBHvoNG0"&gt;https://t.co/XJMBHvoNG0&lt;/a&gt;&lt;/p&gt;&amp;mdash; Mike Bostock (@mbostock) &lt;a href="https://twitter.com/mbostock/status/1299025739807784960?ref_src=twsrc%5Etfw"&gt;August 27, 2020&lt;/a&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;I try to keep up, but inevitably have lots of production code,
+tutorials,
+and examples still in older versions (the biggest …&lt;/p&gt;</summary><content type="html">&lt;p&gt;D3 moves fast:&lt;/p&gt;
+&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;Whew, D3 6.0 is out! Here are the detailed release notes, hot off the press. 😅 &lt;a href="https://t.co/XJMBHvoNG0"&gt;https://t.co/XJMBHvoNG0&lt;/a&gt;&lt;/p&gt;&amp;mdash; Mike Bostock (@mbostock) &lt;a href="https://twitter.com/mbostock/status/1299025739807784960?ref_src=twsrc%5Etfw"&gt;August 27, 2020&lt;/a&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;/p&gt;
+&lt;p&gt;I try to keep up, but inevitably have lots of production code,
+tutorials,
+and examples still in older versions (the biggest project I maintain, &lt;a href="https://hedonometer.org/timeseries/en_all/"&gt;hedonometer.org&lt;/a&gt;, is on v3...eek!).
+Keeping all of that running would be impossible without the documentation for that code,
+and thankfully we can still access everything because of how well the D3 team uses git, git tags, and the GitHub releases feature.&lt;/p&gt;
+&lt;p&gt;You can access any older, or the current version of d3 itself through npmjs, &lt;a href="https://www.npmjs.com/package/d3/v/4.13.0"&gt;here’s the link to v4.13&lt;/a&gt;.
+The instructions there show you how to use that version through npm, through cdnjs, etc.&lt;/p&gt;
+&lt;p&gt;D3 itself, if you've made it this far you know, is a collection of submodules.
+The main repository on GitHub is: &lt;a href="https://github.com/d3/d3"&gt;https://github.com/d3/d3&lt;/a&gt;.
+This bundles most, but not all, of the submodules (notes on how to add additional modules are in the npmjs instruction above and in the readme on the GitHub).&lt;/p&gt;
+&lt;p&gt;For accessing the older version of d3 on GitHub, you can click on the “tags” button, and scroll back to version &lt;code&gt;v4.13&lt;/code&gt;, you’ll end up on this link to the tag itself: &lt;a href="https://github.com/d3/d3/releases/tag/v4.13.0"&gt;https://github.com/d3/d3/releases/tag/v4.13.0&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you go from there to click on the commit tag (it looks like &lt;code&gt;dd87262&lt;/code&gt;), you’ll be here: &lt;a href="https://github.com/d3/d3/commit/dd8726223d70fd13056ba3e967c1f748928fb2cf"&gt;https://github.com/d3/d3/commit/dd87262...&lt;/a&gt;
+and then you can click “browse files” to get back to the main repo pack at that specific release commit: &lt;a href="https://github.com/d3/d3/tree/dd8726223d70fd13056ba3e967c1f748928fb2cf"&gt;https://github.com/d3/d3/tree/dd87262...&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;From that version of the repo, you can access the API doc by clicking on the &lt;code&gt;API.md&lt;/code&gt; file, so that’s the docs for &lt;code&gt;v4.13&lt;/code&gt;!
+If you didn’t follow all of the clicks, here it is: &lt;a href="https://github.com/d3/d3/blob/dd8726223d70fd13056ba3e967c1f748928fb2cf/API.md"&gt;https://github.com/d3/d3/blob/dd87262/API.md&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now, some of the references in there refer you to the submodules, like clicking &lt;code&gt;d3.selection&lt;/code&gt;, it will send you here: &lt;a href="https://github.com/d3/d3-selection/blob/master/README.md#selection"&gt;https://github.com/d3/d3-selection/blob/master/README.md#selection&lt;/a&gt;.
+Well, damn, that’s the latest release of &lt;code&gt;d3-selection&lt;/code&gt;, not the one bundled in d3 &lt;code&gt;v4.13&lt;/code&gt;.
+But not to worry,
+back on the main repo pack for the v4.13 commit,
+navigate to the &lt;code&gt;index.js&lt;/code&gt; file and you’ll see all of the pinned dependencies.
+For &lt;code&gt;d3-selection&lt;/code&gt;, it’s this line:
+&lt;a href="https://github.com/d3/d3/blob/dd8726223d70fd13056ba3e967c1f748928fb2cf/package.json#L66"&gt;https://github.com/d3/d3/blob/dd87262/package.json#L66&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Phew,
+now on the &lt;code&gt;d3-selection&lt;/code&gt; repo,
+you can follow the same steps:
+- Go to tags,
+- scroll to version &lt;code&gt;1.3.0&lt;/code&gt;,
+- click that one,
+- click the commit tag,
+- click browse files.
+You’re back at &lt;code&gt;v1.3.0&lt;/code&gt; of &lt;code&gt;d3-selection&lt;/code&gt; with the code and documentation as it was when &lt;code&gt;v1.3.0&lt;/code&gt; was released.&lt;/p&gt;
+&lt;p&gt;A bit of a saga, but in short you can find any version of d3,
+the submodules,
+and their documentation through GitHub.
+It’s a good exercise in getting familiar with tagging releases with git
+(&lt;code&gt;git tag v0.0.1; git push origin --tags;&lt;/code&gt;),
+just how powerful that can be if done right,
+and navigating around GitHub.&lt;/p&gt;</content><category term="misc"></category></entry><entry><title>Vectorizing code matters</title><link href="/2020/09/17/vectorizing-code-matters/" rel="alternate"></link><published>2020-09-17T00:00:00+02:00</published><updated>2020-09-17T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-17:/2020/09/17/vectorizing-code-matters/</id><summary type="html">&lt;p&gt;I come from the world of MATLAB and numerical computing,
 where for loops are shorn and vectors are king.
 During my PhD at UVM,
-Professor Lakoba's Numerical Analysis class was one of the most challenging courses I took
-and the deep knowledge of numerical code still sticks with me.
-My …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I come from the world of MATLAB and numerical computing,
+&lt;a href="http://www.cems.uvm.edu/~tlakoba/"&gt;Professor Lakoba&lt;/a&gt;'s Numerical Analysis class was one of the most challenging courses I took
+and the deep knowledge of numerical code still sticks with me …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I come from the world of MATLAB and numerical computing,
 where for loops are shorn and vectors are king.
 During my PhD at UVM,
-Professor Lakoba's Numerical Analysis class was one of the most challenging courses I took
+&lt;a href="http://www.cems.uvm.edu/~tlakoba/"&gt;Professor Lakoba&lt;/a&gt;'s Numerical Analysis class was one of the most challenging courses I took
 and the deep knowledge of numerical code still sticks with me.
 My favorite example of a vectorization is when a colleague shared his Lorenz 96 code with me,
 after writing a really cool paper about it that footnoted the massive amount of computation involved.
 Well, vectorizing the inner loop was about 4x faster,
 so now the footnote is a just a carbon footprint.&lt;/p&gt;
 &lt;p&gt;Fast numerical code is what makes machine learning even possible these days,
-though I'm not sure how many of the kids these days can write a QR decomposition in C.
-I'm kidding, because I don't know how to, but I sure as heck could write it in MATLAB (at one point)
+though I'm not sure how many of the kids these days can write a &lt;a href="https://www.academia.edu/4902724/Numerical_Recipes_in_C_The_Art_of_Scientific_Computing_2nd_Ed_William_H_Press"&gt;QR decomposition in C&lt;/a&gt;.
+I'm kidding, because I haven't done it, but I sure as heck could write it in MATLAB (at one point)
 or in Numpy or Julia now (I'll stick to just magrittr and dplyr in R).
 A lot of the work I do at MassMutual is fundamentally numerical computation,
 and the difference of a pipeline that takes hours, even minutes from one that takes seconds is a big deal.
 Seconds means we can iterate, try more options, and move faster.
-Still, a lot of numerical code is written in pure Python,
+Still, a lot of numerical code is written in pure Python (no Cython, no Numba),
 for the &lt;em&gt;flexibility&lt;/em&gt;.
 I'm going to argue that this is a bad idea!
 Here's a paraphrased email from a colleague:&lt;/p&gt;
@@ -80,10 +126,12 @@ Here's the non-vectorized version in Python:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;This last one returns a different type of thing,
-a list of dicts...not two arrays.
-We can also import Pandas to stuff results into,
-which gives us one more option for iteration:&lt;/p&gt;
+&lt;p&gt;This one above returns a different type of thing,
+a list of dicts...not two arrays.&lt;/p&gt;
+&lt;p&gt;We can also import Pandas to stuff results into for all three of the above (so they're consistent outputs, we could save to excel, etc).
+If we have Pandas loaded,
+we could use an empty dataframe for iteration,
+so one more option:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="n"&gt;years&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;

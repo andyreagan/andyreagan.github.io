@@ -168,62 +168,95 @@ this is what we get:</p>
 <th align="left">vectorized</th>
 <th align="left">return_type</th>
 <th align="left">iterate_type</th>
-<th align="right">time</th>
+<th align="left">time</th>
 <th align="right">slowdown</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td align="left">True</td>
-<td align="left">native</td>
+<td align="left">numpy</td>
 <td align="left">--</td>
-<td align="right">0.0626053</td>
+<td align="left">0.607289</td>
 <td align="right">1</td>
 </tr>
 <tr>
 <td align="left">False</td>
-<td align="left">native</td>
 <td align="left">numpy</td>
-<td align="right">1.58186</td>
+<td align="left">numpy</td>
+<td align="left">15.2983</td>
 <td align="right">25</td>
 </tr>
 <tr>
 <td align="left">False</td>
-<td align="left">native</td>
+<td align="left">list(dict)</td>
 <td align="left">dict</td>
-<td align="right">0.928074</td>
-<td align="right">14</td>
+<td align="left">9.2112</td>
+<td align="right">15</td>
 </tr>
 <tr>
 <td align="left">True</td>
 <td align="left">pandas</td>
 <td align="left">--</td>
-<td align="right">3.17171</td>
-<td align="right">50</td>
+<td align="left">37.8838</td>
+<td align="right">62</td>
 </tr>
 <tr>
 <td align="left">False</td>
 <td align="left">pandas</td>
 <td align="left">numpy</td>
-<td align="right">4.43196</td>
-<td align="right">70</td>
+<td align="left">47.0335</td>
+<td align="right">77</td>
 </tr>
 <tr>
 <td align="left">False</td>
 <td align="left">pandas</td>
 <td align="left">dict</td>
-<td align="right">148.113</td>
-<td align="right">2365</td>
+<td align="left">1717.72</td>
+<td align="right">2828</td>
 </tr>
 <tr>
 <td align="left">False</td>
 <td align="left">pandas</td>
 <td align="left">pandas</td>
-<td align="right">6.42774</td>
-<td align="right">102</td>
+<td align="left">77.5634</td>
+<td align="right">127</td>
+</tr>
+<tr>
+<td align="left">False</td>
+<td align="left">list</td>
+<td align="left">list</td>
+<td align="left">1.80763</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td align="left">False</td>
+<td align="left">numpy</td>
+<td align="left">numpy</td>
+<td align="left">14.6285</td>
+<td align="right">24</td>
+</tr>
+<tr>
+<td align="left">False</td>
+<td align="left">list</td>
+<td align="left">c array</td>
+<td align="left">0.663318</td>
+<td align="right">1</td>
 </tr>
 </tbody>
 </table>
+<h2>Addendum</h2>
+<p>I also add a few <a href="https://cython.readthedocs.io/en/latest/src/tutorial/cython_tutorial.html">Cython</a> versions of the code,
+showing that you can get vectorized performance without numpy,
+by using C.
+This might indeed strike the best balance between readability (keep the for-loop!) and
+speed.</p>
+<p>Numba may also retain the same speedups (it may be as fast as Cython/Vectorized Numpy).
+In both cases (Cython/Numba),
+you have to be careful about which datatypes you're using (no dicts or pandas!).
+I think that it would be possible to make the Cython + Numpy loop just as fast
+as vectorized numpy if you are <a href="https://cython.readthedocs.io/en/latest/src/userguide/memoryviews.html#memoryviews">smarter about how to integrate them</a>.</p>
+<p>All of the code, including the Cython, is available here: <a href="https://github.com/andyreagan/vectorizing-matters">https://github.com/andyreagan/vectorizing-matters</a>.</p>
   </div><!-- /.entry-content -->
       </div>
       </div>      

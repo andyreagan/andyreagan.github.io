@@ -156,62 +156,95 @@ this is what we get:&lt;/p&gt;
 &lt;th align="left"&gt;vectorized&lt;/th&gt;
 &lt;th align="left"&gt;return_type&lt;/th&gt;
 &lt;th align="left"&gt;iterate_type&lt;/th&gt;
-&lt;th align="right"&gt;time&lt;/th&gt;
+&lt;th align="left"&gt;time&lt;/th&gt;
 &lt;th align="right"&gt;slowdown&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td align="left"&gt;True&lt;/td&gt;
-&lt;td align="left"&gt;native&lt;/td&gt;
+&lt;td align="left"&gt;numpy&lt;/td&gt;
 &lt;td align="left"&gt;--&lt;/td&gt;
-&lt;td align="right"&gt;0.0626053&lt;/td&gt;
+&lt;td align="left"&gt;0.607289&lt;/td&gt;
 &lt;td align="right"&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td align="left"&gt;False&lt;/td&gt;
-&lt;td align="left"&gt;native&lt;/td&gt;
 &lt;td align="left"&gt;numpy&lt;/td&gt;
-&lt;td align="right"&gt;1.58186&lt;/td&gt;
+&lt;td align="left"&gt;numpy&lt;/td&gt;
+&lt;td align="left"&gt;15.2983&lt;/td&gt;
 &lt;td align="right"&gt;25&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td align="left"&gt;False&lt;/td&gt;
-&lt;td align="left"&gt;native&lt;/td&gt;
+&lt;td align="left"&gt;list(dict)&lt;/td&gt;
 &lt;td align="left"&gt;dict&lt;/td&gt;
-&lt;td align="right"&gt;0.928074&lt;/td&gt;
-&lt;td align="right"&gt;14&lt;/td&gt;
+&lt;td align="left"&gt;9.2112&lt;/td&gt;
+&lt;td align="right"&gt;15&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td align="left"&gt;True&lt;/td&gt;
 &lt;td align="left"&gt;pandas&lt;/td&gt;
 &lt;td align="left"&gt;--&lt;/td&gt;
-&lt;td align="right"&gt;3.17171&lt;/td&gt;
-&lt;td align="right"&gt;50&lt;/td&gt;
+&lt;td align="left"&gt;37.8838&lt;/td&gt;
+&lt;td align="right"&gt;62&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td align="left"&gt;False&lt;/td&gt;
 &lt;td align="left"&gt;pandas&lt;/td&gt;
 &lt;td align="left"&gt;numpy&lt;/td&gt;
-&lt;td align="right"&gt;4.43196&lt;/td&gt;
-&lt;td align="right"&gt;70&lt;/td&gt;
+&lt;td align="left"&gt;47.0335&lt;/td&gt;
+&lt;td align="right"&gt;77&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td align="left"&gt;False&lt;/td&gt;
 &lt;td align="left"&gt;pandas&lt;/td&gt;
 &lt;td align="left"&gt;dict&lt;/td&gt;
-&lt;td align="right"&gt;148.113&lt;/td&gt;
-&lt;td align="right"&gt;2365&lt;/td&gt;
+&lt;td align="left"&gt;1717.72&lt;/td&gt;
+&lt;td align="right"&gt;2828&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td align="left"&gt;False&lt;/td&gt;
 &lt;td align="left"&gt;pandas&lt;/td&gt;
 &lt;td align="left"&gt;pandas&lt;/td&gt;
-&lt;td align="right"&gt;6.42774&lt;/td&gt;
-&lt;td align="right"&gt;102&lt;/td&gt;
+&lt;td align="left"&gt;77.5634&lt;/td&gt;
+&lt;td align="right"&gt;127&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;False&lt;/td&gt;
+&lt;td align="left"&gt;list&lt;/td&gt;
+&lt;td align="left"&gt;list&lt;/td&gt;
+&lt;td align="left"&gt;1.80763&lt;/td&gt;
+&lt;td align="right"&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;False&lt;/td&gt;
+&lt;td align="left"&gt;numpy&lt;/td&gt;
+&lt;td align="left"&gt;numpy&lt;/td&gt;
+&lt;td align="left"&gt;14.6285&lt;/td&gt;
+&lt;td align="right"&gt;24&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;False&lt;/td&gt;
+&lt;td align="left"&gt;list&lt;/td&gt;
+&lt;td align="left"&gt;c array&lt;/td&gt;
+&lt;td align="left"&gt;0.663318&lt;/td&gt;
+&lt;td align="right"&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;</content><category term="misc"></category></entry><entry><title>Observable with local files and Flask</title><link href="/2020/09/15/observable-with-local-files-and-flask/" rel="alternate"></link><published>2020-09-15T00:00:00+02:00</published><updated>2020-09-15T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-15:/2020/09/15/observable-with-local-files-and-flask/</id><summary type="html">&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
+&lt;/table&gt;
+&lt;h2&gt;Addendum&lt;/h2&gt;
+&lt;p&gt;I also add a few &lt;a href="https://cython.readthedocs.io/en/latest/src/tutorial/cython_tutorial.html"&gt;Cython&lt;/a&gt; versions of the code,
+showing that you can get vectorized performance without numpy,
+by using C.
+This might indeed strike the best balance between readability (keep the for-loop!) and
+speed.&lt;/p&gt;
+&lt;p&gt;Numba may also retain the same speedups (it may be as fast as Cython/Vectorized Numpy).
+In both cases (Cython/Numba),
+you have to be careful about which datatypes you're using (no dicts or pandas!).
+I think that it would be possible to make the Cython + Numpy loop just as fast
+as vectorized numpy if you are &lt;a href="https://cython.readthedocs.io/en/latest/src/userguide/memoryviews.html#memoryviews"&gt;smarter about how to integrate them&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;All of the code, including the Cython, is available here: &lt;a href="https://github.com/andyreagan/vectorizing-matters"&gt;https://github.com/andyreagan/vectorizing-matters&lt;/a&gt;.&lt;/p&gt;</content><category term="misc"></category></entry><entry><title>Observable with local files and Flask</title><link href="/2020/09/15/observable-with-local-files-and-flask/" rel="alternate"></link><published>2020-09-15T00:00:00+02:00</published><updated>2020-09-15T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-15:/2020/09/15/observable-with-local-files-and-flask/</id><summary type="html">&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
 While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).
 One of these is relying on locally accessible data …&lt;/p&gt;</summary><content type="html">&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
 While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).

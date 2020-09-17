@@ -101,11 +101,28 @@ this is what we get:
 <style>td, th { padding-left: 15px; }</style>
 
 | vectorized   | return_type   | iterate_type   |        time |   slowdown |
-|:-------------|:--------------|:---------------|------------:|-----------:|
-| True         | native        | --             |   0.0626053 |          1 |
-| False        | native        | numpy          |   1.58186   |         25 |
-| False        | native        | dict           |   0.928074  |         14 |
-| True         | pandas        | --             |   3.17171   |         50 |
-| False        | pandas        | numpy          |   4.43196   |         70 |
-| False        | pandas        | dict           | 148.113     |       2365 |
-| False        | pandas        | pandas         |   6.42774   |        102 |
+|:-------------|:--------------|:---------------|:------------|-----------:|
+| True         | numpy         | --             |    0.607289 |          1 |
+| False        | numpy         | numpy          |   15.2983   |         25 |
+| False        | list(dict)    | dict           |    9.2112   |         15 |
+| True         | pandas        | --             |   37.8838   |         62 |
+| False        | pandas        | numpy          |   47.0335   |         77 |
+| False        | pandas        | dict           | 1717.72     |       2828 |
+| False        | pandas        | pandas         |   77.5634   |        127 |
+| False        | list          | list           |    1.80763  |          2 |
+| False        | numpy         | numpy          |   14.6285   |         24 |
+| False        | list          | c array        |    0.663318 |          1 |
+
+## Addendum
+
+I also add a few [Cython](https://cython.readthedocs.io/en/latest/src/tutorial/cython_tutorial.html) versions of the code,
+showing that you can get vectorized performance without numpy,
+by using C.
+This might indeed strike the best balance between readability (keep the for-loop!) and
+speed.
+
+Numba may also retain the same speedups (it may be as fast as Cython/Vectorized Numpy).
+In both cases (Cython/Numba),
+you have to be careful about which datatypes you're using (no dicts or pandas!).
+I think that it would be possible to make the Cython + Numpy loop just as fast
+as vectorized numpy if you are [smarter about how to integrate them](https://cython.readthedocs.io/en/latest/src/userguide/memoryviews.html#memoryviews).

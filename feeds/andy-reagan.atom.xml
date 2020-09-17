@@ -1,5 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>andy reagan - Andy Reagan</title><link href="/" rel="alternate"></link><link href="/feeds/andy-reagan.atom.xml" rel="self"></link><id>/</id><updated>2020-09-15T00:00:00+02:00</updated><entry><title>Observable with local files and Flask</title><link href="/2020/09/15/observable-with-local-files-and-flask/" rel="alternate"></link><published>2020-09-15T00:00:00+02:00</published><updated>2020-09-15T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-15:/2020/09/15/observable-with-local-files-and-flask/</id><summary type="html">&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>andy reagan - Andy Reagan</title><link href="/" rel="alternate"></link><link href="/feeds/andy-reagan.atom.xml" rel="self"></link><id>/</id><updated>2020-09-17T00:00:00+02:00</updated><entry><title>Vectorizing code matters</title><link href="/2020/09/17/vectorizing-code-matters/" rel="alternate"></link><published>2020-09-17T00:00:00+02:00</published><updated>2020-09-17T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-17:/2020/09/17/vectorizing-code-matters/</id><summary type="html">&lt;p&gt;I come from the world of MATLAB and numerical computing,
+where for loops are shorn and vectors are king.
+During my PhD at UVM,
+Professor Lakoba's Numerical Analysis class was one of the most challenging courses I took
+and the deep knowledge of numerical code still sticks with me.
+My …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I come from the world of MATLAB and numerical computing,
+where for loops are shorn and vectors are king.
+During my PhD at UVM,
+Professor Lakoba's Numerical Analysis class was one of the most challenging courses I took
+and the deep knowledge of numerical code still sticks with me.
+My favorite example of a vectorization is when a colleague shared his Lorenz 96 code with me,
+after writing a really cool paper about it that footnoted the massive amount of computation involved.
+Well, vectorizing the inner loop was about 4x faster,
+so now the footnote is a just a carbon footprint.&lt;/p&gt;
+&lt;p&gt;Fast numerical code is what makes machine learning even possible these days,
+though I'm not sure how many of the kids these days can write a QR decomposition in C.
+I'm kidding, because I don't know how to, but I sure as heck could write it in MATLAB (at one point)
+or in Numpy or Julia now (I'll stick to just magrittr and dplyr in R).
+A lot of the work I do at MassMutual is fundamentally numerical computation,
+and the difference of a pipeline that takes hours, even minutes from one that takes seconds is a big deal.
+Seconds means we can iterate, try more options, and move faster.
+Still, a lot of numerical code is written in pure Python,
+for the &lt;em&gt;flexibility&lt;/em&gt;.
+I'm going to argue that this is a bad idea!
+Here's a paraphrased email from a colleague:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In pseudocode, this is the 'actuarial' coding dilemma I ran into months back:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;EOM = 0&lt;/span&gt;
+&lt;span class="err"&gt;for months in years:&lt;/span&gt;
+&lt;span class="err"&gt;    PREM = 50&lt;/span&gt;
+&lt;span class="err"&gt;    BOM = EOM + PREM&lt;/span&gt;
+&lt;span class="err"&gt;    WIT = 5&lt;/span&gt;
+&lt;span class="err"&gt;    EOM = BOM – WIT&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;A simple example, but I think shows the BOM/EOM interdependence (there are a few other variables with a similar relationship.)
+You can’t vectorize BOM without knowing EOM, and you can’t vectorize EOM until you know BOM.
+Then you might have situations where IF WIT &amp;gt; 0 , PREM = 0.
+Basically a lot of inter-dependence emerges.
+Now a lot of the function is not appear easily vectorizable.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Well, I can vectorize this, and I did.
+Here's the non-vectorized version in Python:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="n"&gt;years&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
+&lt;span class="n"&gt;bom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="kp"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;years&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;eom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="kp"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;years&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;month&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;years&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;prem&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
+    &lt;span class="n"&gt;bom&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;month&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;eom&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;month&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;prem&lt;/span&gt;
+    &lt;span class="n"&gt;wit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;
+    &lt;span class="n"&gt;eom&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;month&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bom&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;month&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;wit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And here's the vectorized version:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="n"&gt;years&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
+&lt;span class="n"&gt;prem&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
+&lt;span class="n"&gt;wit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;
+
+&lt;span class="n"&gt;eom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="kp"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;years&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;prem&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="kp"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;years&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;wit&lt;/span&gt;
+&lt;span class="c1"&gt;# and if you still want bom as an array:&lt;/span&gt;
+&lt;span class="n"&gt;bom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;eom&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="kp"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;years&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;wit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I also wrote the for-loop even more flexibly (read: as slow as I could think to) by using a list of dicts:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;years = 10&lt;/span&gt;
+&lt;span class="err"&gt;prem = 50&lt;/span&gt;
+&lt;span class="err"&gt;wit = 5&lt;/span&gt;
+&lt;span class="err"&gt;result = [{&amp;#39;bom&amp;#39;: 0, &amp;#39;eom&amp;#39;: 0}]&lt;/span&gt;
+&lt;span class="err"&gt;for month in range(1, years*12):&lt;/span&gt;
+&lt;span class="err"&gt;    inner = {}&lt;/span&gt;
+&lt;span class="err"&gt;    inner.update({&amp;#39;bom&amp;#39;: result[month-1][&amp;#39;eom&amp;#39;] + prem})&lt;/span&gt;
+&lt;span class="err"&gt;    inner.update({&amp;#39;eom&amp;#39;: inner[&amp;#39;bom&amp;#39;] - wit})&lt;/span&gt;
+&lt;span class="err"&gt;    result.append(inner)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This last one returns a different type of thing,
+a list of dicts...not two arrays.
+We can also import Pandas to stuff results into,
+which gives us one more option for iteration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="n"&gt;years&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
+&lt;span class="n"&gt;prem&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
+&lt;span class="n"&gt;wit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bom&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="kp"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;years&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;eom&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="kp"&gt;zeros&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;years&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;)})&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;iterrows&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;eom&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;eom&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bom&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;wit&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;With all of those types of iteration,
+and with the the option to return a dataframe as the result,
+this is what we get:&lt;/p&gt;
+&lt;style&gt;td, th { padding-left: 15px; }&lt;/style&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align="left"&gt;vectorized&lt;/th&gt;
+&lt;th align="left"&gt;return_type&lt;/th&gt;
+&lt;th align="left"&gt;iterate_type&lt;/th&gt;
+&lt;th align="right"&gt;time&lt;/th&gt;
+&lt;th align="right"&gt;slowdown&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;True&lt;/td&gt;
+&lt;td align="left"&gt;native&lt;/td&gt;
+&lt;td align="left"&gt;--&lt;/td&gt;
+&lt;td align="right"&gt;0.0626053&lt;/td&gt;
+&lt;td align="right"&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;False&lt;/td&gt;
+&lt;td align="left"&gt;native&lt;/td&gt;
+&lt;td align="left"&gt;numpy&lt;/td&gt;
+&lt;td align="right"&gt;1.58186&lt;/td&gt;
+&lt;td align="right"&gt;25&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;False&lt;/td&gt;
+&lt;td align="left"&gt;native&lt;/td&gt;
+&lt;td align="left"&gt;dict&lt;/td&gt;
+&lt;td align="right"&gt;0.928074&lt;/td&gt;
+&lt;td align="right"&gt;14&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;True&lt;/td&gt;
+&lt;td align="left"&gt;pandas&lt;/td&gt;
+&lt;td align="left"&gt;--&lt;/td&gt;
+&lt;td align="right"&gt;3.17171&lt;/td&gt;
+&lt;td align="right"&gt;50&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;False&lt;/td&gt;
+&lt;td align="left"&gt;pandas&lt;/td&gt;
+&lt;td align="left"&gt;numpy&lt;/td&gt;
+&lt;td align="right"&gt;4.43196&lt;/td&gt;
+&lt;td align="right"&gt;70&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;False&lt;/td&gt;
+&lt;td align="left"&gt;pandas&lt;/td&gt;
+&lt;td align="left"&gt;dict&lt;/td&gt;
+&lt;td align="right"&gt;148.113&lt;/td&gt;
+&lt;td align="right"&gt;2365&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;False&lt;/td&gt;
+&lt;td align="left"&gt;pandas&lt;/td&gt;
+&lt;td align="left"&gt;pandas&lt;/td&gt;
+&lt;td align="right"&gt;6.42774&lt;/td&gt;
+&lt;td align="right"&gt;102&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</content><category term="misc"></category></entry><entry><title>Observable with local files and Flask</title><link href="/2020/09/15/observable-with-local-files-and-flask/" rel="alternate"></link><published>2020-09-15T00:00:00+02:00</published><updated>2020-09-15T00:00:00+02:00</updated><author><name>Andy Reagan</name></author><id>tag:None,2020-09-15:/2020/09/15/observable-with-local-files-and-flask/</id><summary type="html">&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
 While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).
 One of these is relying on locally accessible data …&lt;/p&gt;</summary><content type="html">&lt;p&gt;We're relying heavily on &lt;a href="https://observablehq.com/@berkeleyvis"&gt;Observable&lt;/a&gt; for the most recent edition of Berkeley MIDS W209: Information Visualization.
 While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).

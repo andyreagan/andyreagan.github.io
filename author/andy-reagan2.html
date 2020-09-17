@@ -46,6 +46,21 @@
 
 <ol id="post-list">
         <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2019/11/01/2019-nyc-marathon/" rel="bookmark" title="Permalink to 2019 NYC Marathon">2019 NYC Marathon</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2019-11-01T00:00:00+01:00"> Fri 01 November 2019 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>Long story stort:
+I didn't run.</p>
+<p>In the spirit of sharing both successes and failures,
+I overcommitted personally
+and opted to skip the run.
+Instead,
+I drove past NYC
+and spent the afternoon with my wife and kiddos.</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
                 <header> <h2 class="entry-title"><a href="/2019/09/08/presque-isle-marathon/" rel="bookmark" title="Permalink to Presque Isle Marathon">Presque Isle Marathon</a></h2> </header>
                 <footer class="post-info">
                     <abbr class="published" title="2019-09-08T00:00:00+02:00"> Sun 08 September 2019 </abbr>
@@ -147,22 +162,6 @@ The defaults try to "complete" words from your writing, and don't highlight spel
 After many months of using a code editor to write,
 it's clear that I've gone backwards and I should at least be using spell checking!</p>
 <p>These two settings vastly improve the latex …</p> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2018/05/29/tricks-for-coercing-pandas-into-parquet/" rel="bookmark" title="Permalink to Tricks for coercing Pandas into parquet">Tricks for coercing Pandas into parquet</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2018-05-29T00:00:00+02:00"> Tue 29 May 2018 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>For coercing pandas date times (stored as numpy datetime):</p>
-<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;&lt;M8[ns]&#39;</span><span class="p">)]:</span>
-    <span class="c1"># https://stackoverflow.com/questions/32827169/python-reduce-precision-pandas-timestamp-dataframe</span>
-    <span class="c1"># apply(lambda x: x.replace(microsecond=0))</span>
-    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;datetime64[s]&#39;</span><span class="p">)</span>
-</code></pre></div>
-
-
-<p>For coercing python datetime (here, a datetime.date, there …</p> </div><!-- /.entry-content -->
         </article></li>
 </ol><!-- /#posts-list -->
 <p class="paginator">

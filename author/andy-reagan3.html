@@ -46,6 +46,22 @@
 
 <ol id="post-list">
         <li class="paper nostyle"><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2018/05/29/tricks-for-coercing-pandas-into-parquet/" rel="bookmark" title="Permalink to Tricks for coercing Pandas into parquet">Tricks for coercing Pandas into parquet</a></h2> </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2018-05-29T00:00:00+02:00"> Tue 29 May 2018 </abbr>
+                </footer><!-- /.post-info -->
+		<br>
+                <div class="entry-content"> <p>For coercing pandas date times (stored as numpy datetime):</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;&lt;M8[ns]&#39;</span><span class="p">)]:</span>
+    <span class="c1"># https://stackoverflow.com/questions/32827169/python-reduce-precision-pandas-timestamp-dataframe</span>
+    <span class="c1"># apply(lambda x: x.replace(microsecond=0))</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;datetime64[s]&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>For coercing python datetime (here, a datetime.date, there …</p> </div><!-- /.entry-content -->
+        </article></li>
+        <li class="paper nostyle"><article class="hentry">
                 <header> <h2 class="entry-title"><a href="/2018/04/27/some-notes-about-running-d3-inside-jupyter/" rel="bookmark" title="Permalink to Some notes about running D3 inside Jupyter">Some notes about running D3 inside Jupyter</a></h2> </header>
                 <footer class="post-info">
                     <abbr class="published" title="2018-04-27T00:00:00+02:00"> Fri 27 April 2018 </abbr>
@@ -149,16 +165,6 @@ He was born at 11:45AM, weighing 6 pounds and 9 ounces, at 20 some inches of len
 		<br>
                 <div class="entry-content"> <p>This is a re-port of an article I wrote for the MassMutal blog: <a href="https://blog.massmutual.com/post/a-grads-view-solving-real-problems">https://blog.massmutual.com/post/a-grads-view-solving-real-problems</a>.</p>
 <p>Just this past May, I graduated from the University of Vermont and the Computational Story Lab research group to work as a senior data scientist with MassMutual. While there are many …</p> </div><!-- /.entry-content -->
-        </article></li>
-        <li class="paper nostyle"><article class="hentry">
-                <header> <h2 class="entry-title"><a href="/2017/09/10/boston-bound-for-2018/" rel="bookmark" title="Permalink to Boston-bound for 2018">Boston-bound for 2018</a></h2> </header>
-                <footer class="post-info">
-                    <abbr class="published" title="2017-09-10T00:00:00+02:00"> Sun 10 September 2017 </abbr>
-                </footer><!-- /.post-info -->
-		<br>
-                <div class="entry-content"> <p>Well, I never thought it would happen.
-Today I qualified for the Boston Marathon with a 3:00:04 showing at the Presque Isle Marathon.</p>
-<iframe height='405' width='590' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/activities/1180631963/embed/ec6353ad2f3fa0fcf9762dc78efa8bf53822bcb5'></iframe> </div><!-- /.entry-content -->
         </article></li>
 </ol><!-- /#posts-list -->
 <p class="paginator">

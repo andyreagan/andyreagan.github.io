@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+  </head>
+  <body>
+
+    <section id="navbar">
+	  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	    <div class="container">
+              <div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+		  <span class="sr-only">Toggle navigation</span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="/index.html">andyreagan.com</a>
+              </div>
+              <div class="collapse navbar-collapse">
+		<ul class="nav navbar-nav">
+		  <li ><a href="/pages/blog.html">Blog</a></li>
+		  <li ><a href="/pages/about-me.html">About</a></li>
+		  <li ><a href="/pages/cv.html">CV</a></li>
+		  <li ><a href="/pages/publications.html">Publications</a></li>
+		  <li ><a href="/pages/teaching.html">Teaching</a></li>
+		  <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+		</ul>
+              </div><!--/.nav-collapse -->
+	    </div>
+	  </div>
+    </section>
+
+    <br>
+<section class="content">
+  <div class="row">
+    
+    <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+      <div class="paper">
+  <header>
+    <h2 class="entry-title">
+      <a href="/drafts/twitter-data.html" rel="bookmark"
+         title="Permalink to Twitter data">Twitter data</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <abbr class="published" title="2017-11-25T00:00:00+01:00">
+      Sat 25 November 2017
+    </abbr>
+  </footer><!-- /.post-info -->
+  <br>
+  <div class="entry-content">
+    <p>First, important dates:</p>
+<ul>
+<li>2008-09-11: We have the deca-hose from here, with a higher % of the tweets at the beginning and down to 10% now (with the total volume increasing greatly over that time). Geo is (was) roughly 1% of all tweets, first with a "coordinates" and then with the "places" field.</li>
+<li>2009-11-11: The first geo-tweet we have on the books is here: <code>gzip -cd zipped-raw/2009-11-11/2009-11-11-11-15.gz | less</code></li>
+<li>2014-03-07-13-53: turned the spritzer to filter for geo tweets, pulling ~3000K per minute. Some small fraction of these didn't have a lat/lon, just had a "location”, this was about 10%. Around this time, there were ~850 geo tweets (lat/lon) per minute coming in from the gardenhose.</li>
+<li>2014-04-14: twitter upgraded their backend and we starting getting 7-10K geo tweets per minute from the spritzer.</li>
+<li>Unknown dates: There have been various outages of the geo spritzer over the past two years, but we have most of it, I think (why aren't we running 3 of them?)</li>
+<li>Unknown date: At some point, the overall volume slowed back down to 3K/minute from the geo spritzer</li>
+<li>2016-12-07: Data change from Gardenhose to GNIP decahose</li>
+</ul>
+<h2>Other</h2>
+<ul>
+<li>There is a database living at UVM that Morgan built to store the geo tweets starting in 2011 in SQL...it got really big despite UVM saying they could handle it, I don’t know how to use this database<ul>
+<li>Morgan: This seems correct to me. SQL was a fine solution the first year we used it for the geotagged tweets, but appears to be woefully insufficient with the current magnitude of data. One reason for this is that SQL scales vertically (i.e. with faster machines) rather than horizontally (i.e. with parallelization). Hadoop is an example that benefits from horizontal scaling, but there are others. With a beautiful tool like the VACC already in place, it seems to me that horizontal scaling is a viable option.</li>
+<li>SSH to bluemoon server</li>
+<li>`mysql -u mrfrank -p -h webdb-large1.uvm.edu -e "use MRFRANK_2; INSERT SQL COMMANDS HERE!!!!!"``</li>
+<li>you will need password, ask Morgan</li>
+</ul>
+</li>
+<li>Jake build a geo database that pre-processed each tweet to place it in hierarchical boxes by country/state/county (us-analogy, these are more general) and accessed by the incredibly reliable <code>pullTweets.pl</code> script (it's txt files for each minute stored in folders by location, all zipped up, that can be searched through without unzipping it to disk). With the decline in volume, I think that this stopped happening about a month ago, and the database isn't being updated (I could very well be wrong).</li>
+</ul>
+<h2>FAQ</h2>
+<ul>
+<li>Twitter says that if you pull two geo streams, they will be the same tweets (should we check? may be able to get more data by running two streams with different bounding boxes... also the speed of the scraper may matter (ruby chugger seems to be at least as fast as anything I could write in python)). how similar at the geo tweets from the spritzer and the gardenhose?<ul>
+<li>Jake: I did a few tests re: volumes and multiple streams/filters a little while back and am sorry to report that (1) two (spritzer) streams running simultaneously off of the same access key produce nearly identical data (I have not acutely quantified this, but just ran a quick diff---one or two tweets were different), and (2) two disjoint hemisphere streams collectively produce the same volume as one global stream.</li>
+</ul>
+</li>
+<li>The new tweets are mostly "places" tweets, and lat/lon is going away. Probably related to some business decision by twitter to integrate with foursquare (which they have), but where does this leave us?</li>
+<li>How reliable are the "places"? If there is also lat/lon in the tweet, do they generally agree?</li>
+<li>Are there tweets with both lat/lon and “places” specified?<ul>
+<li>Yes, though it is a small fraction of the overall stream.</li>
+</ul>
+</li>
+<li>Do the tweets we’re currently collecting include the “places” specified tweets?<ul>
+<li>Yes.</li>
+</ul>
+</li>
+<li>Am I right in assuming that the spritzer has a filter set for locations?<ul>
+<li>Yes, it is the bounding box for the whole world.</li>
+</ul>
+</li>
+</ul>
+<h2>Other observations</h2>
+<ul>
+<li>Jake: As long as 10% of all tweets are tagged with some form of location, then application of the same filter to the garden hose will not result in reduced volume there. Presumably we could estimate the current proportion of tweets tagged with location from the spritzer, but Twitter seems to be pretty tight-lipped about their sampling methods:
+https://twittercommunity.com/t/is-the-sample-streaming-api-truly-random/14942</li>
+<li>Jake, Re accuracy: My assumption is that the 'places' are reasonably accurate. It appears that they default to a detected location (once enabled), and my guess would be that most folks don't spend too much time switching locations for each tweet. However, even if this data is good, there will forever be a new cohort of data doubters who fear duplicitous behavior.</li>
+</ul>
+<p>If we find that the centroids for the "places" are close to the exact geo location, we can start using those for the pullTweets database.</p>
+<h2>Analysis of "places" Tweets</h2>
+<p>Okay so here are the most recent numbers. these are the fields that we're looking for:</p>
+<div class="highlight"><pre><span></span>tweet[&quot;coordinates&quot;] (ref: https://dev.twitter.com/overview/api/tweets#obj-coordinates)
+tweet[&quot;geo&quot;] --- this was the old place for coordinates
+tweet[&quot;place&quot;] (ref: https://dev.twitter.com/overview/api/places)
+</pre></div>
+
+
+<p>I did a parse for:</p>
+<ol>
+<li>tweets that contain any of them: "any".</li>
+<li>tweets that contain the coordinate field: "coordinates”;</li>
+<li>tweets that contain only the coordinates field: "coordinates-only”.</li>
+<li>tweets that contain only the places field: "place-only".</li>
+</ol>
+<p>Did this for both the spritzer and the main stream, here are the numbers from <code>wc</code> (the first number is the count of Tweets):</p>
+<div class="highlight"><pre><span></span>2016-02-15-00-00-any.gz
+7815  305189 23191117
+
+2016-02-15-00-00-any-spritzer.gz
+43128 1679248 127526514
+
+2016-02-15-00-00-coordinates.gz
+1029   37231 2942433
+
+2016-02-15-00-00-coordinates-only.gz
+5     180   11608
+
+2016-02-15-00-00-coordinates-only-spritzer.gz
+30     773   69684
+
+2016-02-15-00-00-coordinates-spritzer.gz
+5655  207164 16125655
+
+2016-02-15-00-00-place-only.gz
+6786  267958 20248684
+
+2016-02-15-00-00-place-only-spritzer.gz
+37473 1472084 111400859
+</pre></div>
+
+
+<p>Total in the spritzer is 46643 and total in the 10% feed is 398616.</p>
+<h3>Observations</h3>
+<ul>
+<li>there are 3K tweets on the spritzer that have none of these? what's up with those?</li>
+<li>VERY few (effectively none) have only the coordinates (likely folks using an out-of-date version of the Twitter app).</li>
+<li>close to a 6X boost for all categories on the spritzer.</li>
+<li>13% of the tweets with "place" also have "coordinates".</li>
+<li>we're still getting the same number of coordinates tweets from the spritzer as total geo tweets (place or coords) from the 10% stream.</li>
+<li>1.9% of tweets in the main stream have "any": we can then estimate that there are 78K total "any" tweets. we're only seeing 43K of these on the spritzer. so either we're still missing some (almost half) on the spritzer, or the 10%
+over-samples the geo.</li>
+</ul>
+<h3>How good is the center of bounding boxes?</h3>
+<p>Next, I'll see how close the the place is to the coordinates for that subset.</p>
+<p>So 6455 of the 6473 tweets that I tested (almost all) were inside the bounding box, with a mean distance of 52km from the centroid.</p>
+<p><img alt="Distances" src="/images/distances.png"></p>
+<p><img alt="Log10" src="/images/distances-log10.png"></p>
+<p>What the distances from the centroid look like. (note: everything in kilometers)</p>
+<ul>
+<li>Tell me, what does “bounding box” mean in this context
+if the centroid is 52km from the tweet? Is it a county?<ul>
+<li>I think that these "places" are all sorts of things. Farrell Hall is one, so is the city of Burlington, so is the United States.
+Each place just comes with 4 points to describe it, and most of the points are within that bounding box.
+We <em>could</em> query more details on the place from Twitter's API, which I think is a more detailed geo fence than the bounding box.</li>
+</ul>
+</li>
+</ul>
+<h3>More next steps</h3>
+<ul>
+<li>Use data for a longer timeframe (this is only 15 minutes worth).</li>
+<li>Look at the outlier tweets...</li>
+<li>Bin by the size of the bounding box (a USA box is likely to have a tweet further from the centroid), maybe small bounding boxes are most useful for the location?</li>
+<li>Cross reference the place database with the retail store locations (download their place database?).</li>
+</ul>
+<p>Maybe these will be useful for specific projects, and we can test the tweet data as necessary.</p>
+<h3>Final thoughts</h3>
+<p>The statements that 13% of the tweets with "place" also have "coordinates" and 1.9% of tweets in the main stream have “any" indicate that the coordinate-tagged tweets alone now comprise a meager 0.2% of the stream in general (i.e., a drop from ~1%)?. Twitter made it harder to geo-locate with GPS when they integrated with FourSquare.</p>
+<p>The policy decision by Twitter to allow for the soft 'place' location (and its adoption by users) has watered down the data that Twitter is collecting from its users!</p>
+  </div><!-- /.entry-content -->
+      </div>
+      </div>      
+ </section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+      Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+  </body>
+</script>
+</html>

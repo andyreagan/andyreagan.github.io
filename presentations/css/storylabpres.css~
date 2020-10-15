@@ -1,0 +1,9 @@
+
+/* ***************************************** */
+
+/* my changes */
+
+img.img-normal { 
+    border: none; 
+    backgroud: none;
+}

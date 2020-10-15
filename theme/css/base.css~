@@ -1,0 +1,206 @@
+/* /\** * Eric Meyer's Reset CSS v2.0 (http://meyerweb.com/eric/tools/css/reset/) * http://cssreset.com *\/ */
+/* html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,time, mark, audio, video {	 */
+/*     margin: 0; */
+/*     padding: 0; */
+/*     border: 0; */
+/*     font-size: 100%; */
+/*     font: inherit; */
+/*     vertical-align: baseline; */
+/* } */
+/* /\* HTML5 display-role reset for older browsers *\/ */
+/* article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { */
+/*     display: block; */
+/* } */
+/* body { */
+/*     line-height: 1; */
+/* } */
+/* ol, ul { */
+/*     list-style: none; */
+/* } */
+/* blockquote, q {	 */
+/*     quotes: none; */
+/* } */
+/* blockquote:before, blockquote:after,q:before, q:after { */
+/*     content: '';	 */
+/*     content: none; */
+/* } */
+/* table {	 */
+/*     border-collapse: collapse;	 */
+/*     border-spacing: 0; */
+/* } */
+
+
+* {
+    margin:0;
+    padding:0;
+  }
+
+body {
+    /* relative positioning so I can give footer absolute */
+    position: relative;
+    font-family: "Open Sans", sans-serif;
+    background: #E8E8E8;
+}
+
+/* header.body {  */
+/*     background: red; */
+/* } */
+
+.parallax {
+    height: 500px; /* fallback for older browsers */
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-perspective: 300px;
+    perspective: 300px;
+}
+
+.parallax__group {
+    position: relative;
+    height: 300px; /* fallback for older browsers */
+    height: 70vh;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.parallax__layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.parallax__layer--fore {
+    -webkit-transform: translateZ(90px) scale(.7);
+    transform: translateZ(90px) scale(.7);
+    z-index: 2;
+}
+
+.parallax__layer--base {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    z-index: 4;
+
+}
+
+.parallax__layer--back {
+    -webkit-transform: translateZ(-300px) scale(2);
+    transform: translateZ(-300px) translateY(-100px) scale(2);
+    z-index: 1;
+
+    background: url("/images/10584073_912794288737840_3584077335255433114_n.jpg");
+    /* background: url("/theme/images/GOPR0285-50p.JPG"); */
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-position: center; 
+    background-size: cover;
+    height: 100vh;
+}
+
+/* centre the content in the parallax layers */
+.title {
+    text-align: center;
+    position: absolute;
+    left: 10%;
+    top: 60%;
+    color: #202020; /* #eeeeee; */
+}
+
+footer.body {
+    background: #404040;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    color: rgb(230,230,230);
+    z-index: 10;
+    display: none;
+
+}
+
+nav { 
+    background: #404040;
+    z-index: 5;
+}
+
+#content { 
+    background: #E8E8E8;
+    /* room for the footer */
+    padding-bottom: 50px;
+    /* put in the middle of the page */
+    padding-left: 5vh;
+    padding-right: 5vh;
+    z-index: 5;
+    min-height: 50vh;
+    /* max-width: 500px; */
+}
+
+p { 
+    max-width: 500px;
+    padding-bottom: 1.2em;
+}
+
+ol#post-list {
+    padding: 0 0 0 0px;
+}
+
+/* only direct descendants */
+ol#post-list > li {
+    list-style-type: none;
+}
+
+abbr { 
+    font-weight: bold;
+}
+
+body ol {
+  margin: 1em 0;
+  padding: 0 0 0 40px;
+}
+
+body ol li {
+  list-style-type: decimal;
+}
+
+h1 {
+    font-size:3.77em;
+}
+h2 {
+    padding: 20px 0px 10px 0px;
+    font-size:2.11em;
+}
+h3 {
+    font-size:1.55em;
+}
+h4 {
+    font-size:1em;
+}
+
+#menu {
+    color: #eeeeee;
+}
+
+#menu ul {
+    height: auto;
+    padding: 8px 0px;
+    margin-left: 10vh;
+}
+
+#menu li {
+    display: inline;
+    padding: 8px;
+}
+
+#menu a {
+    text-decoration: none;
+    color: #eeeeee;
+    padding: 8px;
+}
+
+.highlight {
+    padding-bottom: 1.2em;
+}
+

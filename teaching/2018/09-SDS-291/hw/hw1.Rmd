@@ -1,0 +1,53 @@
+SDS 291: Multiple Regression
+===========
+## TYPE YOUR NAME -- Fall 2018 -- Prof. Reagan
+
+****
+
+HW 1: Due Thursday, September 13, 2012
+----
+* Reading: Chapter 0 and sections 1.1, 1.2, and 1.3
+* Exercises to hand in: #0.9, #0.15, #0.16.
+
+****
+
+```{r, message=FALSE}
+require(mosaic)
+```
+
+#### Exercise 0.9
+
+> Write your answers below
+
+
+#### Exercise 0.15
+
+> Here is the initial R code to get you started on 0.15
+
+```{r}
+# make sure you get this URL right!
+Survey = read.csv("https://andyreagan.github.io/teaching/2018/09-SDS-291/data/Day1Survey.csv")
+summary(Survey)
+```
+
+> part a: does resting pulse differ by gender?
+
+```{r}
+summary(Survey$Pulse)
+Males = subset(Survey, Sex == "M")
+Females = subset(Survey, Sex == "F")
+summary(Males$Pulse)
+summary(Females$Pulse)
+densityplot(~ Pulse, data=Survey, groups=Sex)
+dotplot(~ Pulse | Sex, data=Survey)
+
+```
+
+> part b:
+
+
+#### Exercise 0.16
+
+> Do women expect to do more reading than men?
+
+> You might want to read about [Welch's t-test](http://en.wikipedia.org/wiki/Welch%27s_t_test), or more generally about [independent two-sample t-tests](http://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test).

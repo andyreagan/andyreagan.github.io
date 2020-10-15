@@ -53,7 +53,14 @@ READERS = {'html': None, 'Rmd': None}
 # IGNORE_FILES = ['*.Rmd']
 STATIC_EXCLUDE_SOURCES = False
 
-MD_EXTENSIONS = ['codehilite(css_class=highlight)','extra']
+MARKDOWN = {
+    'extension_configs': {
+        'markdown.extensions.codehilite': {'css_class': 'highlight'},
+        'markdown.extensions.extra': {},
+        'markdown.extensions.meta': {},
+    },
+    'output_format': 'html5',
+}
 MARKDOWN_EXT = ('md',)
 
 # get a homepage on the menu bar

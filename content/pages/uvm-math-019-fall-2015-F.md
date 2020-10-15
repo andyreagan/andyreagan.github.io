@@ -9,29 +9,29 @@ Status: hidden
 
 ## Welcome to Math 019 for Fall 2015 (Section F)! ##
 
-### [Syllabus]({filename}/files/teaching/2015/fall/math019/common/syllabus.pdf) ###
+### [Syllabus](/files/teaching/2015/fall/math019/common/syllabus.pdf) ###
 
 ### [MyMathLab Sign In](http://www.pearsonmylabandmastering.com/northamerica/mymathlab/) ###
 
-### [MyMathLab Instructions]({filename}/files/teaching/2015/fall/math019/common/mymathlab-instructions.pdf) ###
+### [MyMathLab Instructions](/files/teaching/2015/fall/math019/common/mymathlab-instructions.pdf) ###
 
 </div>
 <div class="paper">
 
 ## All Notes ##
 
-Chapter 6: [[click here]]({filename}/files/teaching/2015/fall/math019/common/notes/Math019_ch6.pdf)
+Chapter 6: [[click here]](/files/teaching/2015/fall/math019/common/notes/Math019_ch6.pdf)
 
-Chapter 5: [[click here]]({filename}/files/teaching/2015/fall/math019/common/notes/Math019_ch5.pdf)
+Chapter 5: [[click here]](/files/teaching/2015/fall/math019/common/notes/Math019_ch5.pdf)
 
-Chapter 4: [[click here]]({filename}/files/teaching/2015/fall/math019/common/notes/Math019_ch4.pdf)
-Chapter 3 (cont'd): [[click here]]({filename}/files/teaching/2015/fall/math019/common/notes/Math019_ch3_4_5.pdf)
+Chapter 4: [[click here]](/files/teaching/2015/fall/math019/common/notes/Math019_ch4.pdf)
+Chapter 3 (cont'd): [[click here]](/files/teaching/2015/fall/math019/common/notes/Math019_ch3_4_5.pdf)
 
-Chapter 3: [[click here]]({filename}/files/teaching/2015/fall/math019/common/notes/Math019_ch3_1_3.pdf)
+Chapter 3: [[click here]](/files/teaching/2015/fall/math019/common/notes/Math019_ch3_1_3.pdf)
 
-Chapter 2: [[click here]]({filename}/files/teaching/2015/fall/math019/common/notes/Math019_ch2.pdf)
+Chapter 2: [[click here]](/files/teaching/2015/fall/math019/common/notes/Math019_ch2.pdf)
 
-Chapter 1: [[click here]]({filename}/files/teaching/2015/fall/math019/common/notes/Math019_ch1.pdf)
+Chapter 1: [[click here]](/files/teaching/2015/fall/math019/common/notes/Math019_ch1.pdf)
 
 </div>
 <div class="paper">

@@ -4,14 +4,6 @@ generate:
 	mv output/index.html output/pages/blog.html
 	mv output/pages/index.html output/
 
-publish:
-	# push the output folder into the local gh-pages branch
-	ghp-import output -b master
-	git push origin master
-
-	# push local content to the remote
-	# git push origin gh-pages
-
 math19:
 	pandoc --from=markdown --to=html content/teaching/2015-09-uvm-math019/index.markdownskip > content/teaching/2015-09-uvm-math019/index.html
 	mkdir -p content/teaching/2015-09-uvm-math019/common/notes

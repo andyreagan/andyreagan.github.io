@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-2">
+            {% block content_title %}
+            <h2>Recent Posts</h2>
+            {% endblock %}
+
+            <ol id="post-list">
+                {% for article in articles_page.object_list %}
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="{{ article.date.isoformat() }}"> {{ article.locale_date }} </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> {{ article.summary }} </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                {% endfor %}
+            </ol><!-- /#posts-list -->
+            {% include 'pagination.html' %}
+        </div>
+        <div class="clearfix visible-xs"></div>
+        <div class="col-xs-12 col-md-2 col-md-offset-1 col-lg-3 col-lg-offset-1">
+            <br>
+            <br>
+            <br>
+            <a class="twitter-timeline" href="https://twitter.com/andyreagan" data-widget-id="515905539788644352">Tweets by @andyreagan</a>
+            <script>
+                ! function(d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0],
+                        p = /^http:/.test(d.location) ? 'http' : 'https';
+                    if (!d.getElementById(id)) {
+                        js = d.createElement(s);
+                        js.id = id;
+                        js.src = p + "://platform.twitter.com/widgets.js";
+                        fjs.parentNode.insertBefore(js, fjs);
+                    }
+                }(document, "script", "twitter-wjs");
+            </script>
+
+            <br>
+            <br>
+            <iframe height='454' width='280' frameborder='0' allowtransparency='true' scrolling='no' src='http://www.strava.com/athletes/136573/latest-rides/beba382751062682088e6323464d7b6a5d5dd544'></iframe>
+        </div>
+    </div>
+</section><!-- /#content -->
+
+{% endblock content %}

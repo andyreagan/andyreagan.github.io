@@ -1,0 +1,29 @@
+Title: Enabling Jupyter notebook dashboards
+Date: 2017-05-04
+Author: Andy Reagan
+Category: Programming
+Tags: python
+
+If you perform EDA using jupyter notebooks, it’s really easy to share those results with some moderate interaction via a jupyter dashboard. Here are the basic steps:
+
+1. Build the analysis, etc. Assuming this is done locally. Install the dashboard layout extension and lay out some sweet graphs. Optional: decorate some graph function with `@interact`.
+
+2. Commit to github/bitbucket. An example: git commit -am "so much wow"; git push github exploratory.
+
+3. Ssh to server. Pull commit down on the server.
+
+4. Back to local. Scp the data files up to the server, in the same place they were locally. It comes in handy to have put them in a folder called `data`. This looks like `scp -r data myserver:project-dir/`.
+
+5. Ssh back to server. Install virtualenv, all necessary libs (numpy, pandas, etc).
+
+6. Install the dashboard layout (you definitely need it now, if you didn’t do the layout in step 1): [https://github.com/jupyter/dashboards](https://github.com/jupyter/dashboards).
+
+7. Enable widgets `jupyter nbextension enable --py --sys-prefix widgetsnbextension`.
+
+8. Launch server, point browser, choose dashboard view, run notebook!
+
+I’ve done this all in a screen environment to leave it running. Overhead should be minimal on the server. Before launching the notebook server, I put my necessary credentials into environment variables as well.
+
+Another potentially important step is to password protect the server. This can be done by calling `jupyter notebook password`.
+
+This way, you don’t need the other two dashboard pieces (the bundler or standalone server). Although if someone were to set those up, it could make this process even easier!

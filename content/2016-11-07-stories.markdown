@@ -1,0 +1,41 @@
+Title: The Shapes of Stories
+Date: 2016-11-07
+Author: Andy Reagan
+Category: Science
+Tags: emotional-arcs
+
+This is a repost of my original at our [StoryLab blog](http://www.uvm.edu/storylab/2016/11/07/emotional-arcs/)_
+
+Stories help us encode and understand our collective existence, underpin cultures, and help frame the possible. Describing the ecology of all human stories is an essential scientific enterprise. With the advent of the internet and massive digitization this vital work has become, in part, a data-driven one.
+
+There are many aspects of stories to characterize and here we take on just one: The overall emotional trajectory.
+
+In a lecture recorded in 1985, Kurt Vonnegut introduced the idea of quantifying the emotional arcs of stories. He suggested that “Man-in-a-hole” is a primary kind of shape in the dimension of good-ill fortune. “Somebody gets into trouble… gets out of it again. People LOVE that story!” If you haven’t seen the video, it’s less than 5 minutes long and a rewarding experience:
+
+<iframe class="youtube-player" width="554" height="300" type="text/html" src="http://www.youtube.com/embed/oP3c1h8v2ZQ?version=3&amp;rel=1&amp;fs=1&amp;autohide=2&amp;showsearch=0&amp;showinfo=1&amp;iv_load_policy=1&amp;wmode=transparent" allowfullscreen="true" style="border:0;"></iframe>
+
+Vonnegut pointed out that computers would be perfectly suited to the task of finding good-ill fortune trajectories, and with this inspiration and today’s computing power, we tested his instincts on a large supply of books. We extracted and analyzed the emotional arcs of 1,722 novels from the Project Gutenberg corpus using sentiment analysis, and found six common shapes:
+
+1. Rags-to-riches,
+2. Tragedy,
+3. Man-in-a-hole (see below for more),
+4. Icarus,
+5. Cindarella,
+6. Oedipus.
+
+Here’s a graphical overview of our process:
+
+<a href="http://www.uvm.edu/storylab/wp-content/uploads/paper-schematic-150.png"><img class="img-responsive" src="http://www.uvm.edu/storylab/wp-content/uploads/paper-schematic-150-760x1024.png"></a>
+
+It seems that in the space of all possible emotional arcs, we tend to prefer a handful of comprehensible building block shapes.
+
+We have interactive visualizations of the emotional arcs of thousands of books (and movies) at [hedonometer.org](http://hedonometer.org/books/v3/1777/). Details can be found in the publication in [EPJ Data Science](http://link.springer.com/article/10.1140%2Fepjds%2Fs13688-016-0093-1) and the paper's [online appendices](http://compstorylab.org/share/papers/reagan2016b/).
+
+One more thing: Tomorrow is the 2016 US Presidential Election. Slogans are, when done well, powerful indicators of a larger narrative. The slogan "Make America Great Again", first used in [Ronald Reagan's 1980 presidential campaign](https://en.wikipedia.org/wiki/Make_America_Great_Again) (and at times by other politicians including Bill Clinton), induces a remarkably full dynamic that matches Vonnegut's Man-in-a-hole trajectory. In fact, it's a much stronger framing as Man-in-a-hole does not suggest a trajectory through time by itself ([The Metamorphosis](https://en.wikipedia.org/wiki/The_Metamorphosis) would roughly fit for example though the “hole” changes in nature). In four words, “Make America Great Again” manages to indicate a perceived state of the past and present, and a desired future:
+<a href="http://www.uvm.edu/storylab/wp-content/uploads/make-_-great-again-cropped-002.jpeg"><img class="img-responsive" src="http://www.uvm.edu/storylab/wp-content/uploads/make-_-great-again-cropped-002-1024x489.jpeg"></a>
+
+Our stance here is apolitical—we are attempting to analyze stories scientifically, and we saw that “Make America Great Again” fits one of Vonnegut’s basic shapes.
+
+And our work on emotional arcs is just one part of understanding the ecology of stories.
+There is much more to do: Extracting and comparing plots, character paths, comparing across cultures and time periods.
+But all this now seems possible.

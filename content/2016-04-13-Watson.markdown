@@ -1,0 +1,15 @@
+Title: Visiting the IBM Watson Research Center
+Date: 2016-04-13
+Author: Andy Reagan
+Category: Professional
+Tags:
+
+Fellow [Computational Story Lab](http://compstorylab.org/) researcher [Eric Clark](http://www.uvm.edu/~eclark/) is spending a few months working with scientists at the [Watson Research Center]().
+The project that he is a part of is really exciting, and you can read more about ``Operation Blue Sky'' in the [Forbes press release](http://www.forbes.com/sites/emilymullin/2016/04/07/pfizer-ibm-launch-ambitious-internet-of-things-for-parkinsons-research/#da9309c24d62).
+
+I went down for a day to give a talk to their weekly machine learning seminar about some of the research that I've been doing with Chris Danforth and Peter Dodds at the `Lab.
+In particular, I got to share some of the latest work we've been doing to visualize happiness and understand the stories in data.
+
+The research center and the people there are amazing, and the projects they have going are fascinating.
+You aren't allowed to take any pictures though, so you'll have to take my word for it!
+It was a pleasure to speak, tour the center, and meet the people on Eric's team.

@@ -1,0 +1,33 @@
+Title: Javascript Vis Libraries
+Date: 2016-09-26
+Author: Andy Reagan
+Category: Programming
+Tags: javascript, d3
+
+Overlooking building a visualization using native DOM manipulation (or jQuery, React.js), there are a whole bunch of libraries to help make visualizations.
+Here are just some:
+
+* [d3.js](https://d3js.org/) BSD
+* [protoviz](http://mbostock.github.io/protovis/) (d3.js predecessor)
+* [dimple.js](http://dimplejs.org/) (d3.js wrapper)
+* [C3.js](http://c3js.org/) (d3.js wrapper)
+* [D3plus](https://d3plus.org/) (d3.js wrapper)
+* [Metrics Graphs](https://github.com/mozilla/metrics-graphics) (d3.js wrapper)
+* [Epoch](http://epochjs.github.io/epoch/) (d3.js wrapper)
+* [Vega](http://vega.github.io/vega/) (d3.js wrapper)
+* [NVD3](http://nvd3.org/examples/) (d3.js wrapper)
+* [processing.js](http://processingjs.org/)
+* [three.js](https://threejs.org/) (* [wow](http://data-arts.appspot.com/globe/), and * [fallen](http://www.fallen.io/ww2/))
+* [PixiJS](http://www.pixijs.com/)
+* [BokehJS](http://bokeh.pydata.org/en/latest/docs/user_guide/bokehjs.html#userguide-bokehjs)
+* [Highcharts](http://www.highcharts.com/)
+* [Flot](http://www.flotcharts.org/)
+* [FusionCharts](http://www.fusioncharts.com/)
+* [Plotly](https://plot.ly/)
+* [JFreeChart](http://www.jfree.org/jfreechart/) LGPL
+* [Google Charts]()
+* [Echarts (by Baidu)](http://echarts.baidu.com/)
+* [Sigma JS](http://sigmajs.org/)
+* [dygraphs](https://github.com/danvk/dygraphs)
+
+* [and many more](https://www.npmjs.com/search?q=data+visualization)

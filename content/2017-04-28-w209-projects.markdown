@@ -1,0 +1,13 @@
+Title: Spring 2017 Berekely DataViz Project Roundup
+Author: Andy Reagan
+Date: 2017-04-28
+Category: Teaching
+Tags: berkeley
+
+Some really fantastic work from the teams in W209 this semester. Links:
+
+- https://rileyrustad.github.io/W209_Final/?demographic=Custom
+- https://sharmila-velamur.github.io/trumpworld/home.html
+- https://ramseynoj.github.io/history_of_refugee_migration/metrocosm/imigration-paths.html
+- http://people.ischool.berkeley.edu/~yhzhao/food_access.html#dashboard_2
+- http://people.ischool.berkeley.edu/~rthamman/W209_Project_Final/Final.html

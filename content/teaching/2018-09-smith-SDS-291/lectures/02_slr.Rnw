@@ -1,0 +1,130 @@
+\documentclass[10pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr,url,hyperref}
+\usepackage{graphicx,xspace}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,decorations.pathmorphing,backgrounds,positioning,fit,through}
+
+\oddsidemargin 0in  %0.5in
+\topmargin     0in
+\leftmargin    0in
+\rightmargin   0in
+\textheight    9in
+\textwidth     6in %6in
+%\headheight    0in
+%\headsep       0in
+%\footskip      0.5in
+
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{obs}{Observation}
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{question}{Question}
+\newtheorem{answer}{Answer}
+\newtheorem{problem}{Problem}
+\newtheorem{solution}{Solution}
+\newtheorem{conjecture}{Conjecture}
+
+\pagestyle{fancy}
+
+\lhead{\textsc{Prof. Reagan}}
+\chead{\textsc{SDS/MTH 291: Lecture notes}}
+\lfoot{}
+\cfoot{}
+%\cfoot{\thepage}
+\rfoot{}
+\renewcommand{\headrulewidth}{0.2pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+\newcommand{\ans}{\vspace{0.25in}}
+\newcommand{\R}{{\sf R}\xspace}
+\newcommand{\cmd}[1]{\texttt{#1}}
+\DeclareMathOperator{\Ex}{\mathbb{E}}
+\DeclareMathOperator{\Var}{\text{Var}}
+
+\rhead{\textsc{September 11, 2018}}
+
+\begin{document}
+
+\paragraph{Agenda}
+\begin{enumerate}
+  \itemsep0em
+  \item Simple Linear Regression: Mathematical Form
+  \item Parameters and statistics
+  \item Data collection
+  \item R and RStudio intro
+\end{enumerate}
+
+% \paragraph{The four-step process}
+% \begin{enumerate}
+% \item \textbf{C}hoose
+% \item \textbf{F}it
+% \item \textbf{A}ssess
+% \item \textbf{U}se
+% \end{enumerate}
+
+\paragraph{Model notation}
+
+
+  $$
+		Y = f(X) + \epsilon
+	$$		
+	\begin{itemize}
+		\item $Y$: response variable
+		\item $f$: a function that makes up the model -- there are \emph{infinitely} many possible functions!
+		\item $X$: explanatory variables (i.e. the data)
+		\item $\epsilon$: error or noise term
+	\end{itemize}
+
+
+
+
+\paragraph{Simple Linear Regression}
+
+Simple linear regression is a special case of the model above, wherein:
+
+\begin{itemize}
+  \item $Y$ is a quantitative variable
+  \item $f$ makes a \emph{line}!\
+  \item $X$ is a single quantitative variable
+  \item $\epsilon \sim N(0, \sigma_\epsilon)$, where $\sigma_\epsilon$ is fixed
+\end{itemize}
+
+\noindent Notation for this may vary. Note that:
+
+	\begin{itemize}
+		\item $Y,X$: the (idea of the) quantities (e.g. Age, Price)
+		\item $y,x$: specific values of those quantities (e.g. 22, \$35,748)
+		\item $y_i,x_i$: the $i$th specific value of a collection
+		\item $\bar{y}, \bar{x}$: average (mean) value of a collection of values
+		$$
+			\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i
+		$$
+		\item $\hat{y}$: an \emph{estimate} of an unknown value based on the model
+	\end{itemize}
+	
+We can write the model as follows:
+$$
+Y = \beta_0 + \beta_1\cdot X + \epsilon, \, \epsilon \sim N(0, \sigma_\epsilon)
+$$
+and we estimate it using the following notation
+$$
+\hat{Y} = \hat{\beta_0} + \hat{\beta_1}\cdot X
+$$
+\clearpage
+\paragraph{Parameters and statistics}
+If we have time, we'll go through this fun explanation of polling, \url{http://rocknpoll.graphics/}. It's focused on election polling (quite relevant today!) but also helps show the difference between population parameters and sample statistics. 
+
+\paragraph{Data collection}
+We are going to choose some variables we want to study about our class as a whole. This isn't going to be a sampling activity (hopefully, we will capture data about the entire class) but we will use linear modeling as a descriptive method. First, we need to brainstorm some variables to collect. Last year, the class collected variables about students credits for the semester, number of siblings, number of pairs of shoes, number of facebook friends, and distance travelled to Smith after winter break. But, we don't have to use those!
+\\ Go to \href{https://docs.google.com/spreadsheets/d/15rrkUmmOe7mkUlEsn7o7H3Z5I-DSmN0P6Ju1Z62b4Mc/edit#gid=0}{this spreadsheet} and enter your information.
+
+
+\paragraph{R and RStudio intro}
+We're going go through the first lab in the course, and we'll see how far we get. Depending on time, we'll do some analysis of your data! 
+
+
+\end{document}

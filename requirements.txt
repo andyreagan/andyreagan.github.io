@@ -1,0 +1,5 @@
+ghp-import==0.4.1
+pelican
+markdown
+click
+git+https://github.com/pR0Ps/pelican-yaml-metadata.git

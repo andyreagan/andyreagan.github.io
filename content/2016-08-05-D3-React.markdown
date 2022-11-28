@@ -1,0 +1,24 @@
+Title: D3.js and Reactjs
+Date: 2016-08-05
+Author: Andy Reagan
+Category: Programming
+Tags: javascript, d3
+
+The world of Javascript is complicated (some might say, insane).
+I recently discovered that to use the newest version of Javascript (ES 2015), there are a whole suite of build tools and transpilers that will turn your ES2015 code into JS that can run on current (IE9+) browsers. Okay!
+
+A popular new technology for from end web UI is Reactjs.
+It's developed and released by Facebook, and solves problems for them by using components.
+So, it must be useful for everyone, right?
+
+If you use D3 to build awesome web graphics, then you might think so.
+But the problems that it solves are already solved by D3, namely DOM manipulation.
+The following post goes into a few different ways of getting them to play together, but I'll throw up the caution flag that you're just making things more complicated.
+
+[D3 within React the right way](http://oli.me.uk/2015/09/09/d3-within-react-the-right-way/) by Oliver Caldwell.
+Impressive work, and he totally understands how both of these technologies work, deeply. Kudos!
+
+Perhaps a benchmark of the performance gain or loss by these approaches would help answer if there is any reason at all, because it's not making the code much prettier.
+I'll be sticking with the module pattern for building re-usable D3!
+
+Cheers!

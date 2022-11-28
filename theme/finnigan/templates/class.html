@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }}{%endblock%}
+
+{% block content %}
+<section class="content">
+  <br>
+  <div class="row">
+    <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+      <div class="paper">
+	{{ page.content }}
+
+	{% if page.modified %}
+	<p>
+	  Last updated: {{ page.locale_modified }}
+	</p>
+	{% endif %}
+      </div>
+    </div>
+  </div>
+</section><!-- /#content -->
+{% endblock %}
+
+

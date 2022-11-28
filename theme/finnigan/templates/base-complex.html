@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="{{ DEFAULT_LANG }}">
+  <head>
+    {% block head %}
+    <title>{% block title %}{{ SITENAME }}{% endblock title %}</title>
+    <meta charset="utf-8" />
+    {% if FEED_ALL_ATOM %}
+    <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Full Atom Feed" />
+    {% endif %}
+    {% if FEED_ALL_RSS %}
+    <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} Full RSS Feed" />
+    {% endif %}
+    {% if FEED_ATOM %}
+    <link href="{{ FEED_DOMAIN }}/{{ FEED_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
+    {% endif %}
+    {% if FEED_RSS %}
+    <link href="{{ FEED_DOMAIN }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
+    {% endif %}
+    {% if CATEGORY_FEED_ATOM and category %}
+    <link href="{{ FEED_DOMAIN }}/{{ CATEGORY_FEED_ATOM|format(category.slug) }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Categories Atom Feed" />
+    {% endif %}
+    {% if CATEGORY_FEED_RSS and category %}
+    <link href="{{ FEED_DOMAIN }}/{{ CATEGORY_FEED_RSS|format(category.slug) }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} Categories RSS Feed" />
+    {% endif %}
+    {% if TAG_FEED_ATOM and tag %}
+    <link href="{{ FEED_DOMAIN }}/{{ TAG_FEED_ATOM|format(tag.slug) }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Tags Atom Feed" />
+    {% endif %}
+    {% if TAG_FEED_RSS and tag %}
+    <link href="{{ FEED_DOMAIN }}/{{ TAG_FEED_RSS|format(tag.slug) }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} Tags RSS Feed" />
+    {% endif %}
+    {% endblock head %}
+    {% block css %}
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">	  
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    {% endblock css %}
+    {% block extracss %}
+    {% endblock extracss %}
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+  </head>
+  <body>
+    <div class="parallax">
+      <header id="banner" class="body parallax__group">
+	<div class="parallax__layer parallax__layer--fore">
+	  <h1 class="title">andy reagan</h1>
+	</div>
+	<div class="parallax__layer parallax__layer--base">
+	  <!-- <h1 class="title">Base layer</h1> -->
+	</div>
+	<div class="parallax__layer parallax__layer--back">
+	  <!-- <ul class="cb-slideshow"> -->
+          <!--   <li> -->
+	  <!--     <span>Image 01</span> -->
+	  <!--   </li> -->
+          <!--   <li> -->
+	  <!--     <span>Image 02</span> -->
+	  <!--   </li> -->
+          <!--   <li> -->
+	  <!--     <span>Image 03</span> -->
+	  <!--   </li> -->
+          <!--   <li> -->
+	  <!--     <span>Image 04</span> -->
+	  <!--   </li> -->
+          <!--   <li> -->
+	  <!--     <span>Image 05</span> -->
+	  <!--   </li> -->
+          <!--   <li> -->
+	  <!--     <span>Image 06</span> -->
+	  <!--   </li> -->
+          <!-- </ul> -->
+	  <div class="cb-slideshow">
+	    <spam id="image1">Image 01</spam>
+	    <spam id="image2">Image 02</spam>
+	    <spam id="image3">Image 03</spam>
+	    <spam id="image4">Image 04</spam>
+	    <spam id="image5">Image 05</spam>
+	    <spam id="image6">Image 06</spam>
+          </div>
+	  <!-- <h1 class="title">Background layer</h1> -->
+	</div>
+      </header>
+      <div class="parallax__group">
+	<div class="parallax__layer parallax__layer--base">
+
+	  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	    <div class="container">
+              <div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+		  <span class="sr-only">Toggle navigation</span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="http://andyreagan.github.io">andyreagan.com</a>
+              </div>
+              <div class="collapse navbar-collapse">
+		<ul class="nav navbar-nav">
+		  {% for title, link in MENUITEMS %}
+		  <li {% if "/"+output_file == link %} class="active"{% endif %}><a href="{{ link }}">{{ title }}</a></li>
+		  {% endfor %}
+		  {% if DISPLAY_PAGES_ON_MENU %}
+		  {% for p in PAGES %}
+		  <li{% if p == page %} class="active"{% endif %}><a href="{{ SITEURL }}/{{ p.url }}">{{ p.title }}</a></li>
+		  {% endfor %}
+		  {% else %}
+		  {% if DISPLAY_CATEGORIES_ON_MENU %}
+		  {% for cat, null in categories %}
+		  <li{% if cat == category %} class="active"{% endif %}><a href="{{ SITEURL }}/{{ cat.url }}">{{ cat }}</a></li>
+		  {% endfor %}
+		  {% endif %}
+		  {% endif %}
+		</ul>
+              </div><!--/.nav-collapse -->
+	    </div>
+	  </div>
+
+	  {% block content %}
+	  {% endblock %}
+
+	</div>
+      </div>
+    <!-- 	<div class="parallax__layer parallax__layer--base bg"> -->
+    <!-- 	</div> -->
+    <!--   </div> -->
+    <!-- </div> -->
+    <footer id="slidingfooter" class="body">
+      Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+    {% block finaljs %}
+    {% endblock finaljs %}
+  </body>
+</script>
+</html>
+

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }}{%endblock%}
+
+{% block extracss %}
+{% endblock extracss %}
+
+{% block content %}
+<section class="content">
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-lg-1">
+            </div> <!-- .col -->
+            <div class="col-xs-12 col-lg-10">
+                <div class="paper">
+                    <h2>{{ page.title }}</h2>
+
+                    {{ page.content }}
+                </div> <!-- .paper -->
+
+                <div id="hey"></div>
+
+                <!-- <div id="extracontainer" style="display: block; height: 700px;"> -->
+                <div id="container">
+                    {% for item in page.data %}
+                    <div class="item">
+                        <a href="{{ item.uri }}" target="_blank">
+                            <img src="{{ item.image }}" class="img-responsive blackwhite" />
+                            <text>{{ item.desc }}</text>
+                        </a>
+                    </div> <!-- .item -->
+                    {% endfor %}
+                </div> <!-- #container -->
+            </div> <!-- .col -->
+            <div class="clearfix visible-xs"></div>
+            <div class="col-xs-12 col-lg-1">
+            </div> <!-- .col -->
+        </div> <!-- .row -->
+        {% if page.modified %}
+        <div class="row">
+            <div class="col-xs-12">
+                <br>
+                <br>
+                <h4 class="text-center small">
+                    Last updated: {{ page.locale_modified }}
+                </h4>
+            </div> <!-- .col -->
+        </div> <!-- .row -->
+        {% endif %}
+    </div> <!-- container -->
+</section><!-- #content -->
+
+<section id="content">
+
+</section><!-- /#content -->
+{% endblock %}
+
+{% block finaljs %}
+<script>
+</script>
+{% endblock finaljs %}

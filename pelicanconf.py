@@ -49,7 +49,7 @@ STATIC_PATHS = [
     'presentations',
     'files',
     'teaching',
-    ]
+]
 
 READERS = {'html': None, 'Rmd': None}
 

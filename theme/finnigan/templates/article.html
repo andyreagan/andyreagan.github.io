@@ -32,6 +32,9 @@
                     <abbr class="published" title="{{ article.date.isoformat() }}">
                         {{ article.locale_date }}
                     </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/{{ article.relative_source_path }}">Edit on Github</a>
                     {% if article.modified %}
                     <abbr class="modified" title="{{ article.modified.isoformat() }}">
                         {{ article.locale_modified }}

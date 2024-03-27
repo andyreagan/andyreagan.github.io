@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="running" />
+<meta name="tags" contents="sweat science" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2022/07/21/ai-powered-fitness-training/" rel="bookmark" title="Permalink to AI-powered Fitness Training">AI-powered Fitness Training</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2022-07-21T00:00:00+02:00">
+                        Thu 21 July 2022
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2022-07-21-AI-fitness.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>Last year Alex Hutchinson, in his generally excellent Sweat Science series, <a href="https://www.outsideonline.com/health/training-performance/training-data-analytics-framework/">discovered the four level framework</a> for data analytics:</p>
+<ul>
+<li>Descriptive: What happened?</li>
+<li>Diagnostic: Why did it happen?</li>
+<li>Predictive: What will happen?</li>
+<li>Prescriptive: How do we make it happen?</li>
+</ul>
+<p>This isn't news for people who work in data, and yet he concludes that have yet to see prescriptive analysis. I think he's wrong, the <a href="https://journals.humankinetics.com/view/journals/ijspp/16/11/article-p1719.xml">research paper didn't do much research</a>, and I said as much on Twitter:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Good to know. There are a bunch of AI-powered training plans starting to emerge these days (e.g. from Training Peaks, SVEXA, and others). The hard part is evaluating how well they work in the real world!</p>&mdash; Alex Hutchinson (@sweatscience) <a href="https://twitter.com/sweatscience/status/1458472680059965440?ref_src=twsrc%5Etfw">November 10, 2021</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>In part because I think it would be fun to write the machine learning algorithm (an idea I've been spinning on for years),
+I set out to list what algorithms are already out there.
+Turns out, there are a lot! I compiled all of the ones that I found into <a href="https://docs.google.com/spreadsheets/d/1E0ai5oE9FKay2u8rbSqTDKquDFzqNBMXTAprup9TXRI/edit?usp=sharing">a big list on a Google Sheets</a> and I'll highlight the biggest names below which seem to be basing their approach on data.</p>
+<h2><a href="https://www.trainerroad.com/adaptive-training/">TrainerRoad</a></h2>
+<p>The leader in this category seems like TR,
+with their adaptive training system for cycling,
+all based on power meter data.
+Miss a workout, fail to hit your power targets, or mark a session as easier than the algorithm expected and it will adjust your future session difficulty in response.
+Cycling is a great place to start with clear quantitative data (power) on which to based the training.
+As a part of this research,
+I have started using TR and am enjoying it.</p>
+<h2><a href="https://tridot.com/">triDot</a></h2>
+<p>I've seen these folks mostly from their advertisements, and can't speak much more to how well their system works or whether it's truly adaptive.
+They certainly mention AI in their materials.</p>
+<h2><a href="https://www.garmin.com/en-US/blog/fitness/daily-workout-suggestions-for-runners/">Garmin + FirstBeat</a></h2>
+<p>A stalwart in the endurance tech space, Garmin has partenered with FirstBeat
+(whom they now own, I recall)
+to build a recommendation engine using a workout library and some adaptation of the Bannister model
+(reading between the lines in their linked PR).
+Disclaimer: I have been using Garmin watches to train for running and cycling for many years,
+and as such have developed a positive bias here.</p>
+<h2><a href="https://triq.ai">TRIQ-App</a></h2>
+<p>They have some research on sports science <a href="https://triq.ai/triathlon-knowledge/sports-science">here</a>.
+Maybe they have based their rules engine on data that shows performance improvements?</p>
+<h2><a href="https://aiendurance.com/blog/which-training-really-works">AI Endurance</a></h2>
+<p>With a lot of material on their blog and relatively transparent materials from the researcher behind their system (Markus Rummel),
+this one deserves a mention with the top.
+Though they don't appear to big yet,
+it doesn't appear that they are just using AI as a hype word.</p>
+<h2><a href="https://www.xertonline.com">Xert</a></h2>
+<p>The folks at Xert have been doing this for a long time in the cycling space.
+They have plans that adjust based on performance,
+and really they seem like the first in this space.
+<a href="https://baronbiosys.com/xert-training-advisor-first-introduction/">Link to science behind the training advisor</a>.
+Like AI Endurance, their marketing does not seem to rival TR or triDot.</p>
+<h2>Others: Ultra Trail Coaching, SVEXA, 2PEAK, TrainAsONE, Training Peaks, Sparta Science, Humango, Althetica, Perform, Vert.run, and more</h2>
+<p>With all of the others,
+it's hard to separate marketing from whether an algorithm is actually optimized on training data to improve performance.
+It would seem like Training Peaks would have the right data,
+but it's not clear that their entry in the market here (coaching-focused, perhaps to be expected) is based on data or whether it's a just a rules-based system.
+SVEXA sounds fancy but doesn't have a consumer product.</p>
+<p>Not even making the list are popular endurance training platforms that haven't mentioned dynamic training: Today's Plan, Training Tilt, Final Surge, and many many more.</p>
+<h1>The list</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">URI</th>
+<th style="text-align: left;"><div style="width:350px">Tagline</div></th>
+<th style="text-align: left;">Notes</th>
+<th style="text-align: left;">Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">TrainerRoad</td>
+<td style="text-align: left;">https://www.trainerroad.com/adaptive-training/</td>
+<td style="text-align: left;">TrainerRoad is a cycling training system designed to make you faster with science-based, goal-driven training. Adaptive Training uses machine learning and science-based coaching principles to continually assess your performance and intelligently adjust your training plan. It trains you as an individual and makes you a faster cyclist.</td>
+<td style="text-align: left;"><a href="https://www.trainerroad.com/forum/t/trainingpeaks-announcing-adaptative-training/22081/84">Interesting commentary in the forums about TrainingPeaks</a>. Not too much detail on how it works, <a href="https://www.youtube.com/watch?v=d-Z_mim17Dk">here’s an overview video</a></td>
+<td style="text-align: left;">$20/month</td>
+</tr>
+<tr>
+<td style="text-align: left;">Xert</td>
+<td style="text-align: left;">https://www.xertonline.com</td>
+<td style="text-align: left;">Welcome to a new generation of training tools and technology.</td>
+<td style="text-align: left;">Adaptive training, see <a href="https://baronbiosys.com/xert-training-advisor-first-introduction/">how “training advisor” works</a></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">triDot</td>
+<td style="text-align: left;">https://tridot.com/</td>
+<td style="text-align: left;">DATA OPTIMIZED TRAINING™ powered by your genetics &amp; training data and our AI &amp; predictive analys</td>
+<td style="text-align: left;">Owned by <a href="https://predictive.fit">Predictive Fitness Inc.</a>. <a href="https://patents.google.com/patent/US20130040272A1/en?q=tridot&amp;oq=tridot">Patent 1: System and method for producing customized training plans for multi-discipline …</a> <a href="https://patents.google.com/patent/US20210308522A1/en?q=tridot&amp;oq=tridot">Patent 2: System and method for real-time environmentally normalized endurance athletic …</a></td>
+<td style="text-align: left;">$10-$400 per month</td>
+</tr>
+<tr>
+<td style="text-align: left;">TRIQ-App</td>
+<td style="text-align: left;">https://triq.ai</td>
+<td style="text-align: left;">Plan triathlon training smarter: With TRIQ. It’s a revolutionary, dynamic app that uses a groundbreaking algorithm to adjust your training in real-time.</td>
+<td style="text-align: left;">Adaptive training plans; Cost not clear; <a href="https://triq.ai/triathlon-knowledge/sports-science">Articles on the sports science</a>.</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Garmin + FirstBeat</td>
+<td style="text-align: left;">https://www.garmin.com/en-US/blog/fitness/daily-workout-suggestions-for-runners/</td>
+<td style="text-align: left;">Adaptive plans delivered right to the watch.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">AI Endurance</td>
+<td style="text-align: left;">https://aiendurance.com/blog/which-training-really-works</td>
+<td style="text-align: left;">At AI Endurance, we believe in a modern way of endurance training. A more personalized, scientific approach to help athletes of all skill levels unlock new potential. We’re passionate about it, and our mission is to personalize training. We specialise in artificial intelligence and we're here to bring it to the forefront of training. We're excited to simplify training through our program and break the mold of “one size fits all” training plans.</td>
+<td style="text-align: left;">Propreitary algorithm for dynamic training.</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Ultra Trail Coaching</td>
+<td style="text-align: left;">https://www.ultratrailcoaching.com</td>
+<td style="text-align: left;">The personalized, adaptive training platform for trail and ultra running</td>
+<td style="text-align: left;">Not much detail on what exactly they do</td>
+<td style="text-align: left;">40pounds per month</td>
+</tr>
+<tr>
+<td style="text-align: left;">2PEAK</td>
+<td style="text-align: left;">https://2peak.com/triathlon-training-plan/</td>
+<td style="text-align: left;">Dynamic Triathlon and Duathlon Training Plans</td>
+<td style="text-align: left;">Doesn’t look like there is any AI involved, but they do have dynamically adjusting training plans</td>
+<td style="text-align: left;">72-360 eu per year</td>
+</tr>
+<tr>
+<td style="text-align: left;">TrainAsONE</td>
+<td style="text-align: left;">https://www.trainasone.com/training-plans/marathon/</td>
+<td style="text-align: left;">The AI Running App: intelligent training plans for runners of all abilities.</td>
+<td style="text-align: left;">Adaptive training plans</td>
+<td style="text-align: left;">Free to $10/month.</td>
+</tr>
+<tr>
+<td style="text-align: left;">SVEXA</td>
+<td style="text-align: left;">https://www.svexa.com/</td>
+<td style="text-align: left;">SVEXA is an exercise intelligence company combining expertise in physiology, precision health and data science with a deep understanding in technology.</td>
+<td style="text-align: left;">Training Plan Optimization (MIMIR). Simulate thousands of potential training programs to get the optimal for the specific athlete. The above is one of a handful of bespoke products</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Training Peaks</td>
+<td style="text-align: left;">https://www.trainingpeaks.com/</td>
+<td style="text-align: left;">Featuring plans from expert coaches like Matt Fitzgerald, David Glover and Joe Friel. Take the Training Plan Quiz. Skip the search and find the perfect plan for you! Color-coded workouts. Easy performance analysis. Customizable dashboard.</td>
+<td style="text-align: left;">Adaptive training plans - coaching focused. See https://help.trainingpeaks.com/hc/en-us/articles/204072414-Dynamic-Training-Plans and https://www.stayonpace.com/</td>
+<td style="text-align: left;">Free to $10/month.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sparta Science</td>
+<td style="text-align: left;">https://spartascience.com</td>
+<td style="text-align: left;">Helping the world Move Better.</td>
+<td style="text-align: left;">https://spartascience.com/drphilwagner/</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Humango</td>
+<td style="text-align: left;">https://humango.ai/athletes/</td>
+<td style="text-align: left;">Humango for focus, fitness – and fun Humango™ is a unique platform designed to improve athletic motivation and performance. And whether you’re an elite athlete or simply enjoy getting outdoors to exercise, it will help you train more efficiently than ever before.</td>
+<td style="text-align: left;">App with AI Coaching Assistant for running and triathlon</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Athletica</td>
+<td style="text-align: left;">https://athletica.ai/</td>
+<td style="text-align: left;">Athletica is a premium coaching plan that adapts to your current sport, fitness levels, goals, training sessions and life, allowing you to reach new levels of health and performance you never thought possible – all at an affordable price of $20/month.</td>
+<td style="text-align: left;">https://athletica.ai/about/</td>
+<td style="text-align: left;">$20/month.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Perform</td>
+<td style="text-align: left;">https://joinperform.com/</td>
+<td style="text-align: left;">The most personalized running program, ever. Perform matches you with a personal running coach and uses AI to help you reach your running goals. Adaptive training plans, workouts, and feedback. Made just for you.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Vert.run</td>
+<td style="text-align: left;">https://vert.run/</td>
+<td style="text-align: left;">THE TRAINING PLATFORM FOR TRAIL + ULTRA RUNNING. Let’s unlock your full potential.</td>
+<td style="text-align: left;">You’re unique--so is your plan: Your training plan adapts to your level of experience, current fitness, changing schedule, training conditions and goals.</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Runna</td>
+<td style="text-align: left;">https://www.runna.com/</td>
+<td style="text-align: left;">Just training plans?</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Zing</td>
+<td style="text-align: left;">https://zing.coach/</td>
+<td style="text-align: left;">Zing Coach™ combines human experience and AI technology to give you the best of what people and technology can offer. By harnessing the power of AI, Zing designs personalized workouts tailored to your needs, goals, gender, age, lifestyle, interests, current condition, and emotional well-being. Every fitness program is adjusted in real-time based on your Metabolism, Energy level, Availability of time &amp; equipment, Feedback from each exercise</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">RunGap</td>
+<td style="text-align: left;">http://www.rungap.com/</td>
+<td style="text-align: left;">Workout Data Manager for iOS.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">RunMotion</td>
+<td style="text-align: left;">https://en.run-motion.com/</td>
+<td style="text-align: left;">Personalised &amp; Adaptive training plans. Achieve your running goals with the RunMotion Coach app like 88% of our users. All you have to do is run!</td>
+<td style="text-align: left;">Your current fitness level: the app assesses your form and adapts your plan</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Vitesse</td>
+<td style="text-align: left;">https://vitesserunning.com/</td>
+<td style="text-align: left;">Bringing Coworkers together: The platform that makes corporate wellness easy and time spend with colleagues fun.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">RunningCoach</td>
+<td style="text-align: left;">https://apps.apple.com/us/app/running-coach-run-walk/id1520213665</td>
+<td style="text-align: left;">Run and walk whenever and wherever you want with your Running Coach. Set your goal, track your stats including elevation, pace, calories and more and observe your progress directly from your phone. Put your shoes on, get ready and go! Discover all our features including: - Real-time audio feedback: get motivated during your run. - Real time tracker with GPS: see your route and do it again if you want to. - Complete statistics: including elevation, pace, calories, elevation and more. - Register your activity: observe your progress throughout the time. This app uses HealthKit to track and log your workouts and workout routes.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Run with Hal</td>
+<td style="text-align: left;">https://www.halhigdon.com/apps/</td>
+<td style="text-align: left;">Made by trainingpeaks folks, limited adjustments</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Nike Run Club</td>
+<td style="text-align: left;">https://www.nike.com/nrc-app</td>
+<td style="text-align: left;">Not clear how dynamic things are.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">The Breakaway</td>
+<td style="text-align: left;">https://www.breakaway.app/</td>
+<td style="text-align: left;">Cycling focused workouts</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Training Today</td>
+<td style="text-align: left;">https://trainingtodayapp.com/</td>
+<td style="text-align: left;">Readiness focused</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Rewire</td>
+<td style="text-align: left;">https://rewirefitness.app/</td>
+<td style="text-align: left;">Daily readiness metrics (e.g., like whoop)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Athlytic</td>
+<td style="text-align: left;">https://apps.apple.com/us/app/athlytic-ai-fitness-coach/id1543571755</td>
+<td style="text-align: left;">HRV-based recommendations for training</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Strive</td>
+<td style="text-align: left;">https://strive.ai/</td>
+<td style="text-align: left;">Really just for tracking</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Runkeeper</td>
+<td style="text-align: left;">https://runkeeper.com/cms/</td>
+<td style="text-align: left;">Really just for tracking</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Strava</td>
+<td style="text-align: left;">https://www.strava.com/</td>
+<td style="text-align: left;">Really just for tracking</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Today's Plan</td>
+<td style="text-align: left;">https://www.todaysplan.com.au/</td>
+<td style="text-align: left;">Human coaching focused</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Training Tilt</td>
+<td style="text-align: left;">https://trainingtilt.com/</td>
+<td style="text-align: left;">Human coaching focused</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Final Surge</td>
+<td style="text-align: left;">https://www.finalsurge.com/</td>
+<td style="text-align: left;">Human coaching focused</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Future</td>
+<td style="text-align: left;">https://www.future.co/</td>
+<td style="text-align: left;">Human coaching focused</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<style>
+table {
+ border-collapse: collapse;
+ margin: 25px 0;
+ font-size: 0.9em;
+ font-family: sans-serif;
+ min-width: 400px;
+ box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+thead tr {
+ background-color: #009879;
+ color: #ffffff;
+ text-align: left;
+}
+
+th,
+td {
+ padding: 12px 15px;
+}
+
+tbody tr.active-row {
+ font-weight: bold;
+ color: #009879;
+}
+tbody tr {
+ border-bottom: 1px solid #dddddd;
+}
+
+tbody tr:nth-of-type(even) {
+ background-color: #f3f3f3;
+}
+
+tbody tr:last-of-type {
+ border-bottom: 2px solid #009879;
+}
+</style>
+
+<p>For a more complete list that includes training data collection apps, see the list here: https://endurancebikeandrun.com/blog/2020/2/6/the-best-running-and-cycling-training-diary-planning-and-analysis-applications.</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

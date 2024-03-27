@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="javascript" />
+<meta name="tags" contents="d3" />
+<meta name="tags" contents="hedonometer" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2014/09/24/using-labmt-simple-to-make-wordshifts/" rel="bookmark" title="Permalink to Using labMT-simple to make wordshifts">Using labMT-simple to make wordshifts</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2014-09-24T00:00:00+02:00">
+                        Wed 24 September 2014
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2014-09-24-using-labmtsimple-to-make-wordshifts.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>I just merged updates to the d3 wordshift plotting into labMTsimple, and combined with phantom crowbar (see previous post), it's easier than ever to use the labMT data set to compare texts.</p>
+<p>To make an html page with the shift, you'll just need to have labMT-simple installed.
+To automate the process into generating svg files, you'll need the phantom crowbar, which depends on phantomjs.
+To go all the way to pdf, you'll also need inkscape.</p>
+<p>Let's get set up to make shifts automatically.
+Since they're aren't many dependencies all the way down, start by getting phantomjs installed, then the phantom-crowbar.</p>
+<h2>Installing phantom-crowbar</h2>
+<p>For the phantomjs, I prefer to use homebrew:</p>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>update
+brew<span class="w"> </span>upgrade
+brew<span class="w"> </span>install<span class="w"> </span>phantomjs
+</code></pre></div>
+
+<p>Then to get the crowbar, clone the git repository.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/andyreagan/phantom-crowbar
+</code></pre></div>
+
+<p>To use it system-wide, I use the bash alias:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">alias</span><span class="w"> </span>phantom-crowbar<span class="o">=</span><span class="s2">&quot;/usr/local/bin/phantomjs ~/phantom-crowbar/phantom-crowbar.js&quot;</span>
+</code></pre></div>
+
+<p>Without too much detail, I recommend adding this to your <code>~/.bash_profile</code> so that it's loaded every time you start a terminal session.</p>
+<h2>Installing inkscape</h2>
+<p>You only need inkscape if you want to go from svg to pdf (and there are other ways too), but this one is easy with, again, homebrew.</p>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>inkscape
+</code></pre></div>
+
+<h2>Installing labMTsimple</h2>
+<p>There are two ways to get it: using pip of cloning the git repo.
+If you're not sure, use pip.
+I think pip makes it easier to keep it up to date, etc.</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>labMTsimple
+</code></pre></div>
+
+<h2>Making your first shift</h2>
+<p>If you cloned the git repository, install the thing and then you can check out the example in <code>examples/example.py</code>.
+If you went with pip, see that file on <a href="https://github.com/andyreagan/labMT-simple/blob/master/examples/example.py">github</a>.</p>
+<p>The basic idea is to generate the word vectors, and then pass them to <code>shiftHtml()</code>.
+In a little bit more detail, the key pieces are:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># load the module</span>
+<span class="kn">from</span> <span class="nn">labMTsimple.storyLab</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># get word, and word score frequency vectors</span>
+<span class="n">labMT</span><span class="p">,</span><span class="n">labMTvector</span><span class="p">,</span><span class="n">labMTwordList</span> <span class="o">=</span> <span class="n">emotionFileReader</span><span class="p">(</span><span class="n">stopval</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">returnVector</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># see the example file, but assuming there are two strings to score</span>
+<span class="c1"># named &quot;saturday&quot; and &quot;tuesday&quot;, generate their word frequency vectors</span>
+<span class="n">saturdayValence</span><span class="p">,</span><span class="n">saturdayFvec</span> <span class="o">=</span> <span class="n">emotion</span><span class="p">(</span><span class="n">saturday</span><span class="p">,</span><span class="n">labMT</span><span class="p">,</span><span class="n">shift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">happsList</span><span class="o">=</span><span class="n">labMTvector</span><span class="p">)</span>
+<span class="n">tuesdayValence</span><span class="p">,</span><span class="n">tuesdayFvec</span> <span class="o">=</span> <span class="n">emotion</span><span class="p">(</span><span class="n">tuesday</span><span class="p">,</span><span class="n">labMT</span><span class="p">,</span><span class="n">shift</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">happsList</span><span class="o">=</span><span class="n">labMTvector</span><span class="p">)</span>
+
+<span class="c1"># apply the traditional lens to the frequency vectors</span>
+<span class="c1"># this sets the frequency of words with score between</span>
+<span class="c1"># 4 and 6 (corresponding to stopval of 1)</span>
+<span class="n">tuesdayStoppedVec</span> <span class="o">=</span> <span class="n">stopper</span><span class="p">(</span><span class="n">tuesdayFvec</span><span class="p">,</span><span class="n">labMTvector</span><span class="p">,</span><span class="n">labMTwordList</span><span class="p">,</span><span class="n">stopVal</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">saturdayStoppedVec</span> <span class="o">=</span> <span class="n">stopper</span><span class="p">(</span><span class="n">saturdayFvec</span><span class="p">,</span><span class="n">labMTvector</span><span class="p">,</span><span class="n">labMTwordList</span><span class="p">,</span><span class="n">stopVal</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># generate an html file</span>
+<span class="c1"># and make a static directory</span>
+<span class="n">shiftHtml</span><span class="p">(</span><span class="n">labMTvector</span><span class="p">,</span><span class="n">labMTwordList</span><span class="p">,</span><span class="n">tuesdayStoppedVec</span><span class="p">,</span><span class="n">saturdayStoppedVec</span><span class="p">,</span><span class="s2">&quot;wordshift.html&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>That last call actually does quite a few things, in detail:</p>
+<ol>
+<li>Creates a directory called <code>static</code>, in your working directory</li>
+<li>Copies in a handful of files into <code>static</code></li>
+<li>Writes a javascript file called <code>static/wordshift.js</code> that has the lens, words, and both frequency vectors written out. The name is based off the root of the html file you've told it to write.</li>
+<li>Writes an html file, which loads all the javascript in static.</li>
+</ol>
+<p>Phew! We've made the html file. You can open it directly in Chrome (or your browser of choice...IE not tested).</p>
+<p>The optional, final step is to make the svg and/or pdf:</p>
+<div class="highlight"><pre><span></span><code>phantom-crowbar<span class="w"> </span>wordshift.html<span class="w"> </span>shiftsvg<span class="w"> </span>wordshift.svg
+inkscape<span class="w"> </span>-f<span class="w"> </span>wordshift.svg<span class="w"> </span>-A<span class="w"> </span>wordshift.pdf
+</code></pre></div>
+
+<p>Finally, check out wordshift.pdf for the file!
+And I'm working on upgrades, like optionally removing the shift button or putting numbers on the axes, so look out for more.</p>
+<p>And feel free to tweet suggestions at <a href="https://twitter.com/andyreagan">@andyreagan</a>, and submit pull requests to the <a href="https://github.com/andyreagan/labMT-simple">source code</a>!</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

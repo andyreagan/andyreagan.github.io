@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="d3" />
+<meta name="tags" contents="javascript" />
+<meta name="tags" contents="python" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2018/04/27/some-notes-about-running-d3-inside-jupyter/" rel="bookmark" title="Permalink to Some notes about running D3 inside Jupyter">Some notes about running D3 inside Jupyter</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2018-04-27T00:00:00+02:00">
+                        Fri 27 April 2018
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2018-04-27-jupyter-JS-notes.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>Many visualization packages rely on using D3 in the browser, and those include:
+<a href="https://github.com/plotly/plotly.py/blob/master/plotly/widgets/graph_widget.py#L26">Plotly</a>,
+<a href="https://github.com/vega/ipyvega/blob/master/vega/base.py">Vega</a>,
+and <a href="https://github.com/mpld3/mpld3/blob/master/mpld3/_display.py">mpld3</a>
+(links point to the code for how these projects get JS interacting with Jupyter, using IPython’s <a href="https://ipython.org/ipython-doc/3/api/generated/IPython.display.html">display module</a>).
+Some people have
+<a href="http://makeyourowntextminingtoolkit.blogspot.co.uk/2016/09/interactive-d3v4js-in-jupyter-notebook.html">no</a>
+<a href="http://blog.thedataincubator.com/2015/08/embedding-d3-in-an-ipython-notebook/">idea</a>
+<a href="http://www.machinalis.com/blog/embedding-interactive-charts-on-an-ipython-nb/">why</a>
+<a href="https://multithreaded.stitchfix.com/blog/2015/12/15/d3-jupyter/">it’s</a>
+<a href="https://www.authorea.com/users/3/articles/3904-data-driven-interactive-science-with-d3-js-plots-and-ipython-notebooks/_show_article">so</a>
+<a href="http://stackoverflow.com/questions/41149260/d3-js-reference-error-in-jupyter-notebook-from-local-copy">hard</a>,
+and I’ll count myself squarely in that group
+(caveat: those links are mostly random references to the topic).</p>
+<p>The part that makes things confusing is that Jupyter uses RequireJS,
+which doesn’t allow you to do the simple things easily:
+load d3 from a file
+(via <code>&lt;script src=...</code> or by pushing the JS file as a string into the <code>Javascript()</code> function from IPython).
+I could be wrong about this,
+sometimes using the script tag to load d3 works,
+but it definitely doesn’t work for jquery
+(it’s non-trivial for jquery: http://requirejs.org/docs/jquery.html).</p>
+<p>Of all the approaches to get D3 in the browser,
+the ones that seem to do it right use RequireJS to load either a local or CDN copy of D3.
+Here’s a good one:
+https://github.com/ResidentMario/py_d3.
+This is also exactly how MPLD3 does the load of D3, and their code is very clear.</p>
+<hr>
+
+<p>Other projects:
+https://github.com/jdfreder/ipython-d3networkx/
+https://mail.scipy.org/pipermail/ipython-dev/2014-April/013835.html</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

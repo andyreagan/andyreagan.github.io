@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="pandas" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2018/05/29/tricks-for-coercing-pandas-into-parquet/" rel="bookmark" title="Permalink to Tricks for coercing Pandas into parquet">Tricks for coercing Pandas into parquet</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2018-05-29T00:00:00+02:00">
+                        Tue 29 May 2018
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2018-05-29-pandas-parquet.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>For coercing pandas date times (stored as numpy datetime):</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;&lt;M8[ns]&#39;</span><span class="p">)]:</span>
+    <span class="c1"># https://stackoverflow.com/questions/32827169/python-reduce-precision-pandas-timestamp-dataframe</span>
+    <span class="c1"># apply(lambda x: x.replace(microsecond=0))</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;datetime64[s]&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>For coercing python datetime (here, a datetime.date, there may be other options with datetime.datetime (I’ve included my failed attempts that may work there as comments)):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># df.date.values.to_timestamp()</span>
+<span class="c1"># pd.Timestamp(df.date)</span>
+<span class="c1"># df.date.values.astype(np.int64)</span>
+<span class="c1"># df.loc[~df.date.isnull(),&#39;date&#39;].values.astype(np.int64)</span>
+<span class="c1"># df.date.values[0].timestamp()</span>
+<span class="c1"># pd.Timestamp(df.date.values[0],unit=&#39;s&#39;)</span>
+<span class="c1"># pd.Timestamp(df.date.values[0].timestamp(),unit=&#39;s&#39;)</span>
+<span class="c1"># df.date.values[0].isoformat()</span>
+<span class="c1"># df.date.apply(lambda x: x.isoformat())</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">isoformat</span><span class="p">())</span>
+</code></pre></div>
+
+<p>For timedeltas in pandas, <code>timedelta64[ns]</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="p">[</span><span class="s2">&quot;timedelta_days&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">days</span>
+</code></pre></div>
+
+<p>For mixed float and string, encoded as pandas <code>object</code> type and <code>np.nan</code> for nulls (this throws error):</p>
+<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">isfloat</span><span class="p">),</span><span class="s2">&quot;col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+</code></pre></div>
+
+<p>You need these two, inefficient helpers:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">isint</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+<span class="k">def</span> <span class="nf">isfloat</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div>
+
+<p>When things come in with bytes type, and you get a memoryview error, hit your dataframe with this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">stringify_df</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">memoryview</span><span class="p">:</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="p">[</span><span class="n">col</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),:]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">,</span> <span class="s2">&quot;ignore&quot;</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="p">[</span><span class="n">col</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),:]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">,</span> <span class="s2">&quot;ignore&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">,</span> <span class="s2">&quot;ignore&quot;</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

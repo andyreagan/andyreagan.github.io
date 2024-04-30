@@ -301,40 +301,12 @@ You can also see my work on [Google Scholar](https://scholar.google.com/citation
     <div style="padding-bottom: 8px;">
         <div class="row">
             <div class="col-sm-2 nopadding" style="width: 110px;">
-                <img src="/images/papers/2016-02-01-17-35-Screenshot-2016-02-01-17-24-20.png" style="max-width: 100px; max-height-100px;">
-            </div>
-            <div class="col-sm-10 nopadding">
-                <div style="max-width: 500px;">9.
-                    <a href="http://arxiv.org/abs/1601.07969">Selection models of language production support informed text partitioning: an intuitive and practical bag-of-phrases framework for text analysis</a>, 2016.
-                    Jake Williams, Jim Bagrow, Andy Reagan, Sharon Alajajian, Chris Danforth, et. al.
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div style="padding-bottom: 8px;">
-        <div class="row">
-            <div class="col-sm-2 nopadding" style="width: 110px;">
                 <img src="/images/papers/2018-05-21-09-43-Screen-Shot-2018-05-21-at-9-40-09-AM.png" style="max-width: 100px; max-height-100px;">
             </div>
             <div class="col-sm-10 nopadding">
                 <div style="max-width: 500px;">8.
                     <a href="https://arxiv.org/pdf/1601.07969.pdf">Zipf's law is a consequence of coherent language production</a>, 2016.
                     Jake Williams, Jim Bagrow, Andy Reagan, Sharon Alajajian, Chris Danforth, et. al.
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div style="padding-bottom: 8px;">
-        <div class="row">
-            <div class="col-sm-2 nopadding" style="width: 110px;">
-                <img src="/images/papers/2018-06-13-09-20-Screen-Shot-2018-06-13-at-9-18-52-AM.png" style="max-width: 100px; max-height-100px;">
-            </div>
-            <div class="col-sm-10 nopadding">
-                <div style="max-width: 500px;">7.
-                    <a href="https://arxiv.org/abs/1512.00531">Benchmarking sentiment analysis methods for large-scale texts: A case for using continuum-scored words and word shift graphs</a>, 2015.
-                    Andy Reagan, Brian Tivnan, Jake Williams, Chris Danforth, Peter Sheridan Dodds.
                 </div>
             </div>
         </div>

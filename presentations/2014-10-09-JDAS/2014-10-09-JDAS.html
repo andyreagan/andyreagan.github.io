@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Thermosyphon Flow Prediction</title>
+
+    <meta name="author" content="andy reagan">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/katex.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="2014-10-09-JDAS/css.css">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    
+    <!-- For icons -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- fix for the fa icons -->
+    <!-- https://github.com/hakimel/reveal.js/issues/601 -->
+    <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+    <link rel="stylesheet" href="css/storylabpres.css">
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = 'css/print/pdf.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
+
+    <!--[if lt IE 9]>
+	<script src="lib/js/html5shiv.js"></script>
+	<![endif]-->
+  </head>
+
+  <body>
+
+\( 
+\newcommand{\mbe}{\mathbf{\epsilon}}
+\newcommand{\mbx}{\mathbf{x}}
+\newcommand{\mby}{\mathbf{y}}
+\newcommand{\mbd}{\mathbf{d}}
+\newcommand{\mbB}{\mathbf{B}}
+\newcommand{\mbW}{\mathbf{W}}
+\newcommand{\mbR}{\mathbf{R}}
+\newcommand{\mbH}{\mathbf{H}}
+\newcommand{\mbK}{\mathbf{K}}
+\newcommand{\mbP}{\mathbf{P}}
+\newcommand{\mbZ}{\mathbf{Z}}
+\newcommand{\mbw}{\mathbf{w}}
+\newcommand{\mbX}{\mathbf{X}}
+\newcommand{\mbY}{\mathbf{Y}}
+\newcommand{\mb}{\mathbf{}}
+\newcommand{\expv}[1]{E \left [ #1 \right ]}
+\)
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+	<section>
+	  <h1>Thermosyphon Flow Prediction</h1>
+	  <h3>Predicting Flow Reversals in a Computational Fluid Dynamics Simulated Thermosyphon using Data Assimilation</h3>
+	  <p>
+	    <small>created by <a href="http://andyreagan.com">andy reagan</a> / <a href="http://twitter.com/andyreagan">@andyreagan</a></small>
+	  </p>
+	</section>
+
+
+	<section>
+	  <section>
+	    <h3>Data Assimilition</h3>
+	    <p>Tests on Lorenz 63</p>
+	    <ol>
+	      <li class="fragment">3D-Var</li>
+	      <li class="fragment">Extended Kalman Filter</li>
+	      <li class="fragment">Ensemble Kalman Filter</li>
+	      <li class="fragment">Ensemble Transform Kalman Filter</li>
+	      <!-- <li class="fragment">Ensemble Square Root Filter</li> -->
+	    </ol>
+	  </section>
+	  <section>
+	    <h4>Lorenz System</h4>
+	    <div class="fragment">
+	    <!-- <div class="fragment fade-out"> -->
+	      \[ \begin{align*}
+	      \frac{dx}{dt} &= \sigma (y-x)\\
+	      \frac{dy}{dt} &= \rho x - y -xz \\
+	      \frac{dz}{dt} &= xy -  \beta z\end{align*} \]
+	    <!-- </div> -->
+	    </div>
+	    <div class="fragment">	    
+	      <pre><code data-trim contenteditable>	      
+function [xprime] = lorenz63_model(~,x,params)
+% the Lorenz '63 system, as a function
+% 
+% INPUT
+%   t  - time, scalar
+%   y  - column vector solution
+%   params  - cell array of parameters {b,s,r}
+
+b = params{1}; s = params{2}; r = params{3};
+
+xprime = [s*(x(2)-x(1));r*x(1)-x(2)-x(1)*x(3);x(1)*x(2)-b*x(3)];
+end
+	      </code></pre>
+	    </div>
+	  </section>
+	  <section>
+	    <h3>3D-Var</h3>
+	    <ul>
+	      <li class="fragment">Theory last week!</li>
+	      <li class="fragment">Cost function:
+		\[ J(\mathbf{x}) = (\mathbf{x} - \mathbf{x}_b) ^T \mathbf{B} ^{-1} (\mathbf{x} - \mathbf{x}_b) + (\mathbf{y_o} + H(\mathbf{x}))^T\mathbf{R}^{-1| (\mathbf{y}_o - H(\mathbf{x})) \]
+	      </li>
+	      <li class="fragment">Set \( \nabla_x J(\mathbf{x}_a)  = 0 \):
+		\[ \mathbf{x}_a = \mathbf{x}_b+(\mathbf{B}^{-1} + \mathbf{H}^T\mathbf{R}^{-1}\mathbf{H})^{-1}\mathbf{H}^T\mathbf{R}^{-1}(\mathbf{y}_o-\mathbf{H}(\mathbf{x}_b)) \]
+	      </li>
+	      <li class="fragment">Get
+		\[ \mathbf{V} = (\mathbf{B}^{-1}+\mathbf{H}^{T}\mathbf{R}^{-1}\mathbf{H})^{-1}\mathbf{H}^{T}\mathbf{R}^{-1} \]
+		\[ \mathbf{d} = \mathbf{y}_0 - \mathbf{H} \mathbf{x}_b \]
+		\[ \mathbf{x}_a = \mathbf{x}_b + \mathbf{V} \mathbf{d} \]
+	      </li>
+	    </ul>
+	  </section>
+	  <section>
+	    <pre><code data-trim contenteditable>
+function [x_a] = threedvar(x_f,y_o,H,R,B,varargin)
+% 3D-Var
+%
+% Solve the 3D-Var cost function
+%
+% INPUTS
+%   x_f: the previous analysis, column vector
+%   y_o: observations
+%   H:   obs operator
+%   R:   obs cov
+%   B:   model cov
+%
+% OUTPUTS
+%  x_a -> the analysis
+%
+% written by Andy Reagan
+% last edited 2014-10-02
+
+
+% precompute intermediary matrix
+V = (Binv+H'*inv(R)*H)\(H'*inv(R));
+
+% innovation
+d = y_o - H*x_f;
+
+x_a = x_f + V*d; 
+	    </code></pre>
+	  </section>
+	  <section>
+	    <h3>EKF</h3>
+	    <ul>
+	      <li class="fragment">Implementation:
+	      \[ \begin{align} \mbx^a (t_i ) &= \mbx^f (t_i) + \mbK_i \mbd_i\\
+	      \mbP^a (t_i) &= (\mathbf{I} - \mbK_i \mbH_i )\mbP^f (t_i) \end{align} \]
+	      \[ \mbd_i = \mby_i^o - \mbH[x^f (t_i) ] \]
+	      </li>
+	      <li class="fragment">
+	      The Kalman gain matrix is computed to minimize the analysis error covariance \( P^a _i \) as
+	      \[ \mbK_i = \mbP^f (t_i) \mbH_i ^T [ \mbR_i + \mbH_i \mbP^f (t_i) \mbH^T ] ^{-1} \]
+	      where \( \mbR_i \) is the observation error covariance.
+	      </li>
+	    </ul>
+	  </section>
+	  <section>
+	    <pre><code data-trim contenteditable>
+function [x_a,p_a] = EKF(x_f,y_o,H,R,p_f,varargin)
+% EKF
+%
+% generalized EKF: compute a new error covariance and forecast
+%
+% INPUTS
+%   x_f: the previous analysis, column vector
+%   y_o: observations
+%   H:   obs operator
+%
+% OUTPUTS
+%  x_a -> the analysis
+%
+% written by Andy Reagan
+% 13-06-13
+
+% now need to compute the new analysis
+K = (p_f*H')/(R+H*p_f*H');
+
+% innovation
+d = y_o - H*x_f;
+
+% analysis
+x_a = x_f + K*d; 
+p_a = (eye(length(x_f)) - K*H)*p_f;
+	    </code></pre>
+	  </section>
+	  <section>
+	    <h3>Integrating the TLM</h3>
+	    <ul>
+	      <li class="fragment">We can think of the ODE we're solving as:
+		\[ \frac{d\mbx}{dt} = F(\mbx) .\]
+	      </li>
+	      <li class="fragment">The RK4 scheme I use discretized this equation:
+		\[ \mbx(t) = M[ \mbx(t_0) ] .\]
+	      </li>
+	      <li class="fragment">Introducing a small perturbation \(\mby\), we can approximate our model \(M\) applied to \(\mbx(t_0) + \mby(t_0)\) with a Taylor series around \(\mbx(t_0)\):
+		\[ \begin{align*} M[ \mbx(t_0) + \mby(t_0) ] &= M [ \mbx(t_0) ] + \frac{\partial M}{\partial \mbx} \mby(t_0) + O [ \mby(t_0) ^2 ]\\ &\approx \mbx(t) + \frac{\partial M}{\partial \mbx} \mby(t_0) .\end{align*} \]
+	    </li>
+	    </ul>
+	  </section>
+	  <section>
+	    <h3>Integrating the TLM</h3>
+	    <li class="fragment">We can then solve for the linear evolution of the small perturbation \(\mby(t_0)\) as 
+	      \[ \begin{equation} \frac{d\mby }{dt } = \mathbf{J} \mby \label{eq:ODETLM} \end{equation} \]
+	      where \(\mathbf{J} = \partial F / \partial \mbx\) is the Jacobian of \(F\).
+	    </li>
+	  </section>
+	  <section>
+	    <h3>Integrating the TLM</h3>
+	    <img src="2014-10-09-JDAS/TLM-explanation.png" class="img-normal"/>
+	  </section>
+	  <section>
+	    <pre><code data-trim contenteditable>
+function [p_f] = lorenz63_TLM(method,t,window_len,x_a,tstep,p_a,params)
+
+switch method
+    case 'rk2prime'
+        %%%%%%%%%%%%%%%%%
+        %% rk2 prime method
+        
+        % integrate the foward model
+        [~,~,L] = rk2prime(@lorenz63_model,@lorenzJ,params,[t t+window_len],x_a,tstep);
+        
+        % error covariance from model
+        p_f = L*p_a*L';
+                
+    case 'kam'
+        %%%%%%%%%%%%%%%%%%%%%%
+        %% method from Kam
+
+        % compute the Jacobian of Lorenz 63
+        lorenzJac = @(y,params) [-params{2},params{2},0;-y(3)+params{3},-1,-y(1);y(2),y(1),-params{1}];
+        J = lorenzJac(x_a,params);
+        
+        dim = length(x_a);
+        p_f = ones(dim);
+        for i=1:dim
+            [~,tmp] = rk2(@(~,y,params) J*y,params,[t t+window_len],p_a(:,i),tstep);
+            p_f(:,i) = tmp(end,:)';
+        end
+        
+    case 'explicit'
+        %%%%%%%%%%%%%%%%%%%%
+        %% explicit RK2 derivative method
+        
+        % compute the LTM from the RK2 discretization of model directly
+        [~,~,L] = lorenzRK2explicit([t t+window_len],x_a,tstep);
+        
+        % error covariance from model
+        p_f = L*p_a*L';
+end
+end
+	    </code></pre>
+	  </section>
+	  <section>
+	    <pre><code data-trim contenteditable>
+function [tout, yout,L] = rk2prime(FunFcn,J,params, tspan, y0, ssize)
+
+% RK2	Integrates a system of ordinary differential equations using
+%	the second order Runge-Kutta  method.  See also ODE45 and
+%	ODEDEMO.M.
+%	[t,y] = rk2('yprime', tspan, y0) integrates the system
+%	of ordinary differential equations described by the M-file
+%	yprime.m over the interval tspan=[t0,tfinal] and using initial
+%	conditions Y0.
+%	[t, y] = rk2(F, tspan, y0, ssize) uses step size ssize
+%
+% INPUT:
+% F     - String containing name of user-supplied problem description.
+%         Call: yprime = fun(t,y,params) where F = 'fun'.
+%         t      - Time (scalar).
+%         y      - Solution column-vector.
+%         yprime - Returned derivative column-vector; yprime(i) = dy(i)/dt.
+%         params - Parameters of the function, cell array
+% tspan = [t0, tfinal], where t0 is the initial value of t, and tfinal is
+%         the final value of t.
+% y0    - Initial value column-vector.
+% ssize - The step size to be used. (Default: ssize = (tfinal - t0)/100).
+%
+% OUTPUT:
+% t  - Returned integration time points (column-vector).
+% y  - Returned solution, one solution column-vector per tout-value.
+%
+% The result can be displayed by: plot(t,y).
+
+% Initialization
+
+t0=tspan(1);
+tfinal=tspan(2);
+pm = sign(tfinal - t0);  % Which way are we computing?
+if nargin < 4, ssize = (tfinal - t0)/100; end
+if ssize < 0, ssize = -ssize; end
+h = pm*ssize;
+t = t0;
+y = y0(:);
+
+% We need to compute the number of steps.
+
+dt = abs(tfinal - t0);
+N = floor(dt/ssize) + 1;
+if (N-1)*ssize < dt
+  N = N + 1;
+end
+
+% Initialize the output.
+
+tout = zeros(N,1);
+tout(1) = t;
+yout = zeros(N,size(y,1));
+yout(1,:) = y.';
+k = 1;
+
+% The main loop 
+
+% initialize L
+dim = length(y0);
+L = eye(dim);
+while k < N
+  if pm*(t + h - tfinal) > 0 
+    h = tfinal - t; 
+    tout(k+1) = tfinal;
+  else
+    tout(k+1) = t0 +k*h;
+  end
+  k = k + 1;
+  % Compute the slopes
+  s1 = feval(FunFcn,t, y,params); s1 = s1(:);
+  L1 = feval(J,t,y,params);
+  s2 = feval(FunFcn,t + h, y + h*s1,params); s2=s2(:);
+  L2 = feval(J,t+h,y+h*s1,params)*(eye(dim)+h*L1);
+  % Compute L here
+  % L = L*(eye(dim) + h/2*(feval(J,t,y,params)+feval(J,t+0.5*h,y+h*s1,params)*(eye(dim)+h*feval(J,t,y,params))));
+  L = L*(eye(dim) + h/2*(L1+L2));
+  y = y + h*(s1 + s2)/2;
+  t = tout(k);
+  yout(k,:) = y.';
+end;
+	    </code></pre>
+	  </section>
+	  <section>
+	    <h3>Did that actually work??</h3>
+	    <img src="2014-10-09-JDAS/TLM-verification.png" class="img-normal"/>
+	  </section>
+	  <section>
+	    <h3>EnKF</h3>
+	    <ol>
+	      <li class="fragment">Ensemble filters estimate the covariance using an ensemble of models</li>
+	      <li class="fragment">Easy to run L63 lots, harder to use 40 CFD simulations simultaneously</li>
+	      <li class="fragment">Approximate model covariance:
+	      \[ \mbP^f \approx \frac{1}{K-2} \sum _{k\neq l} \left ( \mbx_k ^f - \overline{\mbx} ^f _l \right ) \left (\mbx_k ^f - \overline{\mbx} ^f _l \right ) ^T .\]
+	      </li>
+	    </ol>
+	  </section>
+	  <section>
+	    <pre><code data-trim contenteditable>
+function X_a = EnKF(X_f,y_o,H,R,delta,varargin)
+
+% EnKF.m
+%
+% generalized EnKF: compute the new analysis
+% "perturbed observation" method
+%
+% INPUTS
+%  X_f:     the whole forecast, columns are model state
+%
+% OUTPUTS
+%  X_a:     the analysis matrix, columns are model state analysis
+%
+% written by Andy Reagan
+% 2013-10-13
+
+% set the error the randomly perturbing the analysis IC for ensemble members
+% this is the std dev of a normal error
+PertError = R(1,1); % or error_max
+
+N = length(X_f(1,:));
+
+% let x_f now be the average
+x_f = mean(X_f,2);
+
+% for speed, could also try
+X_f_diff = X_f - repmat(x_f,1,N);
+
+% multiplicative inflation
+X_f_diff = sqrt(1+delta).*X_f_diff;
+
+p_f = 1/(N-1)*(X_f_diff*X_f_diff');
+
+K = (p_f*H')/(R+H*p_f*H');
+
+% now compute the analysis for each ensemble member
+X_a=X_f;
+for j=1:N
+    % perturb y_o according to R
+    pertY = y_o+randn(size(y_o))*PertError;
+
+    % innovation
+    d = pertY - H*(x_f+X_f_diff(:,j));
+
+    % here it is
+    X_a(:,j) = x_f+X_f_diff(:,j) + K*d;
+end
+	    </code></pre>
+	  </section>
+	  <section>
+	    <h3>Spaghetti</h3>
+	    <img src="2014-10-09-JDAS/EnKF_spaghetti.png" class="img-normal"/>
+	  </section>
+	  <section>
+	    <h3>ETKF</h3>
+	    <ol>
+	      <li class="fragment">
+		Begin by writing:
+		\[ \begin{equation} \mbP_a = \mbZ_a \mbZ_a^T ~~,~~~ \mbP_f = \mbZ_f \mbZ_f^T \end{equation} \]
+	      </li>
+	      <li class="fragment">
+		Since columns of \( \mbZ_f \) are ensemble differences from the mean, update the ensemble with the model \( M \):
+		\[ \begin{equation} \mbZ_f = M \mbZ_a .\end{equation} \]
+	      </li>
+	      <li class="fragment">
+		Now: how to determine \( \mbP_a \) ( or \( \mbZ _a \))?
+	      </li>
+	    </ol>
+	  </section>
+	  <section>
+	    <h3>ETKF</h3>
+	    <ol>
+	      <li class="fragment">
+		Stochastic method from (Tippet 2003):
+		\[ \mbZ _a = ( I - \mbK \mbH) \mbZ _f + \mbK \mathbf{W}. \]
+	      </li>
+	      <li class="fragment">
+		In the SRF approach, the "Potter Method" provides a deterministic update by rewriting
+\[ \begin{align} \mbP_a &= \mbZ_a \mbZ_a^T = \left(\mathbf{I}-\mbP_f\mbH^T(\mbR+\mbH\mbP_f\mbH^T)^{-1}\mbH\right)\mbP_f \\
+&= \mbZ_f\left(\mathbf{I}-\mbZ_f\mbH^T(\mbH\mbZ_f\mbZ_f^T\mbH^T+\mbR)^{-1}\mbH\mbZ_f\right)\mbZ_f^T\\
+&= \mbZ_f\left(\mathbf{I}-\mathbf{V}\mathbf{D}^{-1}\mathbf{Z}^T\right)\mbZ_f^T. \end{align} \]
+	      </li>
+	    </ol>
+	  </section>
+	  <section>
+	    <h3>ETKF</h3>
+	    <ol>
+	      <li class="fragment">
+We have defined \(\mathbf{V}\equiv(\mbH\mbZ_f)^T\) and \(\mathbf{D}\equiv\mathbf{V}^T\mathbf{V}+\mbR\).
+So for the ETFK step, we use the Sherman-Morrison-Woodbury identity to show
+\[ \begin{equation} \mathbf{I} - \mathbf{V}\mathbf{D}^{-1}\mathbf{V}^T = (\mathbf{I}+\mathbf{Z}_f\mathbf{H}^T\mathbf{R}^{-1}\mathbf{H}\mathbf{Z}_f)^{-1}.\end{equation} \]
+	      </li>
+	      <li class="fragment">
+The analysis update is thus
+\[ \begin{equation} \mbZ_a = \mbZ_f \mathbf{C}(\mathbf{\Gamma} +\mathbf{I})^{-1/2} ,\end{equation} \]
+where \(\mathbf{C}\mathbf{\Gamma}\mathbf{C}^T\) is the eigenvalue decomposition of \(\mbZ_f^T\mbH^T\mbR^{-1}\mbH\mbZ_f\).
+	      </li>
+	    </ol>
+	  </section>
+<!-- 	  <section> -->
+<!-- 	    <h3>ETKF</h3> -->
+<!-- 	    <ol> -->
+<!-- 	      <li class="fragment"> -->
+<!-- Then the analysis perturbation is calculated from -->
+<!-- \[ \begin{equation} \mbZ_a = \mbZ_f \mathbf{X} \mathbf{U}, \end{equation} \] -->
+<!-- where \(\mathbf{X}\mathbf{X}^T = (\mathbf{I}-\mathbf{Z}\mathbf{D}^{-1}\mathbf{V}^T)\) and \(\mathbf{U}\) is an arbitrary orthogonal matrix. -->
+<!-- 	      </li> -->
+<!-- 	      <li class="fragment"> -->
+<!-- In this filter, the analysis perturbations are assumed to be equal to the backgroud perturbations post-multiplied by a transformation matrix \(\mathbf{T}\) so that that the analysis error covariance satisfies -->
+<!-- \[ \mbP_a = (1- \mbK \mbH ) \mbP_f . \] -->
+<!-- 	      </li> -->
+<!-- 	      <li class="fragment"> -->
+<!-- The analysis covariance is also written -->
+<!-- \[ \mbP_f = \frac{1}{P-1} ( \mathbf{X}_a (\mathbf{X}_a) ^T = \mathbf{X} ^b \hat{\mathbf{A}} (\mathbf{X} ^b) ^T \] -->
+<!-- where \(\hat{\mathbf{A}} = [(P-1) \mathbf{I} + (\mathbf{H} \mathbf{X} ^b ) ^T \mathbf{R} ^{-1} (\mathbf{H} \mathbf{X} ^b ) ] ^{-1} \). -->
+<!-- The analysis perturbations are \(\mathbf{X} ^a = \mathbf{X} ^b \mathbf{T}\) where \(\mathbf{T} = [(P-1)\hat{\mathbf{A}} ] ^{1/2} \). -->
+<!-- 	      </li> -->
+<!-- 	    </ol> -->
+<!-- 	  </section> -->
+	  <section>
+	    <h3>ETKF</h3>
+	    <ol>
+	      <li class="fragment">
+To summarize, the steps for the ETKF are to (1) form \(\mbZ_f^T\mbH^T\mbR^{-1}\mbH\mbZ_f\), assuming \(\mathbf{R}^{-1}\) is easy, and (2) compute its eigenvalue decomposition, and apply it to \(\mbZ_f\).
+	      </li>
+	    </ol>
+	  </section>
+	  <section>
+	    <pre><code data-trim contenteditable>
+function X_a = ETKF(X_f,y_o,H,R,delta,varargin)
+
+% ETKF.m
+%
+% Ensemble Transform Kalman Filter: compute the new analysis
+% 
+% INPUTS
+%  X_f:     the whole forecast, columns are model state
+%
+% OUTPUTS
+%  X_a:     the analysis matrix, columns are model state analysis
+%
+% written by Andy Reagan
+% 2013-10-18
+
+N = length(X_f(1,:));
+
+%% let x_f now be the average
+x_f = mean(X_f,2);
+
+X_f_diff = X_f - repmat(x_f,1,N);
+
+%% multiplicative inflation
+X_f_diff = sqrt(1+delta).*X_f_diff;
+
+p_f = 1/(N-1)*(X_f_diff*X_f_diff');
+
+K = (p_f*H')/(R+H*p_f*H');
+
+d = y_o - H*x_f;
+
+x_a = x_f + K*d;
+
+%% perform the transform
+%% it is (from the literature)
+%% absolutely necessary to perform this inversion
+p_a = inv((N-1)*eye(N)+(H*X_f_diff)'/(R)*(H*X_f_diff));
+
+T = sqrtm((N-1)*p_a);
+
+X_a_diff = X_f_diff*T;
+
+%% now compute the analysis for each ensemble member
+X_a=repmat(x_a,1,N) + X_a_diff;
+	    </code></pre>
+	  </section>
+<!-- 	  <section> -->
+<!-- 	    <h3>EnSRF</h3> -->
+<!-- 	    <ol> -->
+<!-- 	      <li class="fragment">I understand this one the least</li> -->
+<!-- 	    </ol> -->
+<!-- 	  </section> -->
+<!-- 	  <section> -->
+<!-- 	    <pre><code data-trim contenteditable> -->
+<!-- function X_a = EnSRF(X_f,y_o,H,R,delta,varargin) -->
+
+<!-- % EnSRF.m -->
+<!-- % -->
+<!-- % Ensemble Square Root Filter: compute the new analysis -->
+<!-- % -->
+<!-- % INPUTS -->
+<!-- %  X_f:     the whole forecast, columns are model state -->
+<!-- % -->
+<!-- % OUTPUTS -->
+<!-- %  X_a:     the analysis matrix, columns are model state analysis -->
+<!-- % -->
+<!-- % written by Andy Reagan -->
+<!-- % 2013-10-13 -->
+
+
+<!-- N = length(X_f(1,:)); -->
+
+<!-- % let x_f now be the average -->
+<!-- x_f = mean(X_f,2); -->
+
+<!-- % for speed, could also try -->
+<!-- X_f_diff = X_f - repmat(x_f,1,N); -->
+
+<!-- % multiplicative inflation -->
+<!-- X_f_diff = sqrt(1+delta).*X_f_diff; -->
+
+<!-- p_f = 1/(N-1)*(X_f_diff*X_f_diff'); -->
+
+<!-- K = (p_f*H')/(R+H*p_f*H'); -->
+<!-- d = y_o - H*x_f; -->
+
+<!-- x_a = x_f + K*d; -->
+
+<!-- Kt = p_f*H'/(sqrtm(H*p_f*H'+R))')/(sqrtm(H*p_f*H'+R)+sqrtm(R)); -->
+
+<!-- X_a_diff = (eye(length(H(:,1)))-Kt*H)*X_f_diff; -->
+
+<!-- % now compute the analysis for each ensemble member -->
+<!-- X_a=repmat(x_a,1,N) + X_a_diff; -->
+<!-- 	    </code></pre> -->
+<!-- 	  </section> -->
+	</section>
+
+
+
+	<section>
+	  <section>
+	    <h2>Testing and tuning the filters</h2>
+	  </section>
+	  <section>
+	    <p>Pre-compute climatological \( \mbB \) for 3D-Var<p>
+	    <div class="fragment">
+	    <pre><code data-trim contenteditable>
+% generate_B.m
+%
+% make some climatological B matrices for 3dvar
+%
+% Andy Reagan
+% 2014-10-02
+
+clear all
+close all
+addpath(genpath('/Users/andyreagan/work/2013/2013-05data-assimilation/src'))
+
+%% parameters
+numRuns = 100;
+
+modelname = 'lorenz63';
+dim = 3;
+
+%% initialize storage
+
+for window=0.05:0.05:1
+    B = zeros(dim);
+    %% loop over number of runs (smooth out errors)
+    for i=1:numRuns
+        model = lorenz63();
+        model.init();
+        model.window = window;
+        initial_x = model.x;
+        % generate the truth timeseries
+        model.run()
+        final_x = model.x;
+        
+        B = B + (final_x-initial_x)*(final_x-initial_x)';
+        
+        fprintf('run %d finished\n',i);
+        % disp((final_x-initial_x)*(final_x-initial_x)');
+    end
+    fprintf('final B from window %f:\n',window)
+    B = B./numRuns;
+    disp(B);
+    Binv = inv(B);
+    save(sprintf('B%.2f.mat',window),'B','Binv')
+end
+	    </code></pre>
+	    </div>
+	  </section>
+	  <section>
+	    <h3>Covariance inflation</h3>
+	    <p class="fragment">To maintain the numerical stability of the assimilation it is necessary to use additive and/or multiplicative covariance inflation</p>
+	    <img src="2014-10-09-JDAS/covinflation.png" class="img-normal fragment"/>
+	  </section>
+	  <section>
+	    <h3>Testing individually</h3>
+	    <img src="2014-10-09-JDAS/DA_test_noname_w3dvar.png" class="img-normal fragment"/>
+	  </section>
+
+	  <section>
+	    <h3>Against each other and window length</h3>
+	    <img src="2014-10-09-JDAS/window_experiment_plot002.png" class="img-normal fragment"/>
+	  </section>
+	</section>
+
+	<section>
+	  <section>
+	    <h2>Thermosyphon as model atmosphere</h2>
+	  </section>
+	  <section>
+	    <img src="2014-10-09-JDAS/loopdiagram.png" class="img-normal"/>
+	  </section>
+	  <section>
+	    <img src="2014-10-09-JDAS/thermoexamples.png" class="img-normal"/>
+	  </section>
+	  <section>
+	    <img src="2014-10-09-JDAS/alaskathermo.png" class="img-normal"/>
+	  </section>
+	  <section>
+	    <iframe class="youtube" width="975" height="515" src="http://www.youtube.com/embed/Vbni-7veJ-c" frameborder="0" allowfullscreen></iframe>
+	  </section>
+	</section>
+
+	<section>
+	  <section>
+	    <h2>Modeling the thermosyphon</h2>
+	  </section>
+	  <section>
+	    <h3>CFD: Navier-stokes equations</h3>
+	    <div class="fragment">
+	      \[ 
+	      \begin{align*} \frac{\partial}{\partial x_j} u_j &= 0\\
+	      \rho \frac{\partial u_i}{\partial t} + \rho \frac{\partial}{\partial x_j} (u_j u_i)  &= - \frac{\partial p}{\partial x_i} + \mu \frac{\partial^2 u_i}{\partial x_j ^2} + \rho g_i\\
+	      \frac{\partial}{\partial t} (\rho e) + \frac{\partial}{\partial x_j} (\rho e u_j)  &= -k \frac{\partial^2 T}{\partial x_k^2}\end{align*}
+	      \]
+	    </div>
+	  </section>
+
+	  <section>
+	    <h3>Boussinesq Approximation</h3>
+	    <div class="fragment">
+	    Assume density changes are linear with temperature:
+	    \[ 
+	    \rho _k = 1 - \beta ( T - T_{\text{ref}})
+	    \]
+	    So we neglect their effect except when multiplied by gravity
+	    \[
+	    \Rightarrow \rho = \rho _0
+	    \]
+	    </div>
+	  </section>
+
+	  <section>
+	    <h3>Solving: OpenFOAM</h3>
+	    <p class="fragment">OpenFOAM is an open source C++ library of CFD solvers</p>
+	    <div class="fragment">
+	    <h1>buoyantBoussinesqPimpleFoam</h1>
+	    <p>Weapon of choice</p>
+	    </div>
+	  </section>
+
+	  <section>
+	    <h3>simulation parameters</h3>
+	    <ul>
+	      <li class="fragment">fixed boundary conditions</li>
+	      <li class="fragment">2D, laminar</li>
+	      <li class="fragment">PISO solving algorithm</li>
+	      <li class="fragment">semi-staggered grid</li>
+	      <li class="fragment">euler time-stepping</li>
+	      <li class="fragment">gauss linear/upwind/linear grad/div/laplacian linear interpolation</li>
+	      <li class="fragment">DILU/PBiCG, relaxation 1</li>
+	    </ul>
+	  </section>
+
+	  <section>
+	    <h3>Meshing</h3>
+	    <pre><code data-trim contenteditable>
+convertToMeters 0.1; // specifications in .1 meters
+
+vertices
+(
+    // 16 vertices for the loop (x y z)
+    // top four
+    (0 0 34.5) //0
+    (1.5 0 36) //1
+    (0 0 37.5) //2
+    (-1.5 0 36) //3
+...
+blocks
+(
+    // block 1, upper left
+    hex (6 5 4 7 2 1 0 3) (30 30 300) simpleGrading (1 1 1)
+...
+
+// define the arcs of the loop
+edges
+3D Mesh
+￼￼(
+    // top circle python blockMeshDictHelper.py arc 0 0 34.5 1.5 0 36 0 0 37.5 -1.5 0 36 0 1 2 3
+    arc 0 1 (1.0606601717798212,0.0,34.93933982822018)
+    arc 1 2 (1.0606601717798212,0.0,37.06066017177982)
+    arc 2 3 (-1.0606601717798212,0.0,37.06066017177982)
+    arc 3 0 (-1.0606601717798212,0.0,34.93933982822018)
+...
+ 	    </code></pre>
+	  </section>
+	  <section>
+	    <h3>3D</h3>
+	    <img src="2014-10-09-JDAS/3D mesh!!.png" class="img-normal fragment"/>
+	  </section>
+	  <section>
+	    <h3>2D</h3>
+	    <img src="2014-10-09-JDAS/mesh.png" class="img-normal fragment"/>
+	  </section>
+
+	  <section>
+	    <h3>Action! (2D)</h3>
+	    <iframe src="//player.vimeo.com/video/108178860" width="500" height="404" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/108178860">VTK010-2D-fluxBC</a> from <a href="http://vimeo.com/user3348824">Andy Reagan</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+	  </section>
+	  <section>
+	    <h3>Action! (3D)</h3>
+	    <iframe src="//player.vimeo.com/video/108178618" width="500" height="375" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/108178618">3D-Ra-2pt13-E7</a> from <a href="http://vimeo.com/user3348824">Andy Reagan</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+	  </section>
+	</section>
+
+	<section>
+	  <section>
+	    <h2>Prediction</h2>
+	  </section>
+
+	  <section>
+	    <h3>Integrating OpenFOAM and MATLAB: "FOAMLAB"</h3>
+	    <p>Conglomeration of bash scripts and MATLAB classes that allow MATLAB to run arbitrary OpenFOAM models on the VACC</p>
+	    <pre><code data-trim contenteditable>
+# foamLab.sh
+
+# INITIALIZE MODE SETTINGS
+RUN=false
+READ=false
+INIT=false
+
+# DEFAULT VARIABLE SETTINGS
+TIME=0
+while getopts ":xd:t:b:r:ie:l:w:h:g:c:q:Q:W:D:B:" opt; do
+  case $opt in
+     x) # switch for running the case
+      RUN=true
+      ;;
+     d) # directory for either running, or reading
+      DIR=$OPTARG
+      ;;
+     t) # starting time
+      TIME=$OPTARG
+      ;;
+     e) # end time
+      ENDTIME=$OPTARG
+     ...
+ 	    </code></pre>
+	  </section>
+
+	  <section>
+	    <h3>Covariance localization</h3>
+	    <ul>
+	      <li class="fragment">
+		full loop: \( P^f : n \times n \)
+	      </li>
+	      <li class="fragment">
+		not practical!
+	      </li>
+	    </ul>
+	  </section>
+
+	  <section>
+	    <h3>Covariance localization</h3>
+	    <ul>
+	      <li class="fragment">
+		Square slices: \( P^f : rw \times rw \)
+	      </li>
+	    </ul>
+	    <img src="2014-10-09-JDAS/covariance-localization-01.png" class="img-normal fragment"/>
+	  </section>
+
+	  <section>
+	    <h3>Covariance localization</h3>
+	    <ul>
+	      <li class="fragment">
+		Radial localization: \( P^f : < 2r \times 2r \)
+	      </li>
+	    </ul>
+	    <img src="2014-10-09-JDAS/covariance-localization-02.png" class="img-normal fragment"/>
+	  </section>
+
+	  <section>
+	    <h3>Real data!</h3>
+	    <img src="2014-10-09-JDAS/realdata.png" class="img-normal fragment"/>
+	  </section>
+
+	  <section>
+	    <h3>Synthetic data</h3>
+	    <img src="2014-10-09-JDAS/syndata001.png" class="img-normal fragment"/>
+<!-- try relative positioning -->
+	    <!-- <img src="2014-10-09-JDAS/syndata001.png" class="img-normal fragment" style="position: absolute; left: 0; height: 300px;"/> -->
+	    <!-- <img src="2014-10-09-JDAS/syndata002.png" class="img-normal fragment" style="position: absolute; left: 200px; height: 300px;"/> -->
+	  </section>
+
+	  <section>
+	    <h3>Synthetic data</h3>
+	    <img src="2014-10-09-JDAS/syndata002.png" class="img-normal fragment"/>
+<!-- try relative positioning -->
+	    <!-- <img src="2014-10-09-JDAS/syndata001.png" class="img-normal fragment" style="position: absolute; left: 0; height: 300px;"/> -->
+	    <!-- <img src="2014-10-09-JDAS/syndata002.png" class="img-normal fragment" style="position: absolute; left: 200px; height: 300px;"/> -->
+	  </section>
+
+	  <section>
+	    <h3>Results</h3>
+	    <p class="fragment">Testing different ensemble filters:</p>
+	    <p class="fragment">ETKF outperforms EnKF, EnSRF</p>
+	  </section>
+
+	  <section>
+	    <h3>Results</h3>
+	    <p class="fragment">Vary number of ensemble members, using 32 data points:</p>
+	    <img src="2014-10-09-JDAS/result002.png" class="img-normal fragment"/>
+	  </section>
+
+	  <section>
+	    <h3>Results</h3>
+	    <p class="fragment">Use full 40K variables observation (and different numbers of ensemble members):</p>
+	    <img src="2014-10-09-JDAS/result001.png" class="img-normal fragment"/>
+	  </section>
+
+	  <section>
+	    <h3>Results</h3>
+	    <p class="fragment">How many observations do we need?</p>
+	    <img src="2014-10-09-JDAS/result003.png" class="img-normal fragment"/>
+	  </section>
+
+	  <section>
+	    <h3>Current work</h3>
+	    <ul>
+	      <li class="fragment">
+		How can we do better with fewer observations?
+	      </li>
+	      <li class="fragment">
+		Fast adaptive covariance localization!
+	      </li>
+	    </ul>
+	    <img src="2014-10-09-JDAS/covariance-localization-03.png" class="img-normal fragment"/>
+	  </section>
+
+	</section>
+
+
+
+	<section>
+	  <h1>FIN</h1>
+	  <h3>thanks!</h3>
+	</section>
+
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+    <script src="js/katex.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      <!-- width: 1200, -->
+      <!-- height: 700, -->
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Parallax scrolling
+      // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+      // parallaxBackgroundSize: '2100px 900px',
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+      });
+
+//       katex.render('\\frac{dx}{dt} = \\sigma y - x',document.getElementById('lorenz1'));
+//       katex.render('\\frac{dy}{dt} = x (\\rho - z) - y',document.getElementById('lorenz2'));
+//       katex.render('\\frac{dz}{dt} = xy - \\beta z',document.getElementById('lorenz3'));
+// 
+//       katex.render('J(x) = (x-x_b)^{T} B^{-1} (x-x_b)+(x-x_b)^{T}H^{T}R^{-1}H(x-x_b)-(yo - H(x_b))^{T} R^{-1}H(x - x_b) - (x - x_b)^{T} H^{T} R^{-1}(yo - H(x_b)) +(yo - H(x_b))^{T} R^{-1}(yo - H(x_b))',document.getElementById('threedvareq0'));
+//       katex.render('V = (B^{-1}+H^{T}R^{-1}H)^{-1}H^{T}R^{-1}',document.getElementById('threedvareq1'));
+//       katex.render('d = y_0 - Hx_f',document.getElementById('threedvareq2'));
+//       katex.render('x_a = x_f + Vd',document.getElementById('threedvareq3'));
+
+
+    </script>
+    <script type="text/javascript"
+	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="sweat science" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2024/05/01/its-all-stress/" rel="bookmark" title="Permalink to It's All Stress">It's All Stress</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2024-05-01T00:00:00+02:00">
+                        Wed 01 May 2024
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2024-05-01-calculating-load.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>Training stress, that is. 
+If we want to measure the impact of training on performance,
+we need a way to quantify the training.
+This is not a new problem.
+Methods like Bannister's TRIMP have been around since the 1970's,
+while new takes like <a href="https://www.researchgate.net/profile/Elisabet-Borsheim/publication/9025532_Effect_of_Exercise_Intensity_Duration_and_Mode_on_Post-Exercise_Oxygen_Consumption/links/09e41510bf1c033340000000/Effect-of-Exercise-Intensity-Duration-and-Mode-on-Post-Exercise-Oxygen-Consumption.pdf">FirstBeat's EPOC</a> estimation are relatively new.</p>
+<p>The basic formula has to incorporate the basics of exercise science: frequency, intensity, and duration (<a href="https://a.co/d/0iazKMj">ACSM's Guidelines for Exercise Testing and Prescription</a>).
+An hour of work, at a given intensity (say aerobic threshold), can be given a score of 100.
+From there, we can scale the score based on intensity (non-linearly), and duration (linearly).
+These are rough models, and will never fully capture how the human body responds to stress (),
+but still serve as good gaurd rails.
+Training peaks has a nice overview of <a href="https://help.trainingpeaks.com/hc/en-us/articles/204071944-Training-Stress-Scores-TSS-Explained">TSS and it's variation</a>,
+and I'd highly recommend Dr. Skiba's <a href="https://a.co/d/5jrUdaE">Scientific Training for Endurance Athletes</a> for a more thorough overview of the space.</p>
+<h2>Internal vs external measures</h2>
+<p>If you can measure output directly, like in cycling with a power meter, than these measure can be pretty "hard".
+With only internal measurements, things will be more approximate, but still relative to yourself: 
+my HR of 168 may have a very different <em>output</em> in kCal running or biking than Tadej Pogacar on the bike at 168 HR,
+but the relative stress to ourselves may be similar.</p>
+<h2>Scaling of intensity</h2>
+<p>Strava has a simple formula for their "<a href="https://support.strava.com/hc/en-us/articles/360000197364-Relative-Effort">relative effort</a>" (they used to call it suffer score),
+it's been reverse engineered <a href="https://www.alessandroaime.com/2017/03/03/reverse-engineering-the-strava-suffer-score-algorithm">multiple</a> <a href="https://djconnel.blogspot.com/2011/08/strava-suffer-score-decoded.html">times</a>.
+I haven't tried to reverse engineer Whoop's Strain score,
+but I'm sure it's very similar 
+(they suggest as much in their patent, and I'm not too interested to violate their terms of service to determine the coefficients).
+Complaints about the scaling parameters abound: is a 5 hour ride in Z2 really harder than a 20min FTP test?
+Any reduction to a single number will have these issues.
+Cyclists will of course be familiar with Normalized Power,
+which takes the raw output and scales it by raising to the fourth power, and then taking the fourth root:
+this makes harder efforts have a bigger relative impact (a perfectly steady ride will have the same average power and NP).
+Since this more closely aligns with the impact on the body in practice, NP is a very useful metric.</p>
+<p>On Strava's simple formula's, 
+worth pointing out that their weekly effort recommendations are simply the weighted average of the past three weeks
+(1/6, 1/3, 1/2, respectively) for the sum of the relative effort.
+The target range is 60-120% of these past three weeks; with 60-90% as maintaining, 90-120% building, and 120-150% overreeaching (labels mine).
+They get <a href="https://communityhub.strava.com/t5/ideas/display-weekly-relative-effort-score-based-on-last-7-days/idi-p/8958">some flak</a> for showing the weekly target, instead of the rolling 7 days 
+Maybe rolling 10 days would even better, to smooth out weekends.</p>
+<p>Many years ago I had a garmin watch's auto recommendations for steps turned on, and every day it wanted me to get more than the last.
+That was fine until it was suggesting every day I get 18K steps!
+It would give me a repreive once I missed the target, 
+but then push me again.
+There should be some upper range... (so I like the 60-120% from Strava).
+Maybe if we threw in the CDC minimum and recommendation for some context,
+we'd have a system for the people (<a href="https://a.co/d/0iazKMj">ACSM's Guidelines for Exercise Testing and Prescription</a>).</p>
+<h2>Summary</h2>
+<p>Any attempt to quantify health and fitness (remember: these are the <a href="https://library.crossfit.com/free/pdf/CFJ-trial.pdf">same thing</a>)
+can be improved by striving for measures that more closely reflect our biology.
+We can use a pedometer in the same way we use a power meter (strain gauge!) or an indirect calorimeter
+as a proxy for stress.
+Contextualized recommendations that consider calendary cycles (weeks) 
+and reasonable upper bounds can work,
+with our work/stress proxy,
+to build a system that offers actionable, personalized insights.</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

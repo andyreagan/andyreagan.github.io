@@ -1,0 +1,292 @@
+x<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Bayes!</title>
+
+    <meta name="description" content="">
+
+    <meta name="author" content="andy reagan">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    
+    <!-- For icons -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- fix for the fa icons -->
+    <!-- https://github.com/hakimel/reveal.js/issues/601 -->
+    <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+    <link rel="stylesheet" href="css/storylabpres.css">
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = 'css/print/pdf.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
+
+    <!--[if lt IE 9]>
+	<script src="lib/js/html5shiv.js"></script>
+	<![endif]-->
+  </head>
+
+  <body>
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+	<section>
+	  <h1>the signal and the noise</h1>
+	  <h3>exploring the math behind Nate Silver's best seller</h3>
+	  <p>
+	    <small>created by <a href="http://andyreagan.com">andy reagan</a> / <a href="http://twitter.com/andyreagan">@andyreagan</a></small>
+	  </p>
+	</section>
+
+
+	<section>
+	  <section>
+	    <h3>meet nate silver:</h3>
+	    <h4>super geek powers</h4>
+	    <img src="/presentations/2014-12-03-SCRAPS-Silver/images/Nate-Silver-010.jpg" class="img-normal" width="300" />
+	  </section>
+	  <section>
+	    <h4>fame!</h4>
+	    <img src="/presentations/2014-12-03-SCRAPS-Silver/images/headline.png" class="img-normal" width="500" />
+	    
+	  </section>
+	  <section>
+	    <h4>so he wrote this book:</h4>
+	    <img src="/presentations/2014-12-03-SCRAPS-Silver/images/book-cover.jpg" class="img-normal" width="300" />
+	  </section>
+	</section>
+
+<!--  -->
+
+	<section>
+	  <section>
+	    <h3>probability basics (sorry)</h3>
+	    <div class="fragment">
+	      <p>Probability space is the triple \((\Omega, \mathcal{F}, \mathbb{P} )\) where</p>
+	      \[ \begin{align*} &\Omega: \text{non empty set}\\
+	      &\mathcal{F}: \sigma\text{-algebra of subsets of}\Omega \\ 
+	      &\mathbb{P}: \text{measure on}\mathcal{F}\text{with}\mathbb{P}(\Omega) = 1 \end{align*} \]
+	    </div>
+	    <div class="fragment">
+	      <p>Example: let \(\Omega = [0,1] \in \mathbb{R}\), let \(\mathcal{F}\) be the set of Lebesgue measurable subsets of \([0,1]\), and let \(\mathbb{P}\) be the Lebesgue measure \(\lambda_1\) restricted to \([0,1]\).</p>
+	    </div>
+	  </section>
+	  <section>
+	    <h4>of course we have (for \(A,B \subseteq [0,1]\))</h4>
+	    <div class="fragment">
+	      \[ P(A) = 1 − P(A^c)\]
+	    </div>
+	    <div class="fragment">
+	      \[ P(A\cap B) = P(B\cap A)\]
+	    </div>
+	    <div class="fragment">
+	      \[ P(A\cup B) = P(A)+P(B)-P(A\cap B)\]
+	    </div>
+	    <div class="fragment">
+	      \[ P(A | B) = \frac{P(A\cap B)}{P(B)}\]
+	      \[ P(B | A) = \frac{P(A\cap B)}{P(A)}\]
+	    </div>
+	    <div class="fragment">
+	      \[ \Rightarrow P(A | B) = \frac{P(B | A) P(A)}{P(B)}\]
+	    </div>
+	  </section>
+	</section>
+
+	<section>
+          <section>
+	    <h3>let's settle the monty hall problem (for good?)</h3>
+	    <img src="/presentations/2014-12-03-SCRAPS-Silver/images/monty-hall.GIF" class="img-normal" width="450" />
+	  </section>
+	  <section>
+	    <h3>let's settle the monty hall problem (for good?)</h3>
+	    <ul>
+	    <li class="fragment">notations:
+	      \[ \begin{align*} D_c&: \text{door with the car}\\
+	         D_m&: \text{door monty opens} \end{align*} \]
+	    </li>
+	    <li class="fragment">rules:
+	      \[ \begin{align*} &\text{he never opens the door you choose} \\
+	      &\text{he never opens the door with the car} \end{align*} \]
+	    </li>
+	    </ul>
+	  </section>
+	  <section>
+	    <h3>let's settle the monty hall problem (for good?)</h3>
+	    <ul>
+	    <li class="fragment">we have:
+	      \[ \begin{align*} \Omega &= \{ (D_c,D_m) \forall D_c,D_m \in \{ 1,2,3 \} \} \\ 
+	      &= \{ (1,2),(1,3),(2,3),(3,2) \} \\
+	      D_c&=1: \{ (1,2),(1,3) \}\\
+	      D_c&=2: \{ (2,3) \}\\
+	      D_c&=3: \{ (3,2) \} \end{align*} \]
+	    </li>
+	    <li class="fragment">and
+	      \[ \begin{align*} D_m=2&: \{ (1,2),(3,2) \} \\
+	         D_m=3&: \{ (1,3),(2,3) \} \end{align*} \]
+	    </li>
+	    <li class="fragment">with
+	      \[ P(D_c=1)=P(D_c=2)=P(D_c=3)=1/3 \]
+	    </li>
+	    </ul>
+	  </section>
+	  <section>
+	    <p class="fragment">
+	      Assume \(D_c=2\), should we switch? Look at conditionals.
+	    </p>
+	    <ul>
+	    <li class="fragment">given he chose door 2, we were right with probability:
+	      \[ \begin{align*} P(D_c=1 | D_m=2) &= \frac{P(D_c=1 ,D_m=2)}{P(D_m=2)} \end{align*} \]
+	    </li>	    
+	    <li class="fragment">rearranging:
+	      \[\begin{align*} P(D_c=1 | D_m=2)P(D_m=2) &= P(D_c=1 ,D_m=2)\\
+	      &= P(D_m=2,D_c=1)\\
+	      &= P(D_m=2 | D_c=1)P(D_c=1) \end{align*}\]
+	    </li>	    
+	    <li class="fragment">and plugging that back in:
+	      \[ \Rightarrow P(D_c=1 | D_m=2) = \frac{P(D_m=2 | D_c=1)P(D_c=1)}{P(D_m=2)}\]	      
+	    </li>
+	    </ul>
+	  </section>
+	  <section>	    
+	    <ul>
+	    <li class="fragment">similarly,
+	      \[ P(D_c=3 | D_m=2) = \frac{P(D_m=2 | D_c=3)P(D_c=3)}{P(D_m=2)}\]	      
+	    </li>	    
+	    <li class="fragment">so if we have picked right (don't switch):
+	      \[ \begin{align*} P(D_c=1 | D_m=2) &= \frac{P(D_m=2 | D_c=1)P(D_c=1)}{P(D_m=2)}\\
+	      &= \frac{(1/2)(1/3)}{P(D_m=2)}\\
+	      &= \frac{1/6}{P(D_m=2)} \end{align*} \]	      
+	    </li>	    
+	    </ul>
+	  </section>
+	  <section>	    
+	    <ul>
+	    <li class="fragment">but if we switch:
+	      \[ \begin{align*} P(D_c=3 | D_m=2) &= \frac{P(D_m=2 | D_c=3)P(D_c=3)}{P(D_m=2)}\\
+	      &= \frac{(1)(1/3)}{P(D_m=2)}\\
+	      &= \frac{1/3}{P(D_m=2)} \end{align*} \]	      
+	    </li>	    
+	    </ul>
+	  </section>
+	  <section>
+	    <p>who spotted bayes' theorem??</p>
+	    <p class="fragment">you can get pizza now</p>
+	  </section>
+	</section>
+
+	<section>
+	  <section>
+	    <h3>how does bayes help us predict careers? poker odds? earthquakes? elections?</h3>
+	    <p class="fragment">(this was the leap for me!)</p>
+	    <p class="fragment">meet PECOTA</p>
+	    <img src="/presentations/2014-12-03-SCRAPS-Silver/images/pecota.gif" class="img-normal fragment" width="500" alt="moneyball"/>
+	  </section>
+	  <section>
+	    <h3>it's a bayesian (particle) filter!</h3>
+	    <ul>
+	    <li class="fragment">
+	      Carefully normalize performace by league, weather, stadium, age, what they ate for breakfast...etc.
+	    </li>
+	    <li class="fragment">
+	      Denote a player's adjusted performance by \(\psi_i\), joint probability density \(f(\psi)\).
+	    </li>
+	    <li class="fragment">
+	      Weight each player with weight \(w_i\), denote most recent performance by \(d\), and we have 
+	      \[ P(\psi | d) = \sum _{i=1} ^N w_i (\psi -\psi_i) \]
+	    </li>
+	    <li class="fragment">
+	      with weights given by
+	      \[ w_i = \frac{ P(d|\psi _i) }{ \sum _{j=1} ^N P(d | \psi_j) }.\]
+	    </li>
+	    </ul>
+	  </section>
+	  <section>
+	    <h3>it's a bayesian (particle) filter!</h3>
+	    <img src="/presentations/2014-12-03-SCRAPS-Silver/images/particle1.png" class="img-normal fragment" width="300" alt="filter pic"/>
+	    <img src="/presentations/2014-12-03-SCRAPS-Silver/images/particle2.png" class="img-normal fragment" width="300" alt="filter pic"/>
+	  </section>
+	</section>
+
+	<section>
+	  <section>
+	    <h3>bonus, can we predict movies?</h3>
+	    <ul>
+	      <li class="fragment"><a href="http://hedonometer.org/movies/list.html">1000 or so movies</a></li>
+	      <li class="fragment"><a href="/files/recursive-bayesian-filter.html">ipython notebook</a></li>
+	    </ul>	    
+	  </section>
+	</section>
+
+	<section>
+	  <h1>THE END</h1>
+	  <h3>questions?</h3>
+	  <div class="fragment">
+	    <iframe class="vine-embed" src="https://vine.co/v/M21ZdIgWzQT/embed/simple" width="300" height="300" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+	  </div>
+	</section>
+
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      width: 1200,
+      height: 700,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Parallax scrolling
+      // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+      // parallaxBackgroundSize: '2100px 900px',
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+      });
+
+    </script>
+    <script type="text/javascript"
+	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+  </body>
+</html>

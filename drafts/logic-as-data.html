@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/drafts/logic-as-data.html" rel="bookmark" title="Permalink to Logic as Data">Logic as Data</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2021-11-19T00:00:00+01:00">
+                        Fri 19 November 2021
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/draft/logic-as-data.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>We’ve all been there: trying to understand how a 40-line CASE statement encodes some particular business logic. At MassMutual, particular combinations of gender, policy issue year, issue month, rate series, product name, line of business, basis code, and more can determine the possible number of underwriting classes that a policy had available at the time of issue. Suffer no more.</p>
+<p>I’m here to tell you that every CASE statement can be written as a join, and the logic replaced by an adjoining data set. Simple enough, sure, but this idea has <em>legs</em>. By the end of this post, you’ll be eagerly refactoring that hairy data pipeline that keeps the engineering team up at night.</p>
+<p>Let’s take a tractable example to start:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SELECT</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="kr">CASE</span> <span class="n">WHEN</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span> <span class="kr">THEN</span> <span class="mi">0</span>
+<span class="n">WHEN</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">AND</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span> <span class="kr">THEN</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">WHEN</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span> <span class="kr">THEN</span> <span class="mi">2</span>
+<span class="n">WHEN</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span> <span class="n">and</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span> <span class="kr">THEN</span> <span class="mi">4</span>
+<span class="kr">ELSE</span> <span class="mi">11</span> <span class="kr">END</span> <span class="n">AS</span> <span class="n">c</span>
+<span class="n">FROM</span> <span class="n">my_table</span>
+</code></pre></div>
+
+<p>Not too crazy but there are a number of problems. Can you email this query to the sales team to check that it is correct? Which statements got applied to which rows of data?</p>
+<p>Here’s how we can refactor this code:</p>
+<div class="highlight"><pre><span></span><code>SELECT x.a, x.b, y.c, y.rule_no
+FROM my_table x
+LEFT OUTER JOIN my_logic y ON x.a = y.a AND x.b = y.b
+</code></pre></div>
+
+<p>Instead of the CASE statement, we have join to:</p>
+<p>| rule_no | a | b | c |
+| — | — | — | — |
+| 1            | 1  | * | 0 |
+| 2 | 1 | 0 | -1 |
+| 3 | 0 | * | 2 |
+| 4 | 5 | 1 | 4 |
+| 5 | * | * | 11 |</p>
+<p>The first thing you might notice, now, is that rules 1 and 2 overlap! In the CASE statement, we would never had hit the second statement.</p>
+<p>A key simplification in the above is the glob operator: <code>*</code>. I used it to represent all possible values, condensing the logic to it’s essential form (as it was effectively collapsed in the CASE statement). There are a number of ways to deal with glob in operation, and I’ll discuss two.</p>
+<p>First, you can use a database or data tool that support the join on all possible values! This is available in some R packages.</p>
+<p>The other option is to examine the data in <code>my_table</code> and expand the logic table to cover all of the joins. This is easier that you might at first think. Here’s how you could take a logic table with globs and expand it, column by column in Python:</p>
+<div class="highlight"><pre><span></span><code><span class="s s-Atom">def</span> <span class="nf">expand_logic</span><span class="p">(</span>
+    <span class="s s-Atom">logic</span><span class="p">:</span> <span class="s s-Atom">pd</span><span class="p">.</span><span class="nv">DataFrame</span><span class="p">,</span> <span class="s s-Atom">data</span><span class="p">:</span> <span class="s s-Atom">pd</span><span class="p">.</span><span class="nv">DataFrame</span><span class="p">,</span> <span class="s s-Atom">save_intermediate_results</span><span class="o">:</span> <span class="s s-Atom">bool</span> <span class="o">=</span> <span class="nv">False</span>
+<span class="p">)</span> <span class="s s-Atom">-&gt;</span> <span class="s s-Atom">pd</span><span class="p">.</span><span class="nv">DataFrame</span><span class="o">:</span>
+    <span class="s s-Atom">&#39;&#39;&#39;logic: dataframe with first column as an index `rule_no`, last column as output</span>
+<span class="s s-Atom">    expands to all possible combinations of individual column values for the globs,</span>
+<span class="s s-Atom">    then shrinks to only the combinations that exist.&#39;&#39;&#39;</span>
+    <span class="s s-Atom">logic_expanded</span> <span class="o">=</span> <span class="nf">deepcopy</span><span class="p">(</span><span class="s s-Atom">logic</span><span class="p">)</span>
+    <span class="s s-Atom">logic_cols</span> <span class="o">=</span> <span class="s s-Atom">logic</span><span class="p">.</span><span class="s s-Atom">columns</span><span class="p">[</span><span class="mi">1</span><span class="o">:-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="s s-Atom">for</span> <span class="s s-Atom">col</span> <span class="s s-Atom">in</span> <span class="s s-Atom">logic_cols</span><span class="o">:</span>
+        <span class="s s-Atom">expanded_values</span> <span class="o">=</span> <span class="s s-Atom">pd</span><span class="p">.</span><span class="nv">DataFrame</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;expanded&quot;</span><span class="o">:</span> <span class="s s-Atom">d</span><span class="p">,</span> <span class="s s-Atom">col</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span><span class="p">}</span>
+                <span class="s s-Atom">for</span> <span class="s s-Atom">d</span> <span class="s s-Atom">in</span> <span class="s s-Atom">data</span><span class="p">.</span><span class="nf">groupby</span><span class="p">(</span><span class="s s-Atom">col</span><span class="p">,</span> <span class="s s-Atom">dropna</span><span class="o">=</span><span class="nv">False</span><span class="p">)[</span><span class="s s-Atom">data</span><span class="p">.</span><span class="s s-Atom">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="p">.</span><span class="nf">agg</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+                <span class="p">.</span><span class="s s-Atom">index</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s s-Atom">expanded_values</span><span class="p">)</span>
+        <span class="s s-Atom">logic_expanded</span> <span class="o">=</span> <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="s s-Atom">expanded_values</span><span class="p">,</span> <span class="s s-Atom">how=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s s-Atom">on</span><span class="o">=</span><span class="p">[</span><span class="s s-Atom">col</span><span class="p">])</span>
+        <span class="s s-Atom">logic_expanded</span><span class="p">[</span><span class="s s-Atom">col</span><span class="p">]</span> <span class="o">=</span> <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="s s-Atom">expanded</span><span class="p">.</span><span class="nf">combine_first</span><span class="p">(</span><span class="s s-Atom">logic_expanded</span><span class="p">[</span><span class="s s-Atom">col</span><span class="p">])</span>
+        <span class="s s-Atom">logic_expanded</span> <span class="o">=</span> <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="s s-Atom">iloc</span><span class="p">[</span><span class="o">:</span><span class="p">,</span> <span class="o">:-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s s-Atom">np</span><span class="p">.</span><span class="s s-Atom">nan</span><span class="p">,</span> <span class="s s-Atom">inplace</span><span class="o">=</span><span class="nv">True</span><span class="p">)</span>
+    <span class="s s-Atom">#</span> <span class="s s-Atom">save</span> <span class="s s-Atom">initial</span> <span class="s s-Atom">#</span> <span class="s s-Atom">of</span> <span class="s s-Atom">dupes</span> <span class="s s-Atom">to</span> <span class="s s-Atom">disk</span>
+    <span class="s s-Atom">#</span> <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="s s-Atom">loc</span><span class="p">[</span><span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="nf">duplicated</span><span class="p">([</span><span class="s s-Atom">logic_cols</span><span class="p">,</span> <span class="s s-Atom">keep</span><span class="o">=</span><span class="nv">False</span><span class="p">),</span> <span class="o">:</span><span class="p">].</span><span class="nf">to_csv</span><span class="p">(</span><span class="s s-Atom">&#39;logic_dupes.csv&#39;</span><span class="p">)</span>
+    <span class="s s-Atom">#</span> <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="nf">sort_values</span><span class="p">(</span><span class="s s-Atom">logic_cols</span><span class="p">).</span><span class="s s-Atom">loc</span><span class="p">[</span><span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="nf">duplicated</span><span class="p">(</span><span class="s s-Atom">logic_cols</span><span class="p">,</span> <span class="s s-Atom">keep</span><span class="o">=</span><span class="nv">False</span><span class="p">),</span> <span class="o">:</span><span class="p">].</span><span class="nf">to_csv</span><span class="p">(</span><span class="s s-Atom">&#39;logic_dupes_sorted.csv&#39;</span><span class="p">)</span>
+
+    <span class="s s-Atom">#</span> <span class="s s-Atom">convert</span> <span class="s s-Atom">to</span> <span class="s s-Atom">floats</span>
+    <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="s s-Atom">loc</span><span class="p">[</span>
+        <span class="o">:</span><span class="p">,</span> <span class="s s-Atom">logic_cols</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="s s-Atom">logic_expanded</span><span class="p">[</span><span class="s s-Atom">logic_cols</span><span class="p">].</span><span class="nf">astype</span><span class="p">(</span>
+        <span class="s2">&quot;float&quot;</span>
+    <span class="p">)</span>
+    <span class="s s-Atom">#</span> <span class="s s-Atom">drop</span> <span class="s s-Atom">explicit</span> <span class="s s-Atom">duplicates</span>
+    <span class="s s-Atom">logic_expanded_nodupes</span> <span class="o">=</span> <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="s s-Atom">loc</span><span class="p">[</span>
+        <span class="o">~</span><span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="nf">duplicated</span><span class="p">(</span>
+            <span class="s s-Atom">logic_cols</span><span class="p">,</span>
+            <span class="s s-Atom">keep=</span><span class="s2">&quot;first&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="o">:</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="s s-Atom">#</span> <span class="s s-Atom">drop</span> <span class="s s-Atom">any</span> <span class="s s-Atom">rows</span> <span class="s s-Atom">that</span> <span class="s s-Atom">don</span><span class="err">&#39;</span><span class="s s-Atom">t</span> <span class="s s-Atom">actually</span> <span class="s s-Atom">occur</span> <span class="s s-Atom">in</span> <span class="s s-Atom">the</span> <span class="s s-Atom">data</span>
+    <span class="s s-Atom">logic_expanded_nodupes_exists</span> <span class="o">=</span> <span class="s s-Atom">logic_expanded_nodupes</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span>
+        <span class="s s-Atom">data</span><span class="p">.</span><span class="s s-Atom">loc</span><span class="p">[</span>
+            <span class="o">:</span><span class="p">,</span> <span class="s s-Atom">logic_cols</span>
+        <span class="p">].</span><span class="nf">drop_duplicates</span><span class="p">(),</span>
+        <span class="s s-Atom">how=</span><span class="s2">&quot;inner&quot;</span><span class="p">,</span>
+        <span class="s s-Atom">on</span><span class="o">=</span><span class="s s-Atom">logic_cols</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="s s-Atom">assert</span> <span class="s s-Atom">logic_expanded_nodupes_exists</span><span class="p">.</span><span class="s s-Atom">outcome_rule</span><span class="p">.</span><span class="nf">isna</span><span class="p">().</span><span class="nf">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="s s-Atom">if</span> <span class="s s-Atom">save_intermediate_results</span><span class="o">:</span>
+        <span class="s s-Atom">logic_expanded</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="s2">&quot;logic-expanded.csv&quot;</span><span class="p">)</span>
+        <span class="s s-Atom">logic_expanded_nodupes</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="s2">&quot;logic-expanded-nodupes.csv&quot;</span><span class="p">)</span>
+        <span class="s s-Atom">logic_expanded_nodupes_exists</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="s2">&quot;logic-expanded-nodupes-exists.csv&quot;</span><span class="p">)</span>
+
+    <span class="s s-Atom">return</span> <span class="s s-Atom">logic_expanded_nodupes_exists</span>
+</code></pre></div>
+
+<p>You could do the same thing in R:</p>
+<div class="highlight"><pre><span></span><code><span class="n">expand_logic</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">logic</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">save_intermediate_results</span><span class="o">=</span><span class="bp">F</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">logic_expanded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logic</span>
+<span class="w">    </span><span class="n">logic_cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">colnames</span><span class="p">(</span><span class="n">logic</span><span class="p">)[</span><span class="m">2</span><span class="o">:</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="nf">colnames</span><span class="p">(</span><span class="n">logic</span><span class="p">))</span><span class="m">-2</span><span class="p">)]</span>
+<span class="w">    </span><span class="nf">for </span><span class="p">(</span><span class="n">col</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">logic_cols</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">expanded_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">            </span><span class="nf">distinct</span><span class="p">(</span><span class="o">!!</span><span class="nf">sym</span><span class="p">(</span><span class="n">col</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">            </span><span class="nf">mutate</span><span class="p">(</span><span class="n">expanded</span><span class="o">=!!</span><span class="nf">sym</span><span class="p">(</span><span class="n">col</span><span class="p">),</span><span class="w"> </span><span class="o">!!</span><span class="nf">sym</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">:=</span><span class="s">&#39;*&#39;</span><span class="p">)</span>
+<span class="w">        </span><span class="nf">print</span><span class="p">(</span><span class="n">expanded_values</span><span class="p">)</span>
+<span class="w">        </span><span class="n">logic_expanded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logic_expanded</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">            </span><span class="nf">left_join</span><span class="p">(</span><span class="n">expanded_values</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="n">col</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">            </span><span class="nf">mutate</span><span class="p">(</span><span class="o">!!</span><span class="nf">sym</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">:=</span><span class="nf">ifelse</span><span class="p">(</span><span class="o">!!</span><span class="nf">sym</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">==</span><span class="s">&quot;*&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">as.character</span><span class="p">(</span><span class="n">expanded</span><span class="p">),</span><span class="w"> </span><span class="o">!!</span><span class="nf">sym</span><span class="p">(</span><span class="n">col</span><span class="p">)))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">            </span><span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">expanded</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1"># save initial # of dupes to disk</span>
+<span class="w">    </span><span class="c1"># logic_expanded %&gt;% group_by(logic_cols) %&gt;% mutate(dup_count=n()) %&gt;% ungroup() %&gt;% filter(dup_count &gt; 1) %&gt;% readr::write_csv(&#39;logic_dupes.csv&#39;)</span>
+<span class="w">    </span><span class="c1"># logic_expanded %&gt;% arrange(logic_cols) %&gt;% group_by(gate, bmi, smoker, outputScore, liteTouchOutputScore) %&gt;% mutate(dup_count=n()) %&gt;% ungroup() %&gt;% filter(dup_count &gt; 1) %&gt;% readr::write_csv(&#39;logic_dupes_sorted.csv&#39;)</span>
+
+<span class="w">    </span><span class="c1"># convert to floats</span>
+<span class="w">    </span><span class="n">logic_expanded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logic_expanded</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">mutate_at</span><span class="p">(</span><span class="n">logic_cols</span><span class="p">,</span><span class="w"> </span><span class="n">as.numeric</span><span class="p">)</span>
+<span class="w">    </span><span class="c1"># drop explicit duplicates</span>
+<span class="w">    </span><span class="n">logic_expanded_nodupes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logic_expanded</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">        </span><span class="nf">group_by_at</span><span class="p">(</span><span class="n">logic_cols</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">        </span><span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+<span class="w">        </span><span class="c1"># mutate(rank = rank(gate, ties.method= &quot;random&quot;)) %&gt;%</span>
+<span class="w">        </span><span class="c1"># ungroup() %&gt;%</span>
+<span class="w">        </span><span class="c1"># filter(rank==1) %&gt;%</span>
+<span class="w">        </span><span class="c1"># select(-rank)</span>
+<span class="w">    </span><span class="c1"># drop any rows that don&#39;t actually occur in the data</span>
+<span class="w">    </span><span class="n">logic_expanded_nodupes_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logic_expanded_nodupes</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">inner_join</span><span class="p">(</span>
+<span class="w">        </span><span class="n">data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">            </span><span class="nf">distinct</span><span class="p">(</span><span class="n">logic_cols</span><span class="p">),</span>
+<span class="w">        </span><span class="n">by</span><span class="o">=</span><span class="n">logic_cols</span>
+<span class="w">    </span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">testthat</span><span class="o">::</span><span class="nf">expect_equal</span><span class="p">(</span><span class="nf">sum</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="nf">pull</span><span class="p">(</span><span class="n">logic_expanded_nodupes_exists</span><span class="p">,</span><span class="w"> </span><span class="n">outcome_rule</span><span class="p">))),</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+
+<span class="w">    </span><span class="nf">if </span><span class="p">(</span><span class="n">save_intermediate_results</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">logic_expanded</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">readr</span><span class="o">::</span><span class="nf">write_csv</span><span class="p">(</span><span class="s">&quot;logic-expanded.csv&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="n">logic_expanded_nodupes</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">readr</span><span class="o">::</span><span class="nf">write_csv</span><span class="p">(</span><span class="s">&quot;logic-expanded-nodupes.csv&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="n">logic_expanded_nodupes_exists</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">readr</span><span class="o">::</span><span class="nf">write_csv</span><span class="p">(</span><span class="s">&quot;logic-expanded-nodupes-exists.csv&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nf">return</span><span class="p">(</span><span class="n">logic_expanded_nodupes_exists</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>I’ll leave you with those examples. Happy refactoring!</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

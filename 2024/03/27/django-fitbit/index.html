@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2024/03/27/django-fitbit/" rel="bookmark" title="Permalink to Django + Fitbit">Django + Fitbit</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2024-03-27T00:00:00+01:00">
+                        Wed 27 March 2024
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2024-03-27-django-fitbit-published.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>I finally got around to publishing the Fitbit module of my personal dashboard!</p>
+<p>It's here: https://github.com/andyreagan/django-fitbit-healthkit</p>
+<p>Some fun facts:</p>
+<ul>
+<li>It automatically deploys to PyPI on tagged releases (so hopefully, I never have to remember how to do this!)</li>
+<li>It <em>might</em> be useful to plug into some of what we built for MassMutual's <a href="https://www.massmutual.com/well">WELL Rider</a><ul>
+<li>We rolled our own module, but it could be nice to separate this out so we can test it independently.</li>
+</ul>
+</li>
+</ul>
+<p>Here's some notes that I made this morning when considering some open issues for the Fitbit integration that we wrote.</p>
+<blockquote>
+<p>Maybe we did do a proper search when starting this project 18 months ago, but I've forgotten. I'll take another look in case anything has shown up, and document what I find.</p>
+<p>The one <a href="https://dev.fitbit.com/build/reference/web-api/developer-guide/libraries-and-sample-code/">recommended by fitbit</a> for Python is 5 years old, the django version is <a href="https://github.com/orcasgit/django-fitbit">8 years of date</a>, and Synk gives it a <a href="https://snyk.io/advisor/python/django-fitbit">score of 39/100</a>.</p>
+<p>In fact, there were only two python projects that had been updated in the past 6 months:</p>
+<ul>
+<li>A auto-generated set of APIs based on Swagger definition from fitbit: https://github.com/chemelli74/fitbit-web-api</li>
+<li>A Deta app that pulls heart rate (which I think just happens to be recent) https://github.com/eggplants/heartbeat-status</li>
+</ul>
+<p>In this project, we rolled our own, and yes it wasn't impossible, since fitbit's API is relatively simple. Almost all of the work deals with "business logic" of mapping fitbit API responses to our specific data model.
+</p>
+</blockquote>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

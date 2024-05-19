@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="data-assimilation" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2016/02/11/novel-data-assimilation-improvements-for-limited-observations/" rel="bookmark" title="Permalink to Novel data assimilation improvements for limited observations">Novel data assimilation improvements for limited observations</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2016-02-11T00:00:00+01:00">
+                        Thu 11 February 2016
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2016-02-11-Data-assimilation.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>NOTE: This is a repost of the original on the <a href="http://www.uvm.edu/storylab/2016/02/11/novel-data-assimilation-improvements-for-limited-observations/">Computational Story Lab blog</a>.</p>
+<p>The availability of data on the current state of Earth's atmosphere/ocean/land system continues to improve. As the state-of-the-art weather models and supercomputing power allow for higher resolution forecasts, down to 1km resolution on massively parallel computers, data assimilation techniques are needed to quickly combine the mass of available data.</p>
+<p>Here at the University of Vermont, we employ a <a href="http://www.uvm.edu/storylab/2013/03/18/chaos-in-an-atmosphere-hanging-on-a-wall/" target="_blank">CFD model of a thermosyphon</a> as a testbed for data assimilation techniques. Our latest research, published in <a href="https://t.co/dzjUyyszhE" target="_blank">PLoS ONE</a>, shows that by using information about the direction of uncertainty propagation within a forecast ensemble can improve prediction skill.</p>
+<p>In order to utilize an adaptively localized covariance, we combine a Ensemble Transform Kalman Filter (ETKF) with model estimates of flow velocity to adapt the localization parameters. Below we see an ensemble of initially random forecasts come closer to the true model state, using data assimilation.</p>
+<p><a href="http://www.uvm.edu/storylab/wp-content/uploads/CaiJXdlW0AAIkfe.png" rel="attachment wp-att-1707"><img class="aligncenter wp-image-1707" src="http://www.uvm.edu/storylab/wp-content/uploads/CaiJXdlW0AAIkfe.png" alt="CaiJXdlW0AAIkfe" width="600" height="441" /></a></p>
+<p>Modest improvements in forecast skill are shown to be possible, pushing the envelope of prediction just a bit further into the future. For more detail, take a look at the open-access paper: <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0148134">http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0148134</a></p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

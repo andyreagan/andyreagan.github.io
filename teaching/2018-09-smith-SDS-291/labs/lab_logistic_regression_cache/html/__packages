@@ -1,0 +1,13 @@
+base
+knitr
+dplyr
+lattice
+ggplot2
+mosaicData
+Matrix
+mosaic
+zoo
+lmtest
+survival
+Formula
+Hmisc

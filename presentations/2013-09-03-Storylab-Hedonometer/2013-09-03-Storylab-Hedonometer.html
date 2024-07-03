@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>web stuffz</title>
+
+		<meta name="description" content="what i known about the internet and javascript">
+		<meta name="author" content="andy reagan">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="reveal/css/reveal.min.css">
+		<link rel="stylesheet" href="reveal/css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="reveal/lib/css/zenburn.css">
+		
+		<!-- For icons -->
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+		<!-- fix for the fa icons -->
+		<!-- https://github.com/hakimel/reveal.js/issues/601 -->
+		<style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+		<link rel="stylesheet" href="reveal/css/storylabpres.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'reveal/css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="reveal/lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>the darkest art</h1>
+					<h3>data viz and javascripting</h3>
+					<p>
+						<small>created by <a href="http://andyreagan.com">andy reagan</a> / <a href="http://twitter.com/andyreagan">@andyreagan</a></small>
+					</p>
+				</section>
+
+				<!-- <section> -->
+				<!--   <section> -->
+				<!--     <h2>what i really did this summer</h2> -->
+				<!--     <iframe src="//player.vimeo.com/video/104463620" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/104463620">The Ice Bucket</a> from <a href="http://vimeo.com/user3348824">Andy Reagan</a> on <a href="https://vimeo.com">Vimeo</a>.</p> -->
+
+				<!--     <aside class="notes"> -->
+				<!--       every day. -->
+				<!--     </aside> -->
+				<!--   </section> -->
+				<!-- </section> -->
+
+
+<!-- 				  <section> -->
+<!-- 				    <h2>what i really did this summer</h2> -->
+<!-- <iframe class="vine-embed" src="https://vine.co/v/M21ZdIgWzQT/embed/simple" width="600" height="600" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script> -->
+<!-- 				    <aside class="notes"> -->
+<!-- 				      every day. -->
+<!-- 				    </aside> -->
+<!-- 				  </section> -->
+
+<!-- 				  <section> -->
+<!-- 				    <h2>what i really did this summer</h2> -->
+<!-- <iframe class="vine-embed" src="https://vine.co/v/M3d0lm9TmP5/embed/simple" width="600" height="600" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script> -->
+<!-- 				    <aside class="notes"> -->
+<!-- 				      every day. -->
+<!-- 				    </aside> -->
+<!-- 				  </section> -->
+
+
+				<section>
+				  <section>
+				    <h2>and some visualizations</h2>
+				    <ul>
+				      <li>rework of hedonometer.org</li>
+				      <li>geography of happiness</li>
+				      <li>books app</li>
+				      <li>twitter calories</li>
+				      <li>embeddable wordshifts</li>
+				    </ul>
+
+				  </section>
+				  <section>
+				    <iframe class="hedonometer" width="1200" height="650" src="http://hedonometer.org" frameborder="0" allowfullscreen></iframe>
+				  </section>
+				  <section>
+				    <iframe class="hedonometer" width="1000" height="650" src="http://hedonometer.org/maps.html" frameborder="0" allowfullscreen></iframe>
+				  </section>
+				  <section>
+				    <iframe class="hedonometer" width="1000" height="650" src="http://hedonometer.org/books.html" frameborder="0" allowfullscreen></iframe>
+				  </section>
+				  <section>
+				    <div class="whitebg">
+				    <iframe class="hedonometer" width="400" height="540" src="http://hedonometer.org/embed/main/2014-08-07-prev7/2014-08-07-sum/" frameborder="0" allowfullscreen></iframe>
+				    <div>
+				  </section>
+				  <section>
+				    <iframe class="hedonometer" width="1000" height="650" src="http://hedonometer.org/statesankey.html" frameborder="0" allowfullscreen></iframe>
+				  </section>
+				</section>
+				<section>
+				<section>
+				  <h2>now: the short story</h2>
+				  <h3>of how you get to hedonometer.org</h3>
+				</section>
+				<section>
+					<h2>key players</h2>
+					<ul>
+						<li>emacs</li>
+						<li>the internet</li>
+						<li>google chrome</li>
+						<li>linode (linux)</li>
+						<li>nginx</li>
+						<li>python django</li>
+						<li>git and github</li>
+						<li>d3.js</li>
+						<li>countless other js libraries</li>
+					</ul>
+				</section>
+				</section>
+
+				<section>
+				<section>
+				  <h3>part 1: getting the webpage</h3>
+				</section>
+				<section>
+				  <p class="fragment" style="position: absolute; top: 50px; left: 100px;">your computer</p>
+				  <div class="fragment">
+				    <p style="position: absolute; top: 0px; left: 450px;">GET hedonometer.org</p>
+				    <svg width="1000" height="50">
+				      <rect x="310" y="29" height="4" width="375" fill="white" />
+				      <polygon points="685,25 695,31 685,37" fill="white" />
+				    </svg>
+				  </div>
+				  <p class="fragment" style="position: absolute; top: 50px; left: 850px;">local DNS server</p>
+				  <div class="fragment">
+				    <p style="position: absolute; top: 100px; left: 450px;">that's at 198.74.58.158</p>
+				    <svg width="1000" height="50">
+				      <rect x="310" y="19" height="4" width="375" fill="white" />
+				      <polygon points="310,15 300,21 310,27" fill="white" />
+				    </svg>
+				  </div>
+				</section>
+
+				<section>
+				  <p style="position: absolute; top: 50px; left: 100px;">your computer</p>
+				  <div class="fragment">
+				    <p style="position: absolute; top: 0px; left: 450px;">GET 198.74.58.158:80</p>
+				    <svg width="1000" height="50">
+				      <rect x="310" y="29" height="4" width="375" fill="white" />
+				      <polygon points="685,25 695,31 685,37" fill="white" />
+				    </svg>
+				  </div>
+				  <div class="fragment" style="position: absolute; top: 0px; left: 850px;">
+				    <!-- <p>linode virtual linux server</p> -->
+				    <img src="https://www.linode.com/media/images/logos/standard/dark/linode-logo_standard_dark_medium.png" class="img-normal" width="300" height="100" />
+				  </div>
+				  <div class="fragment">
+				    <p style="position: absolute; top: 100px; left: 450px;"><i class="fa fa-file-code-o"></i> index.html</p>
+				    <svg width="1000" height="50">
+				      <rect x="310" y="19" height="4" width="375" fill="white" />
+				      <polygon points="310,15 300,21 310,27" fill="white" />
+				    </svg>
+				  </div>
+				</section>
+
+				<section>
+				    <img src="https://www.linode.com/media/images/logos/standard/dark/linode-logo_standard_dark_medium.png" class="img-normal" width="300" height"100" />
+				<!-- https://www.linode.com/logos -->
+
+				<p>nginx (a reverse proxy) listens on port 80, and responds to requests based on a configuration that looks like:</p>
+					<pre><code data-trim contenteditable>
+# /etc/nginx/sites-available/www
+
+server {
+    listen 80;
+    server_name hedonometer.org;
+    access_log /var/log/nginx/sample_project.access.log;
+    error_log /var/log/nginx/sample_project.error.log;
+
+    add_header 'Access-Control-Allow-Origin' 'http://www.uvm.edu';
+
+    rewrite  ^/(\?.*)?$  /index.html$1  permanent;
+
+    location /static { # STATIC_URL
+    	autoindex on;
+        alias /usr/share/nginx/wiki/mysite/mysite/static/; # STATIC_ROOT
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /usr/share/nginx/wiki/mysite/media; # MEDIA_ROOT
+        expires 30d;
+    }
+
+    location / {
+        include fastcgi_params;
+        fastcgi_pass 127.0.0.1:8080;
+	fastcgi_param SCRIPT_NAME "";
+    }
+}
+					</code></pre>
+				</section>
+
+				<section>
+				    <img src="img/django-neg.sh-600x600.png" class="img-normal" height="150"/>
+				<p>the django fastcgi server has a bunch of settings</p>
+				<p>it parses the url following rules in urls.py:</p>
+					<pre><code data-trim contenteditable>
+# /usr/share/nginx/wiki/mysite/mysite/urls.py
+
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^', include('hedonometer.urls',namespace='hedonometer')),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^cmplxsys/', include('cmplxsys.urls', namespace='cmplxsys')),
+    url(r'^storybreaker/', include('storybreaker.urls', namespace='storybreaker')),
+)
+					</code></pre>
+				</section>
+
+				<section>
+				<p>for example, the url / gets sent to hedonometer.urls: </p>
+					<pre><code data-trim contenteditable>
+# /usr/share/nginx/wiki/mysite/hedonometer/urls.py
+
+from django.conf.urls import patterns, url, include
+from django.views.generic import TemplateView,RedirectView
+
+from hedonometer import views
+from tastypie.api import Api
+from hedonometer.api import EventResource,BookResource,RandomBookResource,HappsResource,WordResource,GeoHappsResource
+
+v1_api = Api(api_name='v1')
+v1_api.register(EventResource())
+v1_api.register(HappsResource())
+v1_api.register(BookResource())
+v1_api.register(RandomBookResource())
+v1_api.register(WordResource())
+v1_api.register(GeoHappsResource())
+
+urlpatterns = patterns('',
+    url(r'^index.html',
+        TemplateView.as_view(template_name='hedonometer/index.html'),
+        name='index'),
+    url(r'^wordshift.html', 
+        RedirectView.as_view(url='index.html',query_string=True),),
+    url(r'^about.html', 
+        TemplateView.as_view(template_name='hedonometer/about.html'),
+        name='about'),
+    url(r'^shifts.html', 
+        RedirectView.as_view(url='instructions.html#wordshifts'),),
+    url(r'^instructions.html', 
+        TemplateView.as_view(template_name='hedonometer/instructions.html'),
+        name='instructions'),
+    url(r'^words.html',
+        TemplateView.as_view(template_name='hedonometer/words.html'),
+        name='words'),
+    url(r'^table.html', 
+        TemplateView.as_view(template_name='hedonometer/table.html'),
+        name='table'),
+    url(r'^press.html', 
+        TemplateView.as_view(template_name='hedonometer/press.html'),
+        name='press'),
+    url(r'^papers.html', 
+        TemplateView.as_view(template_name='hedonometer/papers.html'),
+        name='papers'),
+    url(r'^talks.html', 
+        TemplateView.as_view(template_name='hedonometer/talks.html'),
+        name='talks'),
+    url(r'^developometer.html', 
+        TemplateView.as_view(template_name='hedonometer/dev.html'),
+        name='dev'),
+    url(r'^storylab.html',
+        TemplateView.as_view(template_name='hedonometer/lab.html'),
+        name='lab'),
+    url(r'^maps.html',
+        TemplateView.as_view(template_name='hedonometer/maps.html'),
+        name='maps'),
+    url(r'^devmaps.html',
+        TemplateView.as_view(template_name='hedonometer/devmaps.html'),
+        name='maps'),
+    url(r'^books.html',
+        TemplateView.as_view(template_name='hedonometer/books.html'),
+        name='books'),
+    url(r'^api.html',
+        TemplateView.as_view(template_name='hedonometer/api.html'),
+        name='api'),
+    url(r'^diy-compare.html',
+        TemplateView.as_view(template_name='hedonometer/diy-compare.html'),
+        name='api'),
+    url(r'^diy-analyze.html',
+        TemplateView.as_view(template_name='hedonometer/diy-analyze.html'),
+        name='api'),
+    url(r'^embed/main/(?P<dateref>[\w-]+)/(?P<datecomp>[\w-]+)/$',views.embedMain,name='embed'),
+    url(r'^embed/(?P<some_hash>\w+)/$',views.embedUpload,name='embed'),
+    (r'^api/', include(v1_api.urls)),
+)
+					</code></pre>
+				</section>
+
+				<section>
+				<p>the django directory struture looks like:</p>
+					<pre><code data-trim contenteditable>
+manage.py
+mysite/
+    urls.py
+    static/
+        hedonometer/
+            js/
+                index-all.js
+            css/
+                index-all.css
+            data/
+                alldays.csv
+                word-vectors/
+                    2014-09-03-sum.csv
+                    2014-09-03-prev7.csv
+hedonometer/
+    init.py
+    urls.py
+    models.py
+    views.py
+    admin.py
+    api.py
+    tests.py
+    migrations/
+        ...
+    templates/
+        hedonometer/
+            templates/
+                base.html
+                index.html
+					</code></pre>
+				</section>
+
+				<section>
+				<p>the templating system... index.html</p>
+					<pre><code data-trim contenteditable>
+# /usr/share/nginx/wiki/mysite/hedonometer/templates/hedonometer/index.html
+
+{% extends "hedonometer/base.html" %}
+{% load staticfiles %}
+{% block headercss %}
+<link href="{% static "hedonometer/css/timeline-all.min.css" %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <div class="infobox">
+        <h4>Average Happiness for Twitter</h4>
+      </div>
+...
+					</code></pre>
+				</section>
+
+				<section>
+				<p>more interesting, views:</p>
+					<pre><code data-trim contenteditable>
+# /usr/share/nginx/wiki/mysite/hedonometer/views.py
+
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core.context_processors import csrf
+from django.template import Context
+import logging
+logger = logging.getLogger(__name__)
+from hedonometer.models import Embeddable
+
+# Create your views here.
+def embedMain(request,dateref,datecomp):
+    filenames = {'h': 'dont matter',
+                 'refFile': '/static/hedonometer/data/word-vectors/%s.csv' % dateref,
+                 "refFileName": dateref,
+                 'compFile': '/static/hedonometer/data/word-vectors/%s.csv' % datecomp,
+                 "compFileName": datecomp,
+    }
+
+    logger.debug(filenames)
+
+    # now pass those into the view
+    return render(request, 'hedonometer/embed.html', Context(filenames))
+
+def embedUpload(request,some_hash):
+    # look up that hash in our database
+    # m = Embeddable.objects.filter(compFile__contains="2014-06-06")
+    m = Embeddable.objects.filter(h__exact=some_hash)
+
+    # grab the filenames of the data from the database
+    filenames = {'h': m[0].h,
+                 'refFile': m[0].refFile,
+                 "refFileName": m[0].refFileName,
+                 "compFile": m[0].compFile,
+                 "compFileName": m[0].compFileName,
+    }
+
+    # now pass those into the view
+    return render(request, 'hedonometer/embed.html', Context(filenames))
+...
+					</code></pre>
+				</section>
+
+				<section>
+				<p>finally, the returned html file is rendered by the browser</p>
+					<pre><code data-trim contenteditable>
+<!-- <!DOCTYPE html> -->
+<!-- <html lang="en"> -->
+<!--   <head> -->
+<!--     <meta http-equiv="X-UA-Compatible" content="IE=9"/> -->
+<!--     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> -->
+    
+    <title>Hedonometer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+...
+
+    <link href="/static/hedonometer/css/timeline-all.min.css" rel="stylesheet">
+
+...
+
+    <div class="container">
+      <div class="infobox">
+        <h4>Average Happiness for Twitter</h4>
+      </div>
+
+      <div id="bigbox" class="container"></div>
+    </div>
+
+...
+
+    <script src="/static/hedonometer/js/index-all.min.js"></script>
+
+...
+
+<!--   </body> -->
+<!-- </html> -->
+					</code></pre>
+				</section>
+
+				<section>
+				  <h3>but there's nothing there!</h3>
+				  <p>what's inside index-all.min.js?</p>
+				  <p>well it's the result of this script:</p>
+				  <pre><code data-trim contenteditable>
+# /usr/share/nginx/wiki/mysite/mysite/static/hedonometer/js/minify.sh
+
+cat d3.andy.js jquery-1.11.0.min.js bootstrap.js bootstrap-datepicker.js urllib.js loadlabMT.js shift.js timeline.js > index-all.js
+minify --type js index-all.js > index-all.min.js
+                                  </code></pre>
+				</section>
+
+				</section>
+
+				<section>
+				<section>
+				  <h3>part 2: client side action (d3)</h3>
+				</section>
+
+				<section>
+				  <h3>d3 basic idea</h3>
+				  <ol>
+				    <li class="fragment">load data</li>
+				    <li class="fragment">make a selection</li>
+				    <li class="fragment">apply data</li>
+				    <li class="fragment">style with data</li>
+				    <li class="fragment">add actions</li>
+				  </ol>
+				</section>
+
+				<section>
+				  <h3>1. load data</h3>
+				  <pre class="fragment"><code data-trim contenteditable>
+d3.text("/static/hedonometer/data/bookdata/labMTscores-"+lang+".csv", function (text) {
+    var tmp = text.split("\n");
+    hedotools.lens = tmp.map(parseFloat);
+    var len = lens.length - 1;
+    while (!lens[len]) {
+        lens = lens.slice(0, len);
+        len--;
+    }
+    if (!--csvLoadsRemaining) hedotools.initializePlot();
+});
+                                  </code></pre>
+				</section>
+
+				<section>
+				  <h3>2. make a selection</h3>
+				  <pre class="fragment"><code data-trim contenteditable>
+axes.selectAll("rect.shiftrect");
+                                  </code></pre>
+				</section>
+
+				<section>
+				  <h3>3. apply data</h3>
+				  <pre class="fragment"><code data-trim contenteditable>
+axes.selectAll("rect.shiftrect")
+    .data(sortedMag);
+                                  </code></pre>
+				</section>
+
+				<section>
+				  <h3>4. style with data</h3>
+				  <pre class="fragment"><code data-trim contenteditable>
+axes.selectAll("rect.shiftrect")
+    .data(sortedMag)
+    .enter()
+    .append("rect")
+    .attr({ 
+	"class": function(d,i) { return "shiftrect "+intStr[sortedType[i]]+" "+typeClass[sortedType[i]]; },
+	"x": function(d,i) { 
+	    if (d>0) { return figcenter; } 
+	    else { return bigshiftx(d)}
+	},
+	"y": function(d,i) { return bigshifty(i+1); },
+	"height": function(d,i) { return iBarH; },
+	"width": function(d,i) { 
+	    if ((d)>0) { return bigshiftx(d)-bigshiftx(0); }
+	    else { return bigshiftx(0)-bigshiftx(d); } 
+	},
+	"opacity": "0.7",
+	"stroke-width": "1",
+	"stroke": "rgb(0,0,0)"
+    });
+                                  </code></pre>
+				</section>
+
+				<section>
+				  <h3>5. add actions</h3>
+				  <pre class="fragment"><code data-trim contenteditable>
+axes.selectAll("rect.shiftrect")
+    .data(sortedMag)
+    .enter()
+    .append("rect")
+    .attr({ 
+	"class": function(d,i) { return "shiftrect "+intStr[sortedType[i]]+" "+typeClass[sortedType[i]]; },
+	"x": function(d,i) { 
+	    if (d>0) { return figcenter; } 
+	    else { return bigshiftx(d)}
+	},
+	"y": function(d,i) { return bigshifty(i+1); },
+	"height": function(d,i) { return iBarH; },
+	"width": function(d,i) { 
+	    if ((d)>0) { return bigshiftx(d)-bigshiftx(0); }
+	    else { return bigshiftx(0)-bigshiftx(d); } 
+	},
+	"opacity": "0.7",
+	"stroke-width": "1",
+	"stroke": "rgb(0,0,0)"
+    })
+    .on("mouseover", function(d){
+        var rectSelection = d3.select(this).style({opacity:"1.0"});
+    })
+    .on("mouseout", function(d){
+         var rectSelection = d3.select(this).style({opacity:"0.7"});
+    });
+                                  </code></pre>
+				</section>
+
+				</section>
+
+
+				<section>
+
+				<section>
+				  <h3>so cool! how do I use it?</h3>
+				</section>
+
+				<section>
+				  <h3>the hedotools module</h3>
+				  <div class="fragment">
+				  <pre class="fragment fade-out"><code data-trim contenteditable>
+# maps.html
+
+{% block bottomjs %}
+
+    <script src="{% static "hedonometer/js/jquery-1.11.0.min.js" %}"></script>
+    <script src="{% static "hedonometer/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "hedonometer/js/d3.andy.js" %}"></script>
+    <script src="{% static "hedonometer/js/urllib.js" %}"></script>
+    <script src="{% static "hedonometer/js/topojson.v1.min.js" %}"></script>
+    <script src="{% static "hedonometer/js/hedotools.init.js" %}"></script>
+    <script src="{% static "hedonometer/js/hedotools.shifter.js" %}"></script>
+    <script src="{% static "hedonometer/js/hedotools.lens.js" %}"></script>
+    <script src="{% static "hedonometer/js/hedotools.map.js" %}"></script>
+    <script src="{% static "hedonometer/js/hedotools.computeHapps.js" %}"></script>
+    <script src="{% static "hedonometer/js/hedotools.barchart.js" %}"></script>
+    <script src="{% static "hedonometer/js/maps-on-load.js" %}"></script>
+
+{% endblock %}
+                                  </code></pre>
+				  </div>
+				  <div class="fragment" style="position: absolute; top: 100px; left: 435px">
+				    <img src="http://imgs.xkcd.com/comics/functional.png" class="img-normal" height="300"/>
+				  </div>
+				</section>
+
+				<section>
+				  <h3>namespacing...modular style...whatever</h3>
+				  <pre class="fragment"><code data-trim contenteditable>
+// /usr/share/nginx/wiki/mysite/mysite/static/hedonometer/js/hedotools.init.js
+
+// namespace it
+var hedotools = hedotools || {};
+
+// use this in both maps and sankey
+var classColor = d3.scale.quantize()
+    .range([0,1,2,3,4,5,6])
+    .domain([50,1]);
+
+// begin with some helper functions
+// http://stackoverflow.com/a/1026087/3780153
+function capitaliseFirstLetter(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// this works really well, but it's deadly slow (working max 5 elements)
+// and it's coupled to jquery
+// http://stackoverflow.com/a/5047712/3780153
+String.prototype.width = function(font) {
+    var f = font || '12px arial',
+    o = $('<div>' + this + '</div>')
+	.css({'position': 'absolute', 'float': 'left', 'white-space': 'nowrap', 'visibility': 'hidden', 'font': f})
+	.appendTo($('body')),
+    w = o.width();
+    o.remove();
+    return w;
+}
+
+// yup
+// http://stackoverflow.com/questions/3883342/add-commas-to-a-number-in-jquery
+function commaSeparateNumber(val){
+    while (/(\d+)(\d{3})/.test(val.toString())){
+	val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
+}
+                                  </code></pre>
+				</section>
+
+				<section>
+				  <h3>an example</h3>
+				  <pre class="fragment"><code data-trim contenteditable>
+// /usr/share/nginx/wiki/mysite/mysite/static/hedonometer/js/hedotools.shifter.js
+
+// define the shifter module 
+hedotools.shifter = function() {
+    // for the word type selection
+    var shiftselencoder = d3.urllib.encoder().varname("wordtypes");
+    var shiftseldecoder = d3.urllib.decoder().varname("wordtypes").varresult("none");
+
+    // initialize that we have't selected a shift
+    var shiftTypeSelect = false;
+
+    // we'll use this thing
+    var intStr = ["zero","one","two","three"];
+
+    // will need a figure.
+    // this needs to be set by setfigure() before plotting
+    var figure = d3.select("body");
+
+    var setfigure = function(_) {
+	console.log("setting figure");
+	figure = _;
+	grabwidth();
+	return hedotools.shifter;
+    }
+
+    // set the ones we can
+    // since the height is fixed, do all that
+    // but just initialize the width-related variables
+
+    // full width and height. we'll draw the outer svg this big
+    var fullwidth = 450;
+    var fullheight = 500;
+
+    var margin = {top: 0, right: 0, bottom: 0, left: 0};
+
+    // the width and height that we're going to use
+    var boxwidth = fullwidth-margin.left-margin.right;
+    var boxheight = fullheight-margin.top-margin.bottom;
+
+    // margin inside
+    var axeslabelmargin = {top: 0, right: 0, bottom: 25, left: 20};
+    
+    // inner width and height
+    // used for the axes
+    var figwidth = boxwidth - axeslabelmargin.left - axeslabelmargin.right;
+    var figheight = boxheight - axeslabelmargin.top - axeslabelmargin.bottom;
+
+......
+......
+......
+
+    }; // hedotools.shifter.plot
+
+    var opublic = { shift: shift,
+		    setfigure: setfigure,
+		    setdata: setdata,
+		    plot: plot, 
+		    setText: setText, } 
+
+    return opublic;
+}();
+                                  </code></pre>
+				</section>
+
+				<section>
+				  <h3>contribute!</h3>
+				  <h4><a href="http://github.com/andyreagan/hedotools" target="_blank">http://github.com/andyreagan/hedotools</a></h4>
+				</section>
+
+				</section>
+
+				<section>
+					<h1>THE END</h1>
+					<h3>questions?</h3>
+					<div class="fragment">
+					<iframe class="vine-embed" src="https://vine.co/v/M21ZdIgWzQT/embed/simple" width="300" height="300" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+					</div>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="reveal/lib/js/head.min.js"></script>
+		<script src="reveal/js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+			        width: 1200,
+			        height: 700,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'reveal/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Resources</title>
+
+<script src="lib/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="lib/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="lib/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="lib/navigation-1.1/tabsets.js"></script>
+<link href="lib/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="lib/highlightjs-9.12.0/highlight.js"></script>
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+@media (min-width: 980px) {
+  .section h2 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+  .section h3 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+}
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="include/beanumber.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/teaching/2018/09-SDS-291/">SDS 291 - Fall 2018</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="syllabus.html">Syllabus</a></li>
+<!--          <li><a href="schedule.html">Schedule</a></li> -->
+          <li class="dropdown">
+            <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Lectures <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+               <li class="dropdown-header">Notes</li>
+                 <li><a href="lectures/01_intro.pdf">01 - Introduction</a></li>
+                 <li><a href="lectures/02_slr.pdf">02 - Simple Linear Regression</a></li>
+                 <li><a href="lectures/03_regression_conditions.pdf">03 - Conditions for Regression</a></li>
+                 <li><a href="lectures/04_transformations.pdf">04 - Transformations</a></li>
+                 <li><a href="lectures/05_slr_inference.pdf">05 - Inference</a></li>
+                 <li><a href="lectures/06_mlr.pdf">06 - Multiple Regression</a></li>
+          </li>
+          </ul>
+
+            <li class="dropdown">
+            <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Resources <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="resources.html">R, RStudio, others</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Website Rmd Sources</li>
+               <li><a href="index.Rmd">Index</a></li>
+               <li><a href="syllabus.Rmd">Syllabus</a></li>
+                 <li><a href="resources.Rmd">Resources</a></li>
+              </ul>
+          </li>
+          <li class="dropdown">
+            <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Labs <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+
+                             <li class="dropdown-header">Lab</li>
+                               <li><a href="labs/01_lab_intro.html">Intro</a></li>
+                               <li><a href="labs/02_lab_residuals.html">Residuals</a></li>
+                               <li><a href="labs/03_lab_transformations.html">Transformations</a></li>
+                               <li><a href="labs/04_lab_intervals.html">Intervals</a></li>
+<!--
+                               <li><a href="lab_regression_summary.html">Regression Summary</a></li>
+                               <li><a href="lab_multicollinearity.html">Multicollinearity</a></li>
+                               <li><a href="lab_added_variables.html">Added Variable Plots</a></li>
+                               <li><a href="lab_diagnostics.html">Diagnostics</a></li>
+                               <li><a href="lab_stepwise.html">Stepwise Regression</a></li>
+                               <li><a href="lab_randomization.html">Randomization & the Bootstrap</a></li>
+                               <li><a href="lab_anova.html">ANOVA</a></li>
+                               <li><a href="lab_multiple_testing.html">Multiple Testing</a></li>
+                               <li><a href="lab_logistic.html">Logistic Regression</a></li>
+                               <li><a href="lab_logistic_fit.html">Logistic Regression Fit</a></li>
+                               <li><a href="lab_merge.html">Merge and Reshape</a></li>
+                               <li><a href="lab_missing.html">Missing Data</a></li>
+                               <li><a href="lab_panel_data.html">Panel Data</a></li>
+                               <li><a href="lab_time_series.html">Time Series</a></li>
+              -->
+                             <li class="dropdown-header">Source</li>
+                               <li><a href="labs/01_lab_intro.Rmd">Intro</a></li>
+                               <li><a href="labs/02_lab_residuals.Rmd">Residuals</a></li>
+                               <li><a href="labs/03_lab_transformations.Rmd">Transformations</a></li>
+                               <li><a href="labs/04_lab_intervals.Rmd">Intervals</a></li>
+<!--
+                 <li><a href="lab_regression_summary.Rmd">Regression Summary</a></li>
+                 <li><a href="lab_multicollinearity.Rmd">Multicollinearity</a></li>
+                 <li><a href="lab_added_variables.Rmd">Added Variable Plots</a></li>
+                 <li><a href="lab_diagnostics.Rmd">Diagnostics</a></li>
+                 <li><a href="lab_stepwise.Rmd">Stepwise Regression</a></li>
+                 <li><a href="lab_randomization.Rmd">Randomization & the Bootstrap</a></li>
+                 <li><a href="lab_anova.Rmd">ANOVA</a></li>
+                 <li><a href="lab_multiple_testing.Rmd">Multiple Testing</a></li>
+                 <li><a href="lab_logistic.Rmd">Logistic Regression</a></li>
+                 <li><a href="lab_merge.Rmd">Merge and Reshape</a></li>
+                 <li><a href="lab_panel_data.Rmd">Panel Data</a></li>
+                 <li><a href="lab_time_series.Rmd">Time Series</a></li>
+-->
+              </ul>
+          </li>
+          <li class="dropdown">
+            <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Assignments <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+               <li class="dropdown-header">Homework</li>
+                 <li><a href="hw/hw1.Rmd">Homework 1</a></li>
+                 <li><a href="hw/hw2.Rmd">Homework 2</a></li>
+                 <li><a href="hw/hw3.Rmd">Homework 3</a></li>
+                 <li><a href="hw/hw4.Rmd">Homework 4</a></li>
+<!--
+                 <li><a href="hw/hw5.Rmd">Homework 5</a></li>
+                 <li><a href="hw/hw6.Rmd">Homework 6</a></li>
+                 <li><a href="hw/hw7.Rmd">Homework 7</a></li>
+                 <li><a href="hw/hw8.Rmd">Homework 8</a></li>
+-->
+               <li class="divider"></li>
+<!--
+               <li class="dropdown-header">Student Solutions</li>
+
+                 <li><a href="hw/HW1_Solutions.html">Homework 1</a></li>
+                 <li><a href="hw/HW2_Solutions.html">Homework 2</a></li>
+                 <li><a href="hw/HW3_Solutions.html">Homework 3</a></li>
+                 <li><a href="hw/HW4_Solutions.html">Homework 4</a></li>
+                 <li><a href="hw/HW5_Solutions.html">Homework 5</a></li>
+                 <li><a href="hw/HW6_Solutions.html">Homework 6</a></li>
+                 <li><a href="hw/HW7_Solutions.html">Homework 7</a></li>
+                 <li><a href="hw/HW8_Solutions.html">Homework 8</a></li>
+
+               <li class="divider"></li>
+-->
+               <li class="dropdown-header">Exams</li>
+<!--
+                <li><a href="handouts/exam1_sample_solutions.pdf">Exam 1: Sample Solutions</a></li>
+                <li><a href="handouts/exam2_sample_solutions.pdf">Exam 2: Sample Solutions</a></li>
+-->
+               <li class="divider"></li>
+               <li class="dropdown-header">Project</li>
+<!--
+                 <li><a href="project.html">Instructions</a></li>
+                 <li><a href="project_schedule.html">Schedule</a></li>
+                 <li class="divider"></li>
+                  <li><a href="https://drive.google.com/a/smith.edu/file/d/0Bz1XG6aZbGewVGExWWhxZnEzRWc/">Group F</a></li>
+                  <li><a href="https://docs.google.com/presentation/d/19DS3vIO_ff7O6PkdZ8J-1cvFFpnmavOFPx2G-d2kTsM/">Group I</a></li>
+                  <li><a href="https://prezi.com/ne8bucq4gazc/present/?follow=jphhnb9zrbbh&auth_key=0s6n3uz#4_95982358">Group G</a></li>
+                  <li><a href="handouts/group-j.pptx">Group J</a></li>
+                  <li><a href="https://docs.google.com/presentation/d/13I37mKF0yQWLusXvwNSPWS4K1ZSajnqoD81hlegYBuw/">Group A</a></li>
+                <li class="divider"></li>
+                 <li><a href="handouts/group-c.pptx">Group C</a></li>
+                 <li><a href="handouts/group-b.pptx">Group B</a></li>
+                 <li><a href="handouts/group-d.pdf">Group D</a></li>
+                 <li><a href="handouts/group-e.pptx">Group E</a></li>
+                 <li><a href="https://docs.google.com/presentation/d/1SS1ZfykJNaiYiq2qiiWnYji5kj02eiCpwYIcAlO_hzw/">Group H</a></li>
+-->
+            </ul>
+          </li>
+        </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Resources</h1>
+
+</div>
+
+
+<ul>
+<li><a href="http://moodle.smith.edu">Moodle</a></li>
+<li>Textbook
+<ul>
+<li><a href="http://www.stat2.org/">Stat2: Building Models for a World of Data</a></li>
+<li>install the <code>Stat2Data</code> package in <code>R</code></li>
+</ul></li>
+<li>RStudio IDE
+<ul>
+<li>Choose one of two options:
+<ol style="list-style-type: decimal">
+<li>Log on to the Smith College <a href="http://rstudio.smith.edu">RStudio Server</a></li>
+<li>Download and install <a href="http://www.rstudio.com/products/rstudio/">RStudio Desktop</a>
+<ul>
+<li>Download and install <a href="http://cran.us.r-project.org/">R</a></li>
+</ul></li>
+</ol></li>
+<li>Learn more about <a href="http://rmarkdown.rstudio.com/">R Markdown</a>
+<ul>
+<li>printable <a href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">Reference Guide for R Markdown</a></li>
+</ul></li>
+<li>RStudio’s <a href="http://www.rstudio.com/resources/cheatsheets/">cheatsheets</a> (there are many, they’re handy!).</li>
+<li>Packages you should install: <code>mosaic</code>, <code>knitr</code>, <code>markdown</code></li>
+<li><a href="http://www.statmethods.net/">Quick R</a></li>
+<li><a href="http://www.r-tutor.com/">R Tutorial</a></li>
+</ul></li>
+<li>Using <code>R</code> with the <code>mosaic</code> package
+<ul>
+<li>the <code>mosaic</code> <a href="http://cran.r-project.org/web/packages/mosaic/index.html">package</a></li>
+<li><a href="https://cran.r-project.org/web/packages/mosaic/vignettes/mosaic-resources.html">A Compendium of Commands to Teach Statistics with R</a>: a longer illustrated guide to using <code>mosaic</code></li>
+<li>Nick Horton’s videos <a href="http://www3.amherst.edu/~nhorton/rstudio/">introducing RStudio at Amherst</a></li>
+<li>Interactive tutorials via <a href="http://swirlstats.com/students.html">swirl</a>, <a href="https://www.datacamp.com/">DataCamp</a></li>
+</ul></li>
+<li>Using <code>R</code> with the <code>dplyr</code> <a href="http://cran.r-project.org/web/packages/dplyr/index.html">package</a>
+<ul>
+<li>Read the vignettes</li>
+<li>RStudio’s <a href="http://www.rstudio.com/resources/cheatsheets/">cheatsheets</a> for Data Wrangling with <code>dplyr</code></li>
+</ul></li>
+<li>Quantitative Resources on campus
+<ul>
+<li><a href="https://www.smith.edu/qlc/tutoring.html">Statistics TAs</a> are available Sunday through Thursday from 7-9 pm in McConnell 301</li>
+<li>visit the <a href="https://www.smith.edu/qlc/">Spinelli Center for Quantitative Learning</a></li>
+</ul></li>
+<li>Refresher on introductory statistics: <a href="http://www.openintro.org/stat/index.php?stat_book=isrs">OpenIntro with Randomization</a>
+<ul>
+<li><a href="http://www.openintro.org/download.php?file=isrs1&amp;referrer=/stat/textbook.php">PDF</a> of the textbook</li>
+</ul></li>
+</ul>
+
+    <div id="footer">
+      <div class="container">
+        <p class="muted credit">Copyright <a href="http://andyreagan.github.io">Andy Reagan</a>, originally by <a href="http://math.smith.edu/~bbaumer">Ben Baumer</a>.</p>
+      </div>
+    </div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

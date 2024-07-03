@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="github" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2014/09/04/github-pages-with-pelican/" rel="bookmark" title="Permalink to Github pages with Pelican">Github pages with Pelican</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2014-09-04T00:00:00+02:00">
+                        Thu 04 September 2014
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2014-09-04-first-post.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>If I get this on github pages, it will be a miracle.</p>
+<p>So, I did. Here's how.</p>
+<ol>
+<li>Note the date on this post, things may have changed.</li>
+<li>Be ready with homebrew (on your Mac) and a github account.</li>
+</ol>
+<p>Install virtualenv (with pip).</p>
+<p>Create a new directory, i.e. "website", and start a virtual environment.
+I use autoenv (brew install autoenv), which executes a .env file if it exists when you change into a directory.
+Autoenv will ask you to confirm the .env file is correct.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>website
+virtualenv<span class="w"> </span>pyenv
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;source /Users/andyreagan/website/pyenv/bin/activate&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.env
+<span class="nb">cd</span><span class="w"> </span>.
+</code></pre></div>
+
+<p>Now your prompt should be prefixed by "(pyenv)". Now start installing pelican.</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pelican
+pip<span class="w"> </span>install<span class="w"> </span>markdown
+pip<span class="w"> </span>install<span class="w"> </span>ghp-import
+</code></pre></div>
+
+<p>If you're going to migrate over posts from somewhere else (wordpress for me), get pandoc.</p>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>pandoc
+</code></pre></div>
+
+<p>Now you can get started building the website with Pelican. First, make sure the github is set up. Follow the instructions on https://pages.github.com/, and leave the repository empty.
+Clone it into your working directory (website) with</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/andyreagan/andyreagan.github.io<span class="w"> </span>.
+</code></pre></div>
+
+<p>Finally, build the website with Pelican. I just followed the tutorial on their documentation, which is excellent: http://docs.getpelican.com/en/3.4.0/quickstart.html</p>
+<p>Once you've got something showing in localhost, it's time to push it up to github. Hold your breath.
+The publishing script that I use, very simple is:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># publishsimple.sh</span>
+
+pelican<span class="w"> </span>content<span class="w"> </span>-s<span class="w"> </span>pelicanconf.py
+ghp-import<span class="w"> </span>output
+git<span class="w"> </span>push<span class="w"> </span>-f<span class="w"> </span>origin<span class="w"> </span>gh-pages:master
+</code></pre></div>
+
+<p>Some other goodies. All of this is well documented within Pelican's docs, but here it is. This is the tail of my pelicanconf.py:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># static paths will be copied without parsing their contents</span>
+<span class="n">STATIC_PATHS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;images&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;files&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+<span class="c1"># get a homepage on the menu bar</span>
+<span class="n">MENUITEMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span><span class="s2">&quot;/index.html&quot;</span><span class="p">,),]</span>
+
+<span class="c1"># make the URL&#39;s look nice</span>
+<span class="n">ARTICLE_URL</span> <span class="o">=</span> <span class="s1">&#39;{date:%Y}/{date:%m}/{date:</span><span class="si">%d</span><span class="s1">}/</span><span class="si">{slug}</span><span class="s1">/&#39;</span>
+<span class="n">ARTICLE_SAVE_AS</span> <span class="o">=</span> <span class="s1">&#39;{date:%Y}/{date:%m}/{date:</span><span class="si">%d</span><span class="s1">}/</span><span class="si">{slug}</span><span class="s1">/index.html&#39;</span>
+<span class="n">YEAR_ARCHIVE_SAVE_AS</span> <span class="o">=</span> <span class="s1">&#39;{date:%Y}/index.html&#39;</span>
+<span class="n">MONTH_ARCHIVE_SAVE_AS</span> <span class="o">=</span> <span class="s1">&#39;{date:%Y}/{date:%b}/index.html&#39;</span>
+</code></pre></div>
+
+<p>And I did fork my own theme. Copied over the theme from "pyenv/lib/python2.7/site-packages/pelican/themes/simple/templates/" into "theme/finnigan".
+I also created the "static" folder alongside "templates," and put the "css" and "js" and "images" folders inside static.</p>
+<p>Then set this to be the theme in "pelicanconf.sh":</p>
+<div class="highlight"><pre><span></span><code><span class="n">THEME</span><span class="o">=</span><span class="s1">&#39;theme/finnigan&#39;</span>
+</code></pre></div>
+
+<p>If you've made it this far, start writing!</p>
+<p>Cheers!</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Data visualization with D3</title>
+
+		<meta name="description" content="what i known about the internet and javascript">
+		<meta name="author" content="andy reagan">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+                <link rel="stylesheet" href="css/anscombe.css">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- For icons -->
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+		<!-- fix for the fa icons -->
+		<!-- https://github.com/hakimel/reveal.js/issues/601 -->
+		<style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+		<link rel="stylesheet" href="css/storylabpres.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+                <script src="js/d3.js"></script>
+	</head>
+
+	<body>
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>d3.js</h1>
+					<h3>data viz and javascripting</h3>
+					<p>
+						<small>created by <a href="http://andyreagan.com">andy reagan</a> / <a href="http://twitter.com/andyreagan">@andyreagan</a></small>
+					</p>
+				</section>
+                                <!-- major section on why visualization -->
+				<section>
+				  <section>
+				    <h2>why "visualize" data? what's the use?</h2>
+				  </section>
+				  <section>
+                                    <h2>anscombe's quartet <a href="http://www.jstor.org/stable/2682899">(Anscombe, 1973)</a></h2>
+                                    <img src="http://www.qualia.hr/wp-content/uploads/2013/11/Anscombe's%20quartet%20table.png" width="800" class="fragment"/>
+				  </section>
+                                  <section>
+                                    <h2>anscombe's quartet <a href="http://www.jstor.org/stable/2682899">(Anscombe, 1973)</a></h2>
+                                    <!-- <iframe src="http://bl.ocks.org/alansmithy/raw/07218980d8bac3689104/" width="500"></iframe> -->
+                                    <!-- https://github.com/d3/d3/wiki/Gallery -->
+                                    <!-- blocks doesn't allows this -->
+                                    <div id="ans-intro"></div>
+                                  </section>
+				  <section>
+				    <h2>because we're humans!</h2>
+				  <pre class="fragment"><code data-trim contenteditable>
+date,happs
+2014-10-24,6.03544317754
+2014-10-25,6.02474118564
+2014-10-26,5.99567864045
+2014-10-27,5.99534731934
+2014-10-28,6.00206738105
+2014-10-29,6.00470739171
+2014-10-30,6.01225517083
+2014-10-31,6.06894280909
+2014-11-01,6.03278443838
+2014-11-01,6.03278443838
+2014-11-02,5.99819658939
+2014-11-03,6.00996280805
+2014-11-04,6.0131565732
+2014-11-05,6.00889999028
+2014-11-06,6.01673676411
+2014-11-07,6.04270487267
+2014-11-08,6.0363700644
+2014-11-09,6.02035760944
+2014-11-10,6.0119068757
+2014-11-12,6.01536420748
+                                  </code></pre>
+				  </section>
+				  <section>
+				    <iframe class="hedonometer" width="1200" height="650" src="http://hedonometer.org" frameborder="0" allowfullscreen></iframe>
+				  </section>
+				</section>
+
+				<section>
+                                  <section>
+				    <h3>where does d3 fit in?</h3>
+                                    <img src="images/d3-chart.png" width="800" class="fragment"/>
+                                  </section>
+                                  <section>
+				    <h3>where does d3 fit in?</h3>
+                                    <img src="images/d3-chart-2.png" width="800" class="fragment"/>
+                                  </section>
+				<section>
+				  <h3>d3: a very (very) brief history</h3>
+                                  <p>original paper: <a href="http://vis.stanford.edu/papers/d3" target="_blank">link</a></p>
+                                </section>
+                                </section>
+
+				<section>
+                                  <section>
+				    <h3>let's build an interactive scatterplot!</h3>
+                                  </section>
+                                  <section>
+                                    <h3>first, we need data</h3>
+                                    <pre class="fragment"><code data-trim contenteditable>
+var data = [
+    [
+        {
+            "x": 10,
+            "y": 8.04
+        },
+        {
+            "x": 8,
+            "y": 6.95
+        },
+        {
+            "x": 13,
+            "y": 7.58
+        },
+        {
+            "x": 9,
+            "y": 8.81
+         },
+....
+                                  </code></pre>
+                                  </section>
+                                  <section>
+                                    <h3>and an SVG</h3>
+                                    <pre class=""><code data-trim contenteditable>
+<svg id="mysvg" width="500" height="500" style="border: 1px solid;"></svg>
+                                    </code></pre>
+                                    <svg id="mysvg" width="400" height="400" style="border: 1px solid;"></svg>
+                                  </section>
+                                <section>
+                                  <h3>without d3</h3>
+                                  <pre class="fragment"><code data-trim contenteditable>
+var svg = document.getElementById("mysvg");
+for (var i=0; i&ltdata[0].length; i++) {
+    var newDataEl = document.createElement("circle");
+    var cx = document.createAttribute("cx");
+    cx.value = data[0][i].cx;
+    var cy = document.createAttribute("cy");
+    cy.value = data[0][i].cy;
+    var r = document.createAttribute("r");
+    r.value = 10;
+    newDataEl.setAttributeNode(cx);
+    newDataEl.setAttributeNode(cy);
+    newDataEl.setAttributeNode(r);
+    svg.appendChild(newDataEl);
+}
+                                  </code></pre>
+
+                                </section>
+                                  <section>
+                                    <svg id="mysvg1" width="500" height="500" style="border: 1px solid;"></svg>
+                                    <script>
+var data = [
+    [
+        {
+            "x": 10,
+            "y": 8.04
+        },
+        {
+            "x": 8,
+            "y": 6.95
+        },
+        {
+            "x": 13,
+            "y": 7.58
+        },
+        {
+            "x": 9,
+            "y": 8.81
+        },
+        {
+            "x": 11,
+            "y": 8.33
+        },
+        {
+            "x": 14,
+            "y": 9.96
+        },
+        {
+            "x": 6,
+            "y": 7.24
+        },
+        {
+            "x": 4,
+            "y": 4.26
+        },
+        {
+            "x": 12,
+            "y": 10.84
+        },
+        {
+            "x": 7,
+            "y": 4.82
+        },
+        {
+            "x": 5,
+            "y": 5.68
+        }
+    ],
+    [
+        {
+            "x": 10,
+            "y": 9.14
+        },
+        {
+            "x": 8,
+            "y": 8.14
+        },
+        {
+            "x": 13,
+            "y": 8.74
+        },
+        {
+            "x": 9,
+            "y": 8.77
+        },
+        {
+            "x": 11,
+            "y": 9.26
+        },
+        {
+            "x": 14,
+            "y": 8.1
+        },
+        {
+            "x": 6,
+            "y": 6.13
+        },
+        {
+            "x": 4,
+            "y": 3.1
+        },
+        {
+            "x": 12,
+            "y": 9.13
+        },
+        {
+            "x": 7,
+            "y": 7.26
+        },
+        {
+            "x": 5,
+            "y": 4.74
+        }
+    ],
+    [
+        {
+            "x": 10,
+            "y": 7.46
+        },
+        {
+            "x": 8,
+            "y": 6.77
+        },
+        {
+            "x": 13,
+            "y": 12.74
+        },
+        {
+            "x": 9,
+            "y": 7.11
+        },
+        {
+            "x": 11,
+            "y": 7.81
+        },
+        {
+            "x": 14,
+            "y": 8.84
+        },
+        {
+            "x": 6,
+            "y": 6.08
+        },
+        {
+            "x": 4,
+            "y": 5.39
+        },
+        {
+            "x": 12,
+            "y": 8.15
+        },
+        {
+            "x": 7,
+            "y": 6.42
+        },
+        {
+            "x": 5,
+            "y": 5.73
+        }
+    ],
+    [
+        {
+            "x": 8,
+            "y": 6.58
+        },
+        {
+            "x": 8,
+            "y": 5.76
+        },
+        {
+            "x": 8,
+            "y": 7.71
+        },
+        {
+            "x": 8,
+            "y": 8.84
+        },
+        {
+            "x": 8,
+            "y": 8.47
+        },
+        {
+            "x": 8,
+            "y": 7.04
+        },
+        {
+            "x": 8,
+            "y": 5.25
+        },
+        {
+            "x": 19,
+            "y": 12.5
+        },
+        {
+            "x": 8,
+            "y": 5.56
+        },
+        {
+            "x": 8,
+            "y": 7.91
+        },
+        {
+            "x": 8,
+            "y": 6.89
+        }
+    ]
+];
+var svg = document.getElementById("mysvg1");
+for (var i=0; i<data[0].length; i++) {
+    var newDataEl = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    var cx = document.createAttribute("cx");
+    cx.value = data[0][i].x;
+    var cy = document.createAttribute("cy");
+    cy.value = data[0][i].y;
+    var r = document.createAttribute("r");
+    r.value = 10;
+    newDataEl.setAttributeNode(cx);
+    newDataEl.setAttributeNode(cy);
+    newDataEl.setAttributeNode(r);
+    svg.appendChild(newDataEl);
+}
+</script>
+                                </section>
+                                  <section>
+                                  <pre><code data-trim contenteditable>
+var xscale = function(x) {
+    return 100+(x-4)/10*500;
+}
+                                    </code></pre>
+                                  </section>
+                                  <section>
+                                    <pre class=""><code data-trim contenteditable>
+var svg = document.getElementById("mysvg");
+for (var i=0; i&ltdata[0].length; i++) {
+    var newDataEl = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    var cx = document.createAttribute("cx");
+    cx.value = xscale(data[0][i].cx);
+    var cy = document.createAttribute("cy");
+    cy.value = data[0][i].cy;
+    var r = document.createAttribute("r");
+    r.value = 10;
+    newDataEl.setAttributeNode(cx);
+    newDataEl.setAttributeNode(cy);
+    newDataEl.setAttributeNode(r);
+    svg.appendChild(newDataEl);
+}
+                                </code></pre>
+                                  </section>
+                                  <section>
+                                    <svg id="mysvg2" width="500" height="500" style="border: 1px solid;"></svg>
+                                    <script>
+
+var xscale = function(x) {
+    return 100+(x-4)/10*500;
+}
+var svg = document.getElementById("mysvg2");
+for (var i=0; i<data[0].length; i++) {
+    var newDataEl = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    var cx = document.createAttribute("cx");
+    cx.value = xscale(data[0][i].x);
+    var cy = document.createAttribute("cy");
+    cy.value = data[0][i].y;
+    var r = document.createAttribute("r");
+    r.value = 10;
+    newDataEl.setAttributeNode(cx);
+    newDataEl.setAttributeNode(cy);
+    newDataEl.setAttributeNode(r);
+    svg.appendChild(newDataEl);
+}
+</script>
+                                </section>
+                                  <section>
+                                  <pre><code data-trim contenteditable>
+var xscale = function(x,domain,range) {
+    return range[0]+(x-domain[0])/(domain[1]-domain[0])*(range[1]+range[0]);
+}
+                                    </code></pre>
+                                  </section>
+                                  <section>
+                                    <pre class=""><code data-trim contenteditable>
+var svg = document.getElementById("mysvg");
+for (var i=0; i&ltdata[0].length; i++) {
+    var newDataEl = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    var cx = document.createAttribute("cx");
+    cx.value = xscale(data[0][i].cx,[4,14],[100,500]);
+    var cy = document.createAttribute("cy");
+    cy.value = data[0][i].cy;
+    var r = document.createAttribute("r");
+    r.value = 10;
+    newDataEl.setAttributeNode(cx);
+    newDataEl.setAttributeNode(cy);
+    newDataEl.setAttributeNode(r);
+    svg.appendChild(newDataEl);
+}
+                                </code></pre>
+                                </section>
+                                  <section>
+                                    <h3>d3 to the rescue</h3>
+                                    <pre class="fragment"><code data-trim contenteditable>
+var xscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.x; }))
+    .range([100,500]);
+                                  </code></pre>
+                                  </section>
+                                  <section>
+                                    <pre class=""><code data-trim contenteditable>
+var svg = document.getElementById("mysvg");
+for (var i=0; i&ltdata[0].length; i++) {
+    var newDataEl = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    var cx = document.createAttribute("cx");
+    cx.value = xscale(data[0][i].cx);
+    var cy = document.createAttribute("cy");
+    cy.value = data[0][i].cy;
+    var r = document.createAttribute("r");
+    r.value = 10;
+    newDataEl.setAttributeNode(cx);
+    newDataEl.setAttributeNode(cy);
+    newDataEl.setAttributeNode(r);
+    svg.appendChild(newDataEl);
+}
+                                </code></pre>
+                                  </section>
+                                  <section>
+                                    <h3>make a "selection" with d3</h3>
+                                    <pre class="fragment"><code data-trim contenteditable>
+var svg = d3.select("#svg-container").append("svg").attr({width: 600, height: 600,});
+                                    </code></pre>
+                                  </section>
+                                  <section>
+                                    <h3>now add data!</h3>
+                                    <pre class="fragment"><code data-trim contenteditable>
+var circles = svg.selectAll("circle").data(data[0]);
+                                    </code></pre>
+                                  </section>
+                                  <section>
+				    <h3>the most important slide today</h3>
+                                    <img src="images/d3-lifecycle.png" width="600" class="fragment"/>
+                                  </section>
+                                  <section>
+                                    <h3></h3>
+                                    <pre class=""><code data-trim contenteditable>
+var circles = svg.selectAll("circle").data(data[0])
+    .enter()
+    .append("circle");
+                                    </code></pre>
+                                  </section>
+                                  <section>
+                                    <h3></h3>
+                                    <pre class=""><code data-trim contenteditable>
+var circles = svg.selectAll("circle").data(data[0])
+    .enter()
+    .append("circle")
+    .attr({
+        cx: function(d,i) { return xscale(d.x); },
+        cy: function(d,i) { return yscale(d.y); },
+        r: 10,
+    });
+                                    </code></pre>
+                                  </section>
+                                  <section>
+                                    <svg id="mysvg3" style="border: 1px solid;"></svg>
+                                    <script>
+var xscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.x; }))
+.range([0,500]);
+var yscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.y; }))
+    .range([500,0]);
+var svg = d3.select("#mysvg3").attr({width:500,height:500});
+var circles = svg.selectAll("circle").data(data[0])
+    .enter()
+    .append("circle")
+    .attr({
+        cx: function(d,i) { return xscale(d.x); },
+        cy: function(d,i) { return yscale(d.y); },
+        r: 10,
+    });
+                                    </script>
+                                    </section>
+                                  <section>
+                                    <h3></h3>
+                                    <pre class=""><code data-trim contenteditable>
+var circles = svg.selectAll("circle").data(data[0])
+    .enter()
+    .append("circle")
+    .attr({
+        cx: function(d,i) { return xscale(d.x); },
+        cy: function(d,i) { return yscale(d.y); },
+        r: 10,
+    })
+    .on("mouseover",function(d,i) {
+        d3.select(this).style("opacity",.5);
+    });
+                                    </code></pre>
+                                  </section>
+                                                                    <section>
+                                    <svg id="mysvg4" style="border: 1px solid;"></svg>
+                                    <script>
+var xscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.x; }))
+.range([0,500]);
+var yscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.y; }))
+    .range([500,0]);
+var svg = d3.select("#mysvg4").attr({width:500,height:500});
+var circles = svg.selectAll("circle").data(data[0])
+    .enter()
+    .append("circle")
+    .attr({
+        cx: function(d,i) { return xscale(d.x); },
+        cy: function(d,i) { return yscale(d.y); },
+        r: 10,
+})
+    .on("mouseover",function(d,i) {
+d3.select(this).style("opacity",.5);
+    });
+                                    </script>
+                                    </section>
+                                  <section>
+                                    <h3></h3>
+                                    <pre class=""><code data-trim contenteditable>
+var circles = svg.selectAll("circle").data(data[0])
+    .enter()
+    .append("circle")
+    .attr({
+        cx: function(d,i) { return xscale(d.x); },
+        cy: function(d,i) { return yscale(d.y); },
+        r: 10,
+    }).on("click", function(d,i) {
+        ans_ind = ( ans_ind + 1 ) % 4;
+        xscale.domain(d3.extent(data[ans_ind],function(d) { return d.x; }));
+        yscale.domain(d3.extent(data[ans_ind],function(d) { return d.y; }));
+        circles.data(data[ans_ind])
+            .transition()
+            .duration(2000)
+            .attr({
+                cx: function(d,i) { return xscale(d.x); },
+                cy: function(d,i) { return yscale(d.y); },
+            });
+    });
+                                    </code></pre>
+                                  </section>
+                                                                    <section>
+                                    <svg id="mysvg5" style="border: 1px solid;"></svg>
+                                    <script>
+var ans_ind = 0;
+var xscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.x; }))
+.range([0,500]);
+var yscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.y; }))
+    .range([500,0]);
+var svg = d3.select("#mysvg5").attr({width:500,height:500});
+var circles5 = svg.selectAll("circle").data(data[0])
+    .enter()
+    .append("circle")
+    .attr({
+        cx: function(d,i) { return xscale(d.x); },
+        cy: function(d,i) { return yscale(d.y); },
+        r: 10,
+}).on("click", function(d,i) {
+        ans_ind = ( ans_ind + 1 ) % 4;
+        xscale.domain(d3.extent(data[ans_ind],function(d) { return d.x; }));
+        yscale.domain(d3.extent(data[ans_ind],function(d) { return d.y; }));
+        circles5.data(data[ans_ind])
+            .transition()
+            .duration(500)
+            .attr({
+                cx: function(d,i) { return xscale(d.x); },
+                cy: function(d,i) { return yscale(d.y); },
+            });
+    });
+                                    </script>
+                                  </section>
+                                  <section>
+                                    <h3></h3>
+                                    <pre class=""><code data-trim contenteditable>
+var xAxis = d3.svg.axis().scale(xscale).orient("bottom");
+svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + 480 + ")")
+      .call(xAxis);
+                                    </code></pre>
+                                  </section>
+                                                                    <section>
+                                    <svg id="mysvg6" style="border: 1px solid;"></svg>
+                                    <script>
+var ans_ind = 0;
+var xscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.x; }))
+.range([0,500]);
+var yscale = d3.scale.linear()
+    .domain(d3.extent(data[0],function(d) { return d.y; }))
+    .range([450,0]);
+var svg = d3.select("#mysvg6").attr({width:500,height:500});
+var xAxis = d3.svg.axis().scale(xscale).orient("bottom");
+svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + 450 + ")")
+      .call(xAxis);
+var circles5 = svg.selectAll("circle").data(data[0])
+    .enter()
+    .append("circle")
+    .attr({
+        cx: function(d,i) { return xscale(d.x); },
+        cy: function(d,i) { return yscale(d.y); },
+        r: 10,
+}).on("click", function(d,i) {
+        ans_ind = ( ans_ind + 1 ) % 4;
+        xscale.domain(d3.extent(data[ans_ind],function(d) { return d.x; }));
+        yscale.domain(d3.extent(data[ans_ind],function(d) { return d.y; }));
+        circles5.data(data[ans_ind])
+            .transition()
+            .duration(500)
+            .attr({
+                cx: function(d,i) { return xscale(d.x); },
+                cy: function(d,i) { return yscale(d.y); },
+            });
+    });
+                                    </script>
+                                  </section>
+                                  <section>
+                                    <h3>Now let's make our wonderful scatterplot re-usable!</h3>
+                                    <h3 class="fragment">How?</h3>
+                                  </section>
+                                  <section>
+                                    <h3>The simple way:</h3>
+                                    <pre class=""><code data-trim contenteditable>
+var myscatterplot = function(data,svg) {
+    var xscale = ...;
+    var yscale = ...;
+    var ans_ind = 0;
+    var circles = svg.selectAll("circle").data(data[0])
+        .enter()
+        .append("circle")
+        .attr({
+            cx: function(d,i) { return xscale(d.x); },
+            cy: function(d,i) { return yscale(d.y); },
+            r: 10,
+        }).on("click", function(d,i) {
+            ans_ind = ( ans_ind + 1 ) % 4;
+            xscale.domain(d3.extent(data[ans_ind],function(d) { return d.x; }));
+            yscale.domain(d3.extent(data[ans_ind],function(d) { return d.y; }));
+            circles.data(data[ans_ind])
+                .transition()
+                .duration(2000)
+                .attr({
+                    cx: function(d,i) { return xscale(d.x); },
+                    cy: function(d,i) { return yscale(d.y); },
+                });
+    });
+};
+                                    </code></pre>
+                                    </section>
+                                  <section>
+                                    <h3>My favorite way:</h3>
+                                    <pre class=""><code data-trim contenteditable>
+var myscatterplot = function() {
+    var data;
+    var set_data = function(_) {
+        data = _;
+    };
+    var plot = function() {
+        var xscale = ...;
+        var yscale = ...;
+        var ans_ind = 0;
+        var circles = svg.selectAll("circle").data(data[0])
+            .enter()
+            .append("circle")
+            .attr({
+                cx: function(d,i) { return xscale(d.x); },
+                cy: function(d,i) { return yscale(d.y); },
+                r: 10,
+            }).on("click", function(d,i) {
+                ans_ind = ( ans_ind + 1 ) % 4;
+                xscale.domain(d3.extent(data[ans_ind],function(d) { return d.x; }));
+                yscale.domain(d3.extent(data[ans_ind],function(d) { return d.y; }));
+                circles.data(data[ans_ind])
+                    .transition()
+                    .duration(2000)
+                    .attr({
+                        cx: function(d,i) { return xscale(d.x); },
+                        cy: function(d,i) { return yscale(d.y); },
+                    });
+        });
+    };
+    return {plot: plot,
+                set_data: set_data};
+}();
+                                    </code></pre>
+                                  </section>
+                                  <section>
+                                    <h3>Scripting and downloading (demo)</h3>
+                                  </section>
+                                </section>
+
+				<section>
+				<section>
+				  <h3>so cool! tell more more! how do I get started?</h3>
+				</section>
+
+				<section>
+				  <h4>option 1: hire a graduate student</h4>
+				</section>
+
+				<section>
+				  <h4>option 2: lots of great resources online</h4>
+				  <ul>
+				    <li class="fragment">find inspirations from examples on <a href="http://d3js.org">d3js.org</a></li>
+				    <li class="fragment">excellent documentation on the <a href="https://github.com/mbostock/d3/wiki">wiki</a></li>
+
+				    <li class="fragment">Knowing some javascipt helps: "Javascript: The Good Parts" by Douglas Crockford</li>
+				    <li class="fragment">test on <a href="http://bl.ocks.org/">bl.ocks</a></li>
+				    <!-- <li class="fragment">...stackoverflow</li> -->
+				  </ul>
+				</section>
+				<section>
+                                  <iframe src="https://github.com/d3/d3/wiki/Gallery" width="500"></iframe>
+                                  <!-- https://github.com/d3/d3/wiki/Gallery -->
+				</section>
+				<section>
+				  <h3>contribute!</h3>
+				  <h4><a href="https://github.com/mbostock/d3" target="_blank">https://github.com/mbostock/d3</a></h4>
+				</section>
+
+				</section>
+
+				<section>
+					<h1>THE END</h1>
+					<h3>questions?</h3>
+					<div class="fragment">
+					<iframe class="vine-embed" src="https://vine.co/v/M21ZdIgWzQT/embed/simple" width="300" height="300" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+					</div>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+                <script src="js/anscombe.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+			        width: 1200,
+			        height: 700,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

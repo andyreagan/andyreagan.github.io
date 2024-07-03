@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="pandas" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2018/04/25/how-to-groupby-in-pandas-with-a-missing-group/" rel="bookmark" title="Permalink to How to groupby in Pandas with a missing group">How to groupby in Pandas with a missing group</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2018-04-25T00:00:00+02:00">
+                        Wed 25 April 2018
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2018-04-25-pandas-groupby-hacky.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>This is a note intended for my future self.
+Here’s how to do it:</p>
+<ol>
+<li>Have a list of the values that you expect for each group.</li>
+<li>Iterate over that list, and look up the values using <code>.loc</code>.</li>
+</ol>
+<p>Say I want to group by months, but not all of the months will have data.
+Here I’ll iterate over the known month range, and fill in as I go.
+Starting with a DataFrame contain the columns BP_ID, CAL_YR, CAL_MO, and COMM_AMT_FYC (with potentially many records (or 0!) per month), we do this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">start</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">start</span>
+<span class="n">month</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">case_count</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">fyc</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">while</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+    <span class="n">month</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">month_data</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">group</span><span class="o">.</span><span class="n">CAL_YR</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">year</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">CAL_MO</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">month</span><span class="p">),</span> <span class="p">:]</span>
+    <span class="n">case_count</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">month_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">fyc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">month_data</span><span class="o">.</span><span class="n">COMM_AMT_FYC</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">year</span><span class="o">+</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">month</span><span class="o">/</span><span class="mi">12</span><span class="p">)),((</span><span class="n">d</span><span class="o">.</span><span class="n">month</span><span class="p">)</span> <span class="o">%</span> <span class="mi">12</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;BP_ID&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">:</span> <span class="n">month</span><span class="p">,</span> <span class="s2">&quot;case_count&quot;</span><span class="p">:</span> <span class="n">case_count</span><span class="p">,</span> <span class="s2">&quot;fyc&quot;</span><span class="p">:</span> <span class="n">fyc</span><span class="p">}))</span>
+</code></pre></div>
+
+<p>It seems inefficient, but it should get the job done.
+It takes about half a second to do for the small dataframes I’m working with.
+In other words, I’ll do 57K of these in 30min.</p>
+<p><a href="https://medium.com/@andyreagan/how-to-groupby-in-pandas-with-a-missing-group-655b20d7826f">This post on Medium</a></p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

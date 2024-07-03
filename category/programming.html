@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-2">
+<h2>Articles in the Programming category</h2>
+
+            <ol id="post-list">
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2022/03/31/non-sql-in-your-dbt-pipeline/" rel="bookmark" title="Permalink to Non-SQL in your DBT pipeline">Non-SQL in your DBT pipeline</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2022-03-31T00:00:00+02:00"> Thu 31 March 2022 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>DBT forces you to use SQL, even when Python or R transformations are clearer.</p>
+<p>DBT makes a lot of sense for 80% of data pipelines, but there are steps that it just isn’t worth forcing into SQL (even when that is possible!). If the code is simpler and easier …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2022/03/30/the-pandas-way-is-the-functional-api/" rel="bookmark" title="Permalink to The “Pandas Way” is the functional API">The “Pandas Way” is the functional API</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2022-03-30T00:00:00+02:00"> Wed 30 March 2022 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>With Pandas ≥ 1.0, the functional API is powerful and should be the new standard.</p>
+<p>Someone just pointed me to the <code>pyjanitor</code> package, which I don't actually think is very useful with <a href="https://pandas.pydata.org/pandas-docs/version/1.0.0/whatsnew/v1.0.0.html">Pandas &gt;= 1.0</a>, because the functional API for Pandas is quite powerful these days. The examples that the …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2022/03/14/business-logic-in-dbt/" rel="bookmark" title="Permalink to Business logic in DBT">Business logic in DBT</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2022-03-14T00:00:00+01:00"> Mon 14 March 2022 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>There are many possibilities for implementing custom logic, and this framework can help you sort through the options.</p>
+<p>I have been really enjoying using the <a href="https://www.getdbt.com/">DBT</a> to structure data pipelines,
+the framework it enforces requires you to structure your pipelines in a standardized way.
+The tool meets perfectly in the …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2021/12/17/jenkins-blocking-job/" rel="bookmark" title="Permalink to Jenkins blocking job">Jenkins blocking job</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2021-12-17T00:00:00+01:00"> Fri 17 December 2021 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>Say you have a job, that depends on three other jobs having been completed.
+They all run at the same time,
+and are not explicitly a part of your pipeline (you can't put them as a single multijob step).
+You need you job to depend on at least one of …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2021/11/09/programming-with-dplyr/" rel="bookmark" title="Permalink to Programming with dplyr">Programming with dplyr</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2021-11-09T00:00:00+01:00"> Tue 09 November 2021 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>This post is <a href="https://towardsdatascience.com/programming-with-dplyr-a8161c03d947">published on Medium</a> and available as an <a href="https://gist.github.com/andyreagan/2a24f30a28ded04fef83d7abb0815f70">Rmd notebook</a>.</p>
+<p>With <code>dplyr</code> version 1.0, there are new ways that you can write functions.
+The <a href="https://dplyr.tidyverse.org/articles/programming.html">programming with dplyr</a> vignette with the docs is the best reference.</p>
+<p>If you're familiar with using <code>sym</code> and converting from standard to nonstandard …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2021/07/02/embed-observable-notebooks/" rel="bookmark" title="Permalink to Embed Observable Notebooks">Embed Observable Notebooks</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2021-07-02T00:00:00+02:00"> Fri 02 July 2021 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>TL;DR: Use all of the cool examples with your own data, while keeping that data local or inside your network.</p>
+<p>If you haven’t heard of it,
+<a href="https://observablehq.com/trending">Observable</a> is a platform for interactive coding brought to the world by Mike Bostock, creator of d3.
+It embodies a bold vision …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2020/10/14/homebrew-and-pyenv-python-playing-pleasantly-in-partnership/" rel="bookmark" title="Permalink to Homebrew and Pyenv Python Playing Pleasantly in Partnership">Homebrew and Pyenv Python Playing Pleasantly in Partnership</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2020-10-14T00:00:00+02:00"> Wed 14 October 2020 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>Like <a href="https://towardsdatascience.com/how-to-setup-a-python-environment-for-machine-learning-354d6c29a264">many</a> <a href="https://towardsdatascience.com/power-up-your-python-projects-with-visual-studio-code-401f78dd97eb">data</a> <a href="https://towardsdatascience.com/the-python-dreamteam-27f6f9f08c34">scientists</a> and <a href="https://towardsdatascience.com/guide-of-choosing-package-management-tool-for-data-science-project-809a093efd46">Python</a> <a href="https://towardsdatascience.com/how-to-setup-an-awesome-python-environment-for-data-science-or-anything-else-35d358cc95d5">developers</a> <a href="https://towardsdatascience.com/managing-virtual-environment-with-pyenv-ae6f3fb835f8">before</a> <a href="https://towardsdatascience.com/power-up-your-python-projects-with-visual-studio-code-401f78dd97eb">me</a>,
+<a href="https://towardsdatascience.com/setting-up-your-data-science-work-bench-4a8d3a28205c">I've</a> <a href="https://towardsdatascience.com/python-environment-101-1d68bda3094d">given</a> <a href="https://towardsdatascience.com/venvs-pyenvs-pipenvs-oh-my-2411149e2f43">up</a> <a href="https://towardsdatascience.com/the-top-4-virtual-environments-in-python-for-data-scientists-5db1c01fd779">on</a> managing my own Python builds and turned to <a href="https://github.com/pyenv/pyenv">pyenv</a> (links to chronological posts in Towards Data Science).
+At various points in time, I built Python versions <a href="https://www.python.org/downloads/source/">from source myself</a> or used the <a href="https://www.python.org/downloads/mac-osx/">prebuilt Framework installers</a> on OSX …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2020/09/18/accessing-the-d3-documentation-for-older-versions/" rel="bookmark" title="Permalink to Accessing the D3 documentation for older versions">Accessing the D3 documentation for older versions</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2020-09-18T00:00:00+02:00"> Fri 18 September 2020 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>D3 moves fast:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Whew, D3 6.0 is out! Here are the detailed release notes, hot off the press. 😅 <a href="https://t.co/XJMBHvoNG0">https://t.co/XJMBHvoNG0</a></p>&mdash; Mike Bostock (@mbostock) <a href="https://twitter.com/mbostock/status/1299025739807784960?ref_src=twsrc%5Etfw">August 27, 2020</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>I try to keep up, but inevitably have lots of production code,
+tutorials,
+and examples still in older versions (the biggest …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2020/09/17/vectorizing-code-matters/" rel="bookmark" title="Permalink to Vectorizing code matters">Vectorizing code matters</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2020-09-17T00:00:00+02:00"> Thu 17 September 2020 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>I come from the world of MATLAB and numerical computing,
+where for loops are shorn and vectors are king.
+During my PhD at UVM,
+<a href="http://www.cems.uvm.edu/~tlakoba/">Professor Lakoba</a>'s Numerical Analysis class was one of the most challenging courses I took
+and the deep knowledge of numerical code still sticks with me …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2020/09/15/observable-with-local-files-and-flask/" rel="bookmark" title="Permalink to Observable with local files and Flask">Observable with local files and Flask</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2020-09-15T00:00:00+02:00"> Tue 15 September 2020 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>We're relying heavily on <a href="https://observablehq.com/@berkeleyvis">Observable</a> for the most recent edition of Berkeley MIDS W209: Information Visualization.
+While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).
+One of these is relying on locally accessible data …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+            </ol><!-- /#posts-list -->
+<p class="paginator">
+    Page 1 / 4
+        <a href="https://andyreagan.github.io/category/programming2.html">&raquo;</a>
+</p>
+        </div>
+        <div class="clearfix visible-xs"></div>
+        <div class="col-xs-12 col-md-2 col-md-offset-1 col-lg-3 col-lg-offset-1">
+            <br>
+            <br>
+            <br>
+            <iframe height='454' width='280' frameborder='0' allowtransparency='true' scrolling='no' src='http://www.strava.com/athletes/136573/latest-rides/beba382751062682088e6323464d7b6a5d5dd544'></iframe>
+        </div>
+    </div>
+</section><!-- /#content -->
+
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

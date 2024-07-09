@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2017/05/04/enabling-jupyter-notebook-dashboards/" rel="bookmark" title="Permalink to Enabling Jupyter notebook dashboards">Enabling Jupyter notebook dashboards</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2017-05-04T00:00:00+02:00">
+                        Thu 04 May 2017
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2017-05-04-jupyter.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>If you perform EDA using jupyter notebooks, it’s really easy to share those results with some moderate interaction via a jupyter dashboard. Here are the basic steps:</p>
+<ol>
+<li>
+<p>Build the analysis, etc. Assuming this is done locally. Install the dashboard layout extension and lay out some sweet graphs. Optional: decorate some graph function with <code>@interact</code>.</p>
+</li>
+<li>
+<p>Commit to github/bitbucket. An example: git commit -am "so much wow"; git push github exploratory.</p>
+</li>
+<li>
+<p>Ssh to server. Pull commit down on the server.</p>
+</li>
+<li>
+<p>Back to local. Scp the data files up to the server, in the same place they were locally. It comes in handy to have put them in a folder called <code>data</code>. This looks like <code>scp -r data myserver:project-dir/</code>.</p>
+</li>
+<li>
+<p>Ssh back to server. Install virtualenv, all necessary libs (numpy, pandas, etc).</p>
+</li>
+<li>
+<p>Install the dashboard layout (you definitely need it now, if you didn’t do the layout in step 1): <a href="https://github.com/jupyter/dashboards">https://github.com/jupyter/dashboards</a>.</p>
+</li>
+<li>
+<p>Enable widgets <code>jupyter nbextension enable --py --sys-prefix widgetsnbextension</code>.</p>
+</li>
+<li>
+<p>Launch server, point browser, choose dashboard view, run notebook!</p>
+</li>
+</ol>
+<p>I’ve done this all in a screen environment to leave it running. Overhead should be minimal on the server. Before launching the notebook server, I put my necessary credentials into environment variables as well.</p>
+<p>Another potentially important step is to password protect the server. This can be done by calling <code>jupyter notebook password</code>.</p>
+<p>This way, you don’t need the other two dashboard pieces (the bundler or standalone server). Although if someone were to set those up, it could make this process even easier!</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

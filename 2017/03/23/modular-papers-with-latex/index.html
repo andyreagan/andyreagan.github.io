@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="latex" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2017/03/23/modular-papers-with-latex/" rel="bookmark" title="Permalink to Modular papers with LaTeX">Modular papers with LaTeX</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2017-03-23T00:00:00+01:00">
+                        Thu 23 March 2017
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2017-03-23-modular-papers.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>Earlier this week I wrote about how to <a href="https://medium.com/@andyreagan/structuring-academic-project-directories-3d959684fba1#.xvmvhqz1y">structure an academic project directory</a> and one of those directories was <code>paper</code>. The project write-ups (read: papers) will live here. My tool of choice for writing is LaTeX. It is not for everyone, and since you’re this far I’m going to assume that you’re already a fan!</p>
+<p>While templates for many academic journals are available from <a href="https://www.sharelatex.com/templates/journals/national-academy-of-sciences-%28pnas%29">ShareLaTeX</a>, <a href="https://www.overleaf.com/gallery/tagged/academic-journal">Overleaf</a>, and often the journals themselves, they share a common problem: each template is a new file with the content copied into it. One of main reasons that we use LaTeX is the clean <em>separation of content and style</em>, and having a new, single tex file for each journal violates this principle. We can overcome this by using multiple files for the content of our writing. To start, we can take a paper that has files looking like this:</p>
+<div class="highlight"><pre><span></span><code>emotional-arcs-EPJ-template.tex
+bmc-mathphys.bst
+bmcart.cls
+everything.bib
+</code></pre></div>
+
+<p>Into one that looks like this:</p>
+<div class="highlight"><pre><span></span><code>emotional-arcs-EPJ.tex
+emotional-arcs.body.tex
+emotional-arcs.abs.tex
+bmc-mathphys.bst
+bmcart.cls
+everything.bib
+</code></pre></div>
+
+<p>We’ve taken the both and the abstract out, and included them inside the EPJ template using <code>\input{\filenamebase.abs}</code> and <code>\input{\filenamebase.body}</code> where for convenience we define the working name of the paper only once in the file with <code>\newcommand{filenamebase}{emotional-arcs}</code>.</p>
+<p>Immediately, we can now easily switch between formats and rely on the same body and abstract files:</p>
+<div class="highlight"><pre><span></span><code>emotional-arcs-EPJ.tex
+emotional-arcs-revtex4.tex
+emotional-arcs.body.tex
+emotional-arcs.abs.tex
+bmc-mathphys.bst
+bmcart.cls
+unsrtabbrv.bst
+everything.bib
+</code></pre></div>
+
+<p>Expanding on this idea, we’ll end up with a directory that looks just like the first academic paper directory I ever encountered, one laid out by <a href="http://www.uvm.edu/pdodds/">Peter Dodds</a>:</p>
+<div class="highlight"><pre><span></span><code>bmc-mathphys.bst
+bmcart.cls
+emotional-arcs-EPJ-supp.tex
+emotional-arcs-EPJ.tex
+emotional-arcs-dissertation-supplementary.tex
+emotional-arcs-dissertation.tex
+emotional-arcs-revtex4.tex
+emotional-arcs.abs.tex
+emotional-arcs.acknowledgments.tex
+emotional-arcs.author.EPJ.tex
+emotional-arcs.author.tex
+emotional-arcs.biblio.tex
+emotional-arcs.body.captions.tex
+emotional-arcs.body.figures.tex
+emotional-arcs.body.nocite.tex
+emotional-arcs.body.nofigures.tex
+emotional-arcs.body.tables.tex
+emotional-arcs.body.tex
+emotional-arcs.coverletter.tex
+emotional-arcs.inputs.txt
+emotional-arcs.kwd.tex
+emotional-arcs.nbooks.tex
+emotional-arcs.settings.tex
+emotional-arcs.supplementary.SOM.tex
+emotional-arcs.supplementary.SVD-all.tex
+emotional-arcs.supplementary.SVD.tex
+emotional-arcs.supplementary.construction.tex
+emotional-arcs.supplementary.extras.tex
+emotional-arcs.supplementary.networks.tex
+emotional-arcs.supplementary.null.tex
+emotional-arcs.supplementary.prediction.tex
+emotional-arcs.supplementary.ringsort.tex
+emotional-arcs.supplementary.stories.tex
+emotional-arcs.supplementary.tex
+emotional-arcs.supplementary.wards-all.tex
+emotional-arcs.supplementary.wards.tex
+emotional-arcs.title.tex
+everything.bib
+makefile
+unsrtabbrv.bst
+</code></pre></div>
+
+<p>Wow, that’s a lot of files! And for your sake, I didn’t even include all of the automatically generated files. For starters, we can note that all five of these files are generated by a Python script from our body file:</p>
+<div class="highlight"><pre><span></span><code>emotional-arcs.body.captions.tex
+emotional-arcs.body.figures.tex
+emotional-arcs.body.nocite.tex
+emotional-arcs.body.nofigures.tex
+emotional-arcs.body.tables.tex
+</code></pre></div>
+
+<p>That allowed us to include the figures after the main text in our EPJ template. For this procedure, on would run</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span><span class="si">${</span><span class="nv">PYTOOLDIR</span><span class="si">}</span>split_body.py<span class="w"> </span><span class="si">${</span><span class="nv">PAPER</span><span class="si">}</span>.body.tex
+</code></pre></div>
+
+<p>which a line straight from the makefile. The Python code to do this is over at: <a href="https://github.com/andyreagan/kitchentabletools-python">https://github.com/andyreagan/kitchentabletools-python</a>.</p>
+<p>Other things that are now possible include making a <code>-combined.tex</code> file for pulling in all of the inputs (see <code>input-inputs.py</code> for that script), and copying the combined file into a directory with the figures locally (renamed fig01,fig01, etc).</p>
+<p>Some of the <code>.tex</code> files aren’t even ones that we wrote: Python also spit out some of the tables (<code>*.SVD-all.tex</code>) and parameters (<code>*.nbooks.tex</code>) from the analysis itself. Made an update to the code? No problem, the figures and parameter files are refreshed all we need to do is run <code>make all</code> to build the paper!</p>
+<p>For a repository with an example layout, see <a href="https://github.com/petersheridandodds/universal-paper-template">https://github.com/petersheridandodds/universal-paper-template</a>.</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

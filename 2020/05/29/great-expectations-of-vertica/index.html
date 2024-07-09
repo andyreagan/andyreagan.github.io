@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="data engineering" />
+<meta name="tags" contents="vertica" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2020/05/29/great-expectations-of-vertica/" rel="bookmark" title="Permalink to Great Expectations of Vertica">Great Expectations of Vertica</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-05-29T00:00:00+02:00">
+                        Fri 29 May 2020
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2020-05-29-great-expectations-vertica.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>Great Expectations is a useful tool in any data pipeline to ensure that data is what you expect.
+While data validation and such have been compared to Data Science's "janitorial work",
+others argue that it's really part of the analysis.
+Either way,
+I've had enough headaches with analysis being wrong and pipelines breaking downstream that
+checking data at the source for some basic consistency is worth it.
+The team at GE <a href="https://github.com/superconductive/ge_tutorials">has tutorials for file backend and for postgres</a>,
+so let's try with Vertica via sqlalchemy.</p>
+<p>Now, first run Vertica:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span>:5433<span class="w"> </span>-e<span class="w"> </span><span class="nv">DATABASE_PASSWORD</span><span class="o">=</span><span class="s1">&#39;foo123&#39;</span><span class="w"> </span>jbfavre/vertica:9.2.0-7_debian-8
+</code></pre></div>
+
+<p>Confirm that you can connect to it:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;select &#39;hello&#39;;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>vsql<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span><span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>dbadmin<span class="w"> </span>-d<span class="w"> </span>docker<span class="w"> </span>-w<span class="w"> </span>foo123
+</code></pre></div>
+
+<p>Now, GE uses Sqlachemy, so let's get a valid connection string using <a href="https://github.com/bluelabsio/sqlalchemy-vertica-python/">sqlachemy-vertica-python</a>.
+First, here's how to do the installs in your global Python (no virtualenv) as installed via the OSX installer (as a "Framework"):</p>
+<div class="highlight"><pre><span></span><code>/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
+/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>great_expectations<span class="w"> </span>sqlalchemy<span class="w"> </span>sqlalchemy-vertica-python<span class="w"> </span>vertica-python<span class="w"> </span>pandas<span class="w"> </span>ipython
+</code></pre></div>
+
+<p>I use ipython, so you can use it to test the connection. Test it, in ipython:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># /Library/Frameworks/Python.framework/Versions/3.8/bin/ipython</span>
+import<span class="w"> </span>sqlalchemy<span class="w"> </span>as<span class="w"> </span>sa
+<span class="nv">engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>sa.create_engine<span class="o">(</span><span class="s1">&#39;vertica+vertica_python://dbadmin:foo123@localhost:5433/docker&#39;</span><span class="o">)</span>
+engine.connect<span class="o">()</span>
+</code></pre></div>
+
+<p>Go ahead and load the example file from GE's tutorial to the database,
+this may be the hardest part.
+There is code here to load the NPI data file from an older version of the tutorial,
+and the currently uncommented code below works for <a href="https://github.com/superconductive/ge_tutorials">the most recent tutorial</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">vertica_python</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span>
+
+<span class="c1"># older one:</span>
+<span class="c1"># df = pd.read_csv(&quot;data/npidata_pfile_20200511-20200517.csv&quot;)</span>
+<span class="c1"># newest:</span>
+<span class="n">dtypes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;vendor_id&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;rate_code_id&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;store_and_fwd_flag&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;payment_type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span>
+<span class="p">}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/yellow_tripdata_sample_2019-01.csv&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtypes</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">vertica_to_pandas_dtype</span><span class="p">(</span><span class="n">dtype_string</span><span class="p">,</span> <span class="n">column_name</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Parse pandas data types and convert to valid Vertica data types.&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="s1">&#39;float&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">dtype_string</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;int&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">dtype_string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;numeric&#39;</span>
+    <span class="k">elif</span> <span class="s1">&#39;date&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">column_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;datetime&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;varchar(</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mf">1.5</span><span class="p">)))</span>
+
+<span class="n">columns_with_types</span> <span class="o">=</span> <span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">vertica_to_pandas_dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)}</span>
+<span class="n">column_name_listing</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">columns_with_types</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">column_with_dtype_listing</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">columns_with_types</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+
+<span class="n">conn_info</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="s1">&#39;dbadmin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;foo123&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;database&#39;</span><span class="p">:</span> <span class="s1">&#39;docker&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;use_prepared_statements&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">with</span> <span class="n">vertica_python</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="n">conn_info</span><span class="p">)</span> <span class="k">as</span> <span class="n">connection</span><span class="p">:</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="c1"># older table</span>
+    <span class="c1"># cur.execute(&#39;CREATE TABLE npidata_pfile_20200511_20200517 ({0});&#39;.format(column_with_dtype_listing))</span>
+    <span class="c1"># yellowcab table:</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;CREATE TABLE if not exists yellow_tripdata_sample_2019_01 (</span><span class="si">{0}</span><span class="s1">);&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column_with_dtype_listing</span><span class="p">))</span>
+    <span class="c1"># copy the schema to a second table (so many ways to do this, just one)</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * INTO yellow_tripdata_staging FROM (select * from yellow_tripdata_sample_2019_01 limit 10) x;&#39;</span><span class="p">)</span>
+    <span class="c1"># we could have limited to 0 rows, but let&#39;s truncate those 10 instead</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;TRUNCATE TABLE yellow_tripdata_staging;&#39;</span><span class="p">)</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;commit;&quot;</span><span class="p">)</span>
+    <span class="c1"># with open(&quot;data/yellow_tripdata_sample_2019-01.csv&quot;, &quot;rb&quot;) as f:</span>
+    <span class="c1">#     cur.copy(&quot;COPY yellow_tripdata_sample_2019_01 ({0}) from stdin DELIMITER &#39;,&#39; &quot;.format(column_name_listing),  f)</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;COPY yellow_tripdata_sample_2019_01 (</span><span class="si">{0}</span><span class="s2">) from LOCAL &#39;</span><span class="si">{1}</span><span class="s2">&#39; DELIMITER &#39;,&#39; &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column_name_listing</span><span class="p">,</span> <span class="s2">&quot;data/yellow_tripdata_sample_2019-01.csv&quot;</span><span class="p">))</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;COPY yellow_tripdata_staging (</span><span class="si">{0}</span><span class="s2">) from LOCAL &#39;</span><span class="si">{1}</span><span class="s2">&#39; DELIMITER &#39;,&#39; &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column_name_listing</span><span class="p">,</span> <span class="s2">&quot;data/yellow_tripdata_sample_2019-02.csv&quot;</span><span class="p">))</span>
+
+<span class="c1"># spot check that the data looks okay in the database</span>
+<span class="k">with</span> <span class="n">vertica_python</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="n">conn_info</span><span class="p">)</span> <span class="k">as</span> <span class="n">connection</span><span class="p">:</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;select count(*) from yellow_tripdata_sample_2019_01;&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;select count(*) from yellow_tripdata_staging;&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;select * from yellow_tripdata_sample_2019_01 limit 1;&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;select * from yellow_tripdata_staging limit 1;&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span>
+</code></pre></div>
+
+<p>Now we can run through the GE tutorial, using a database.
+You have the connection string above, so you'll chose the database option, (the "other", it might still be option 6),
+and create the sample expectations of this table.</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

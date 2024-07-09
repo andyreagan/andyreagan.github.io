@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="hedonometer" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2017/11/14/sentiment-analysis-methods-for-understanding-large-scale-texts-a-case-for-using-continuum-scored-words-and-word-shift-graphs/" rel="bookmark" title="Permalink to Sentiment analysis methods for understanding large-scale texts: a case for using continuum-scored words and word shift graphs">Sentiment analysis methods for understanding large-scale texts: a case for using continuum-scored words and word shift graphs</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2017-11-14T00:00:00+01:00">
+                        Tue 14 November 2017
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2017-11-14-sentiment-analysis-paper.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>As a grad student trying to understand the emotional content of some unreadably large collection of texts, a typical night in grad school can often go something like this: You’re up late at night planning a new research study, thinking about trying some of this fancy sentiment-based text analysis. You resort to your favorite search engine with the query “sentiment analysis package python.” We have all been there, except maybe with R instead of Python (the latter being my favorite).</p>
+<p>Unfortunately, despite advances in our understanding of how to perform sentiment analysis in recent years, the first method off the shelf will rarely be the best choice. Making matters worse, it can be nearly impossible to navigate the immense literature on the topic.</p>
+<p>Fortunately, we’ve figured out that there are only a few things that you need to know to get started using sentiment analysis.</p>
+<p>Using four large text corpora, we did a bake-off of sorts for dozens of tools. The methods fall into two broad categories: Supervised and unsupervised, with supervised methods relying on tagged training dataset to learn rules. Without a large training dataset, and with the desire to have a general purpose white-box tool (things can go very wrong](https://motherboard.vice.com/en_us/article/j5jmj8/google-artificial-intelligence-bias) with black box machine learning), we stick to unsupervised methods. In our recent paper in EPJ Data Science, we find that dictionary-based (unsupervised) sentiment analysis methods perform reliably on large documents (&gt;10,000 words) with a few things in place:</p>
+<ol>
+<li>
+<p>We show that a dictionary-based method will only perform reliably across corpora if the dictionary covers a sufficiently large enough portion of a given text’s lexicon when weighted by word usage frequency.  Summary: Make sure that your dictionary has most of the words in your documents!</p>
+</li>
+<li>
+<p>We explicitly demonstrate that it is necessary to examine the words which contribute to sentiment ratings. Common contextual error is something we can readily identify and correct for through word shifts, but would remain hidden to naive learning methods without new training. Given our results, we emphasize that doing any type of analysis without looking at the words is a fraught activity. Here is an example word shift graph for the saddest day that we have measured on Twitter, and you can see that there are positive words (e.g. ‘prayer’) alongside the negative words making this a very sad day:</p>
+</li>
+</ol>
+<iframe src="https://hedonometer.org/embed/main/2017-10-02/" width="590" height="550" frameborder="0" scrolling="no"></iframe>
+
+<p>Here is an example word shift graph for a happier-than-average day on Twitter, International Women’s Day on March 3 this year:</p>
+<iframe src="https://hedonometer.org/embed/main/2017-03-08/" width="590" height="550" frameborder="0" scrolling="no"></iframe>
+
+<ul>
+<li>In addition, we show that a dictionary-based method will generate more meaningful word shift graphs if words are scored on a continuous scale. To interpret a sentiment score and understand the story behind the numbers, meaningful word shifts graphs are essential. The nuances in language are captured better.</li>
+</ul>
+<p>Now that you have some ideas about what to look for in a dictionary, we suggest you look at Table 1 in <a href="https://epjdatascience.springeropen.com/articles/10.1140/epjds/s13688-017-0121-9">our paper</a>, and go measure some happiness!</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="javascript" />
+<meta name="tags" contents="d3" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2014/09/19/announcing-the-phantom-crowbar/" rel="bookmark" title="Permalink to Announcing the Phantom Crowbar">Announcing the Phantom Crowbar</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2014-09-19T00:00:00+02:00">
+                        Fri 19 September 2014
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2014-09-19-phantom-crowbar-announcement.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>Extract the raw SVG (and styles) from a webpage, from the command line!</p>
+<p>Motivated by the desire to use d3 to make figures automatically.</p>
+<p>Built on top of the wonderful, and more versatile, <a href="http://nytimes.github.io/svg-crowbar/">svg-crowbar</a>.</p>
+<p>I'm testing it on hedonometer.org, and remaining issues are converting to a PDF correctly. But this is likely a result of haphazard use of CSS styles in the page design.</p>
+<p><strong>Dependencies</strong></p>
+<ul>
+<li>phantomjs</li>
+</ul>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>phantomjs
+</code></pre></div>
+
+<p><strong>Usage</strong></p>
+<p>Clone this repository.</p>
+<p>Run the <code>phantom-crowbar.js</code> with <code>phantomjs</code>, passing the webpage, the id of the svg element to grab, and the output filename.
+Here's the first line of test/run.sh:</p>
+<div class="highlight"><pre><span></span><code>phantomjs<span class="w"> </span>phantom-crowbar.js<span class="w"> </span>http://hedonometer.org<span class="w"> </span>timeseries<span class="w"> </span>test1.svg
+</code></pre></div>
+
+<p><strong>Testing</strong></p>
+<p>Uses</p>
+<ul>
+<li>inkscape</li>
+<li>CairoSVG</li>
+</ul>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>inkscape
+pip<span class="w"> </span>install<span class="w"> </span>CairoSVG
+</code></pre></div>
+
+<p>Run tests with</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="nb">test</span>
+.<span class="w"> </span>run.sh
+</code></pre></div>
+
+<p>Inkscape will throw a lot of warnings.
+As mentioned above, there are still plenty of kinks to work out.</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

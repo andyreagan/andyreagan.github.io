@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Syllabus</title>
+
+<script src="lib/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="lib/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="lib/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="lib/navigation-1.1/tabsets.js"></script>
+<link href="lib/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="lib/highlightjs-9.12.0/highlight.js"></script>
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+@media (min-width: 980px) {
+  .section h2 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+  .section h3 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+}
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="include/beanumber.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/teaching/2018/09-SDS-291/">SDS 291 - Fall 2018</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="syllabus.html">Syllabus</a></li>
+<!--          <li><a href="schedule.html">Schedule</a></li> -->
+          <li class="dropdown">
+            <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Lectures <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+               <li class="dropdown-header">Notes</li>
+                 <li><a href="lectures/01_intro.pdf">01 - Introduction</a></li>
+                 <li><a href="lectures/02_slr.pdf">02 - Simple Linear Regression</a></li>
+                 <li><a href="lectures/03_regression_conditions.pdf">03 - Conditions for Regression</a></li>
+                 <li><a href="lectures/04_transformations.pdf">04 - Transformations</a></li>
+                 <li><a href="lectures/05_slr_inference.pdf">05 - Inference</a></li>
+                 <li><a href="lectures/06_mlr.pdf">06 - Multiple Regression</a></li>
+          </li>
+          </ul>
+
+            <li class="dropdown">
+            <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Resources <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="resources.html">R, RStudio, others</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Website Rmd Sources</li>
+               <li><a href="index.Rmd">Index</a></li>
+               <li><a href="syllabus.Rmd">Syllabus</a></li>
+                 <li><a href="resources.Rmd">Resources</a></li>
+              </ul>
+          </li>
+          <li class="dropdown">
+            <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Labs <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+
+                             <li class="dropdown-header">Lab</li>
+                               <li><a href="labs/01_lab_intro.html">Intro</a></li>
+                               <li><a href="labs/02_lab_residuals.html">Residuals</a></li>
+                               <li><a href="labs/03_lab_transformations.html">Transformations</a></li>
+                               <li><a href="labs/04_lab_intervals.html">Intervals</a></li>
+<!--
+                               <li><a href="lab_regression_summary.html">Regression Summary</a></li>
+                               <li><a href="lab_multicollinearity.html">Multicollinearity</a></li>
+                               <li><a href="lab_added_variables.html">Added Variable Plots</a></li>
+                               <li><a href="lab_diagnostics.html">Diagnostics</a></li>
+                               <li><a href="lab_stepwise.html">Stepwise Regression</a></li>
+                               <li><a href="lab_randomization.html">Randomization & the Bootstrap</a></li>
+                               <li><a href="lab_anova.html">ANOVA</a></li>
+                               <li><a href="lab_multiple_testing.html">Multiple Testing</a></li>
+                               <li><a href="lab_logistic.html">Logistic Regression</a></li>
+                               <li><a href="lab_logistic_fit.html">Logistic Regression Fit</a></li>
+                               <li><a href="lab_merge.html">Merge and Reshape</a></li>
+                               <li><a href="lab_missing.html">Missing Data</a></li>
+                               <li><a href="lab_panel_data.html">Panel Data</a></li>
+                               <li><a href="lab_time_series.html">Time Series</a></li>
+              -->
+                             <li class="dropdown-header">Source</li>
+                               <li><a href="labs/01_lab_intro.Rmd">Intro</a></li>
+                               <li><a href="labs/02_lab_residuals.Rmd">Residuals</a></li>
+                               <li><a href="labs/03_lab_transformations.Rmd">Transformations</a></li>
+                               <li><a href="labs/04_lab_intervals.Rmd">Intervals</a></li>
+<!--
+                 <li><a href="lab_regression_summary.Rmd">Regression Summary</a></li>
+                 <li><a href="lab_multicollinearity.Rmd">Multicollinearity</a></li>
+                 <li><a href="lab_added_variables.Rmd">Added Variable Plots</a></li>
+                 <li><a href="lab_diagnostics.Rmd">Diagnostics</a></li>
+                 <li><a href="lab_stepwise.Rmd">Stepwise Regression</a></li>
+                 <li><a href="lab_randomization.Rmd">Randomization & the Bootstrap</a></li>
+                 <li><a href="lab_anova.Rmd">ANOVA</a></li>
+                 <li><a href="lab_multiple_testing.Rmd">Multiple Testing</a></li>
+                 <li><a href="lab_logistic.Rmd">Logistic Regression</a></li>
+                 <li><a href="lab_merge.Rmd">Merge and Reshape</a></li>
+                 <li><a href="lab_panel_data.Rmd">Panel Data</a></li>
+                 <li><a href="lab_time_series.Rmd">Time Series</a></li>
+-->
+              </ul>
+          </li>
+          <li class="dropdown">
+            <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Assignments <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+               <li class="dropdown-header">Homework</li>
+                 <li><a href="hw/hw1.Rmd">Homework 1</a></li>
+                 <li><a href="hw/hw2.Rmd">Homework 2</a></li>
+                 <li><a href="hw/hw3.Rmd">Homework 3</a></li>
+                 <li><a href="hw/hw4.Rmd">Homework 4</a></li>
+<!--
+                 <li><a href="hw/hw5.Rmd">Homework 5</a></li>
+                 <li><a href="hw/hw6.Rmd">Homework 6</a></li>
+                 <li><a href="hw/hw7.Rmd">Homework 7</a></li>
+                 <li><a href="hw/hw8.Rmd">Homework 8</a></li>
+-->
+               <li class="divider"></li>
+<!--
+               <li class="dropdown-header">Student Solutions</li>
+
+                 <li><a href="hw/HW1_Solutions.html">Homework 1</a></li>
+                 <li><a href="hw/HW2_Solutions.html">Homework 2</a></li>
+                 <li><a href="hw/HW3_Solutions.html">Homework 3</a></li>
+                 <li><a href="hw/HW4_Solutions.html">Homework 4</a></li>
+                 <li><a href="hw/HW5_Solutions.html">Homework 5</a></li>
+                 <li><a href="hw/HW6_Solutions.html">Homework 6</a></li>
+                 <li><a href="hw/HW7_Solutions.html">Homework 7</a></li>
+                 <li><a href="hw/HW8_Solutions.html">Homework 8</a></li>
+
+               <li class="divider"></li>
+-->
+               <li class="dropdown-header">Exams</li>
+<!--
+                <li><a href="handouts/exam1_sample_solutions.pdf">Exam 1: Sample Solutions</a></li>
+                <li><a href="handouts/exam2_sample_solutions.pdf">Exam 2: Sample Solutions</a></li>
+-->
+               <li class="divider"></li>
+               <li class="dropdown-header">Project</li>
+<!--
+                 <li><a href="project.html">Instructions</a></li>
+                 <li><a href="project_schedule.html">Schedule</a></li>
+                 <li class="divider"></li>
+                  <li><a href="https://drive.google.com/a/smith.edu/file/d/0Bz1XG6aZbGewVGExWWhxZnEzRWc/">Group F</a></li>
+                  <li><a href="https://docs.google.com/presentation/d/19DS3vIO_ff7O6PkdZ8J-1cvFFpnmavOFPx2G-d2kTsM/">Group I</a></li>
+                  <li><a href="https://prezi.com/ne8bucq4gazc/present/?follow=jphhnb9zrbbh&auth_key=0s6n3uz#4_95982358">Group G</a></li>
+                  <li><a href="handouts/group-j.pptx">Group J</a></li>
+                  <li><a href="https://docs.google.com/presentation/d/13I37mKF0yQWLusXvwNSPWS4K1ZSajnqoD81hlegYBuw/">Group A</a></li>
+                <li class="divider"></li>
+                 <li><a href="handouts/group-c.pptx">Group C</a></li>
+                 <li><a href="handouts/group-b.pptx">Group B</a></li>
+                 <li><a href="handouts/group-d.pdf">Group D</a></li>
+                 <li><a href="handouts/group-e.pptx">Group E</a></li>
+                 <li><a href="https://docs.google.com/presentation/d/1SS1ZfykJNaiYiq2qiiWnYji5kj02eiCpwYIcAlO_hzw/">Group H</a></li>
+-->
+            </ul>
+          </li>
+        </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Syllabus</h1>
+
+</div>
+
+
+<div id="instructor" class="section level4">
+<h4>Instructor</h4>
+<p>Andy Reagan (<code>areagan@smith.edu</code>, Bass 218). My office hours will be held after class Tuesdays and Thursdays Noon - 12:30, and by appointment, in Bass 218 or online.</p>
+</div>
+<div id="description" class="section level4">
+<h4>Description</h4>
+<p>In this course students will learn how to use statistical models to analyze real-world data. Students will work through examples using statistical software and practice using linear models where the response variable is either quantitative or categorical, and the explanatory variables are quantitative or categorical or of both types. They will also consider logistic models for binary response data. This course will emphasize the importance of communicating technical concepts to a possibly non-technical audience with clarity and precision.</p>
+</div>
+<div id="perspective" class="section level4">
+<h4>Perspective</h4>
+<p>This is an applied statistics course. As such, the course work emphasizes using statistical software on the computer to perform data analysis. Homework and examinations will focus primarily on applying the methods learned in class to real data and interpreting the results. One of the goals of this course is for you to be able to clearly communicate the results of your data analysis in non-technical language in both written and oral forms.</p>
+</div>
+<div id="prerequisites" class="section level4">
+<h4>Prerequisites</h4>
+<p>A college-level introductory statistics course or a score of 4 or 5 on the AP Statistics Exam or permission of the instructor. Students need to be familiar with basic statistical concepts including graphical and numerical descriptive statistics, the normal and <span class="math inline">\(t\)</span>-distributions, hypothesis tests, and confidence intervals.</p>
+</div>
+<div id="textbook" class="section level4">
+<h4>Textbook</h4>
+<p>(required) <em>STAT 2: Building Models for a World of Data</em>, Preliminary Edition v.2 (August 2010), by Cannon, Cobb, Hartlaub, Legler, Lock, Moore, Rossman, and Witmer. The book is available at the Grecourt bookstore in the basement of the Campus Center for about $150.</p>
+</div>
+<div id="classes" class="section level4">
+<h4>Classes</h4>
+<p>We meet on Tuesdays and Thursdays from 10:30-11:50 AM. Class time will consist of a mixture of lectures, lab exercises, quizzes, discussing material in the textbook, homework, and projects. This is a hands-on course, where you will learn by doing, so it is imperative that you, unless otherwise instructed, bring your book and a computer to class.</p>
+</div>
+<div id="policies" class="section level2 unnumbered">
+<h2>Policies</h2>
+<div id="attendance" class="section level4">
+<h4>Attendance</h4>
+<p>Your attendance in class is crucial, as is your punctuality. We are all going to learn this material together, so we need to have everyone present and working. I will make accommodations for an unavoidable absence if you notify me. Our Honor Code means that you will be the judge of whether or not an absence was unavoidable. (For instance, staying in bed because you had the flu would be an unavoidable absence, but oversleeping because you stayed up late to write a paper would be an avoidable absence.) One necessary absence during the semester is not unusual; having more than two is uncommon.</p>
+</div>
+<div id="collaboration" class="section level4">
+<h4>Collaboration</h4>
+<p>Much of this course will operate on a collaborative basis, and you are expected encouraged and to work together with a partner or in small groups to study, complete homework assignments, and prepare for exams. However, every word that you write must be your own. Copying and pasting sentences, paragraphs, or blocks of R code from another student is not acceptable and will receive no credit. All students are bound by the Smith College Honor Code.</p>
+</div>
+<div id="academic-honor-code-statement" class="section level4">
+<h4>Academic Honor Code Statement</h4>
+<blockquote>
+<p>Smith College expects all students to be honest and committed to the principles of academic and intellectual integrity in their preparation and submission of course work and examinations.</p>
+<p>Students and faculty at Smith are part of an academic community defined by its commitment to scholarship, which depends on scrupulous and attentive acknowledgement of all sources of information, and honest and respectful use of college resources.</p>
+</blockquote>
+</div>
+</div>
+<div id="assignments" class="section level2 unnumbered">
+<h2>Assignments</h2>
+<div id="homework" class="section level4">
+<h4>Homework</h4>
+<p>Problems (mainly from the book) will be assigned each week, and posted on Moodle. The homework and the project are the backbone of this course and must be completed satisfactorily to receive an A or B grade in the course. Homework will be graded, and you will be occasionally be asked to present your solution to a homework problem to the class. Homework must be handed in before class starts in the period in which it is due.</p>
+<p>Homework should be completed in RMarkdown. All assignments will be due by 5pm of the due date. A hard copy of the knitted file should be submitted. The RMarkdown file should also be submitted via Moodle. Late homework turned in within 48 hours will be accepted with a 25% penalty. No credit will be given after 48 hours unless you are in extenuating situations with verifiable documents.</p>
+<p>Although you are encouraged to discuss problems with each other, I expect each person to submit his or her own work. You may choose to work with a partner on data analyses –– that’s okay, but I want written interpretations and responses to be in your own words. You should always write up your own solutions. It is not acceptable to copy down your classmates’ work and in fact, doing this constitutes academic dishonesty.</p>
+<p>And remember, an answer to a statistics question is almost never just a number –– I want thoughtful explanations and conclusions! In order to receive full credit on a problem, you will need to provide clear explanations and necessary steps to justify your answers. If your work is mostly correct, you will receive most credits. On the other hand, if you do not provide enough work, or follow wrong steps but happen to get a correct answer in the end, then it is likely that you receive no credit or very few partial credit.</p>
+</div>
+<div id="final-project" class="section level4">
+<h4>Final Project</h4>
+<p>Your major achievement in this class will be to conduct (in groups of 3) a statistical investigation on a question of interest to you. Rather than collect primary data, we will use data available on the Internet or from faculty research. You will prepare a project proposal describing your study and obtain approval from me before you begin the investigation. Please see the attached schedule for due dates for intermediate parts of the project. During the last week of class, you (and your group) will give a 10 minute oral presentation of your study. The project will give you experience planning a statistical study, acquiring data, creating and testing a linear model, and writing a technical report. We will spend time in class looking at what data is available on the web and about writing a project proposal.</p>
+</div>
+<div id="exams" class="section level4">
+<h4>Exams</h4>
+<p>Two midterm examinations will be given, the first on Thursday, Oct. 18 and the second on Thursday, Dec Several 10-minute quizzes will be given throughout the term. Quizzes will be easy if you have been keeping up with the reading and the homework. There will be no make-up quizzes but your lowest quiz score will be dropped. Project presentations during the last week of classes will take the place of a final exam.</p>
+</div>
+<div id="grading" class="section level4">
+<h4>Grading</h4>
+<p>Course grades will be a weighted average of the grades on your project, tests, homework, and quizzes. Your participation score will include attendance and participation in class discussions.</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="center">Project &amp; Presentation</td>
+<td align="center">30%</td>
+</tr>
+<tr class="even">
+<td align="center">Homework</td>
+<td align="center">25%</td>
+</tr>
+<tr class="odd">
+<td align="center">First exam</td>
+<td align="center">20%</td>
+</tr>
+<tr class="even">
+<td align="center">Second exam</td>
+<td align="center">20%</td>
+</tr>
+<tr class="odd">
+<td align="center">Participation</td>
+<td align="center">5%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="resources" class="section level2 unnumbered">
+<h2>Resources</h2>
+<div id="course-website" class="section level4">
+<h4>Course Website</h4>
+<p>Course information, including this syllabus, will be available on the course Moodle site. I will update information posted there regularly with class handouts, homework, project assignments, and announcements.</p>
+</div>
+<div id="computing" class="section level4">
+<h4>Computing</h4>
+<p>We will use the R statistical software package extensively, and exclusively. R is open source software that is available for free on Mac, Windows, and Linux operating systems. We also have an RStudio server set up (<a href="http://rstudio.smith.edu:8787" class="uri">http://rstudio.smith.edu:8787</a>), which you are strongly encouraged to use. Most homework assignments will require data analysis using the computer and short written reports of your findings. Documentation for R is online and I will give an introduction to the software.</p>
+</div>
+<div id="writing" class="section level4">
+<h4>Writing</h4>
+<p>Your ability to communicate results, which may be technical in nature, to your audience, which is likely to be non-technical, is critical to your success as a data analyst. The assignments in this class will place an emphasis on the clarity of your writing. The Jacobson Center for Writing (Seelye 307) offers a variety of services design to help students improve drafts of their papers.</p>
+</div>
+<div id="extra-help" class="section level4">
+<h4>Extra Help</h4>
+<p>There are Stat TAs available from 7 to 9 pm on Sunday – Thursday evenings in McConnell 301. Although this course may be beyond the scope of what the TAs are prepared to handle, they should be able to help you review material from your intro course, or with R. In addition, the Spinelli Center for Quantitative Learning (McConnell 301, <code>https://www.smith.edu/qlc/tutoring.html</code>) supports students doing quantitative work across the curriculum, and has a Statistics Counselor available for appointments. Your fellow students are also an excellent source for explanations, tips, etc.</p>
+</div>
+</div>
+<div id="schedule" class="section level2 unnumbered">
+<h2>Schedule</h2>
+<div id="tentative-schedule" class="section level4">
+<h4>Tentative Schedule</h4>
+<p>The following outline lists each class date and gives the topic that will be discussed in that class. The reading assignment from the textbook is also given for each class date. Please complete the reading assignment <em>before</em> coming to class so that you can participate fully in the discussion. I reserve the right to revise this schedule — in particular whether Mountain Day falls on a class day — updates will be posted on Moodle.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">N</th>
+<th align="left">Date</th>
+<th align="left">Day</th>
+<th align="left">Topic</th>
+<th align="left">Reading</th>
+<th align="left">Due</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">Sep-06</td>
+<td align="left">Th</td>
+<td align="left">Intro, review terms and notation. Four-step process</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">Sep-11</td>
+<td align="left">T</td>
+<td align="left">SLR: model, estimation, conditions</td>
+<td align="left">0, 1.1-1.3</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">Sep-13</td>
+<td align="left">Th</td>
+<td align="left">SLR: transformations, outliers, influence</td>
+<td align="left">1.4-1.6</td>
+<td align="left">HW 1</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">Sep-18</td>
+<td align="left">T</td>
+<td align="left">SLR: inference for slope, ANOVA table</td>
+<td align="left">2.1-2.2</td>
+<td align="left">HW 2</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">Sep-20</td>
+<td align="left">Th</td>
+<td align="left">SLR: finishing SLR, more R demos</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">Sep-25</td>
+<td align="left">T</td>
+<td align="left">MLR: correlation, conf. &amp; prediction intervals</td>
+<td align="left">2.3-2.5</td>
+<td align="left">HW 3</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">Sep-27</td>
+<td align="left">Th</td>
+<td align="left">MLR: choosing, fitting and assessing a model</td>
+<td align="left">3.1-3.2</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">Oct-02</td>
+<td align="left">T</td>
+<td align="left">MLR: comparing two regression lines</td>
+<td align="left">3.3</td>
+<td align="left">HW 4, Proposal Outline</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">Oct-04</td>
+<td align="left">Th</td>
+<td align="left">MLR: second-order models</td>
+<td align="left">3.4</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">-</td>
+<td align="left">Oct-09</td>
+<td align="left">T</td>
+<td align="left"><strong>Fall Break</strong></td>
+<td align="left"></td>
+<td align="left">HW 5 due Oct 10.</td>
+</tr>
+<tr class="odd">
+<td align="left">10</td>
+<td align="left">Oct-11</td>
+<td align="left">Th</td>
+<td align="left">MLR: multicollinearity; F-tests &amp; partial SS</td>
+<td align="left">3.5-3.6</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">11</td>
+<td align="left">Oct-16</td>
+<td align="left">T</td>
+<td align="left">MLR: Review and Summary</td>
+<td align="left">3.7-3.8</td>
+<td align="left">HW 6</td>
+</tr>
+<tr class="odd">
+<td align="left">12</td>
+<td align="left">Oct-18</td>
+<td align="left">Th</td>
+<td align="left"><strong>First Exam</strong></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">13</td>
+<td align="left">Oct-23</td>
+<td align="left">T</td>
+<td align="left">MLR: nested (partial) F tests; added variables plots</td>
+<td align="left">4.1</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">14</td>
+<td align="left">Oct-25</td>
+<td align="left">Th</td>
+<td align="left">MLR: subset selection; leverage and influence</td>
+<td align="left">4.2-4.3</td>
+<td align="left">Final Proposal</td>
+</tr>
+<tr class="even">
+<td align="left">15</td>
+<td align="left">Oct-30</td>
+<td align="left">T</td>
+<td align="left">MLR: coding categorical predictiors</td>
+<td align="left">4.4</td>
+<td align="left">HW 7</td>
+</tr>
+<tr class="odd">
+<td align="left">16</td>
+<td align="left">Nov-01</td>
+<td align="left">Th</td>
+<td align="left">MLR: randomization tests</td>
+<td align="left">4.5</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">17</td>
+<td align="left">Nov-06</td>
+<td align="left">T</td>
+<td align="left">MLR: bootstrap for regression</td>
+<td align="left">4.6</td>
+<td align="left">HW 8</td>
+</tr>
+<tr class="odd">
+<td align="left">18</td>
+<td align="left">Nov-08</td>
+<td align="left">Th</td>
+<td align="left">AOV: 1-way model, assessing model</td>
+<td align="left">5.1-5.2</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">19</td>
+<td align="left">Nov-13</td>
+<td align="left">T</td>
+<td align="left">AOV: inferences</td>
+<td align="left">5.3</td>
+<td align="left">HW 9, Progress Report</td>
+</tr>
+<tr class="odd">
+<td align="left">20</td>
+<td align="left">Nov-15</td>
+<td align="left">Th</td>
+<td align="left">AOV: multiple comparisons issues, LSD</td>
+<td align="left">5.4</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">21</td>
+<td align="left">Nov-20</td>
+<td align="left">T</td>
+<td align="left">LOG: model and fitting</td>
+<td align="left">9.1-9.2</td>
+<td align="left">HW 10, Data Due</td>
+</tr>
+<tr class="odd">
+<td align="left">-</td>
+<td align="left">Nov-22</td>
+<td align="left">Th</td>
+<td align="left"><strong>Thanksgiving</strong></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">22</td>
+<td align="left">Nov-27</td>
+<td align="left">T</td>
+<td align="left">LOG: odds ratios &amp; assessing model; 2 x 2 tables</td>
+<td align="left">7.2, 9.3-9.5</td>
+<td align="left">HW 11</td>
+</tr>
+<tr class="odd">
+<td align="left">23</td>
+<td align="left">Nov-29</td>
+<td align="left">Th</td>
+<td align="left">LOG: multiple predictors, LRT test</td>
+<td align="left">10.1-10.3</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">24</td>
+<td align="left">Dec-04</td>
+<td align="left">T</td>
+<td align="left">LOG: assessing goodness-of-fit</td>
+<td align="left">11.1</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">25</td>
+<td align="left">Dec-06</td>
+<td align="left">Th</td>
+<td align="left"><strong>Second Exam</strong></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">26</td>
+<td align="left">Dec-11</td>
+<td align="left">T</td>
+<td align="left"><strong>Project Presentations</strong></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">27</td>
+<td align="left">Dec-13</td>
+<td align="left">Th</td>
+<td align="left"><strong>Project Presentations</strong></td>
+<td align="left"></td>
+<td align="left"><strong>Final Paper</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="muted credit">Copyright <a href="http://andyreagan.github.io">Andy Reagan</a>, originally by <a href="http://math.smith.edu/~bbaumer">Ben Baumer</a>.</p>
+      </div>
+    </div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

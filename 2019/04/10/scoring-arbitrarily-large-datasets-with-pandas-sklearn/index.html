@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="pandas" />
+<meta name="tags" contents="ML" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2019/04/10/scoring-arbitrarily-large-datasets-with-pandas-sklearn/" rel="bookmark" title="Permalink to Scoring arbitrarily large datasets with Pandas + Sklearn">Scoring arbitrarily large datasets with Pandas + Sklearn</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2019-04-10T00:00:00+02:00">
+                        Wed 10 April 2019
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2019-04-10-pandas-sklearn-streaming.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>The workhorses of data analysis and modeling in the <a href="http://jakevdp.github.io/blog/2014/05/09/why-python-is-slow/">Python</a> universe are undoubtedly <a href="http://wesmckinney.com/blog/apache-arrow-pandas-internals/">Pandas</a> and <a href="https://jakevdp.github.io/PythonDataScienceHandbook/05.02-introducing-scikit-learn.html">Sklearn</a>.
+I won't extoll their virtues here, but focus on solving one limiting problem.
+One of the major limitations of these libraries is the size of data they can handle.</p>
+<p>In Pandas, the rule of thumb is needing 5x-10x the memory for the size of your data.
+While that's fine for small datasets, things can quickly get out of hand.
+At <a href="https://datascience.massmutual.com/">MassMutual Data Science</a>, we encountered this problem when we took a model we had trained locally,
+and attempted to apply to it to the entire customer and prospect universe.
+These datasets have upwards of 300 million records!</p>
+<p>There are a couple obvious directions to take this problem:</p>
+<ol>
+<li>Write this model on a scalable platform like Spark.</li>
+<li>Program the model into our database system.</li>
+<li>Just get a bigger machine.</li>
+<li>Break the dataset into small pieces and apply our code.</li>
+</ol>
+<p>For no particularly good reason, we had taken approach (4).
+Of course, option (1) is a lot of work, if possible (a UDF for the model would always be possible).
+Spark's dataframe API is quite a bit different than Pandas, so this would compromise a full rewrite.
+Option (2) is only easy if we dealing with a regression model (and again, a rewrite of the data transform steps).
+Option (3) seems fine, but it does have limits (and is expensive!).</p>
+<p>Anyway, let's see if we hack option (4) to work on a laptop.</p>
+<p>Our code looks basically like this:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">transform_data</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="o">...</span> <span class="n">do</span> <span class="n">stuff</span>
+    <span class="k">return</span> <span class="n">d</span>
+
+
+<span class="k">def</span> <span class="nf">apply_model</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">clf</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="n">medians</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;X.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;clf.pkl&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">clf</span><span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">raw_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+    <span class="n">clean_data</span> <span class="o">=</span> <span class="n">transform_data</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">medians</span><span class="p">)</span>
+
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">apply_model</span><span class="p">(</span><span class="n">clean_data</span><span class="p">,</span> <span class="n">clf</span><span class="p">)</span>
+
+    <span class="n">scores</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;_scored.csv&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+
+<p>We can make this work by splitting our data into 10, or 100, parts to limit the memory needed to read the whole CSV.
+The function is called like this:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>score_data.py<span class="w"> </span>data_part_1.csv
+</code></pre></div>
+
+<p>which writes the file <code>data_part_1_scored.csv</code>.
+Roughly, we expect that memory and computation time will scale linearly with the size of the data.
+If we need to score 10 billion rows, we need to split our data many thousand times,
+and this approach becomes impractical.
+(How big can pieces be for given memory footprint? etc).</p>
+<p>The fix here is to only ever read <code>N</code> rows of data at a time.
+Transform and score these <code>N</code>, write them out, and then read the next batch.
+We can accomplish this by adding a function that works like this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">main_streaming</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">medians</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;X.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;clf.pkl&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">clf</span><span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span>
+    <span class="n">score_header</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">buffer</span> <span class="o">+=</span> <span class="n">line</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">chunk_size</span><span class="p">:</span>
+            <span class="n">raw_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">buffer</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">names</span><span class="o">=</span><span class="n">score_header</span><span class="p">)</span>
+            <span class="n">clean_data</span> <span class="o">=</span> <span class="n">transform_data</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">medians</span><span class="p">)</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">apply_model</span><span class="p">(</span><span class="n">clean_data</span><span class="p">,</span> <span class="n">clf</span><span class="p">)</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">pred</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1"># get the last part</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">raw_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">buffer</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">names</span><span class="o">=</span><span class="n">score_header</span><span class="p">)</span>
+        <span class="n">clean_data</span> <span class="o">=</span> <span class="n">transform_data</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">medians</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">apply_model</span><span class="p">(</span><span class="n">clean_data</span><span class="p">,</span> <span class="n">clf</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">pred</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Now, we only ever accept chunksize=10000 rows into the python process.
+We call our new script like:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>data_part_1.csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>score_data.py<span class="w"> </span>&gt;<span class="w"> </span>data_part_1_scored.csv
+</code></pre></div>
+
+<p>but we also don't need to worry about the size anymore (just <code>data.csv</code> instead of <code>data_part_1.csv</code>).
+We can send an arbitrarily large file here,
+and scoring time will scale linearly.</p>
+<p>As an exercise for the reader,
+use multiprocessing to transform and score batches on different cores!</p>
+<p>I went ahead and tested these memory and compute time assumptions by looking at</p>
+<ol>
+<li>Wall time.</li>
+<li>Memory use.</li>
+</ol>
+<p>of each of these strategies for 100K through 500K rows of data.
+Here's what we found:</p>
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
+<!-- Import vega-embed -->
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script>
+
+<div id="one"></div>
+
+<p>As expected, time scales linearly, up to 500K rows.
+For memory:</p>
+<div id="two"></div>
+
+<script type="text/javascript">
+  var spec = "https://gist.githubusercontent.com/andyreagan/488042d212f6ca0c4d44ab3a8116e15a/raw/a4dc6513a09512f024fb360085c12fe1c18c2311/totaltime.vg.json";
+  vegaEmbed('#one', spec).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+  var spec = "https://gist.githubusercontent.com/andyreagan/488042d212f6ca0c4d44ab3a8116e15a/raw/a4dc6513a09512f024fb360085c12fe1c18c2311/memory.vg.json";
+  vegaEmbed('#two', spec).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+  var spec = "https://gist.githubusercontent.com/andyreagan/488042d212f6ca0c4d44ab3a8116e15a/raw/a4dc6513a09512f024fb360085c12fe1c18c2311/chunksize.vg.json";
+  vegaEmbed('#three', spec).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+</script>
+
+<p>Again this is what we expected: memory remains constant for the streaming process.
+We can easily extrapolate that a 3M line file would need ~30GB of memory!
+A little bit more envelop math and we can see that it will take ~1.5 days to
+score our 300M records.
+The next optimization to apply is then to use all of the cores available,
+and we'll stop here before re-inventing too many wheels.</p>
+<p>One more fun chart to look at how chunk size for streaming affects the time
+and memory of our job.
+The chunksize=1 job is still running :)</p>
+<div id="three"></div>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

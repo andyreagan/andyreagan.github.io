@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="numpy" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2020/09/17/vectorizing-code-matters/" rel="bookmark" title="Permalink to Vectorizing code matters">Vectorizing code matters</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-09-17T00:00:00+02:00">
+                        Thu 17 September 2020
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2020-09-17-vectorize.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>I come from the world of MATLAB and numerical computing,
+where for loops are shorn and vectors are king.
+During my PhD at UVM,
+<a href="http://www.cems.uvm.edu/~tlakoba/">Professor Lakoba</a>'s Numerical Analysis class was one of the most challenging courses I took
+and the deep knowledge of numerical code still sticks with me.
+My favorite example of a vectorization is when a colleague shared his Lorenz 96 code with me,
+after writing a really cool paper about it that footnoted the massive amount of computation involved.
+Well, vectorizing the inner loop was about 4x faster,
+so now the footnote is a just a carbon footprint.</p>
+<p>Fast numerical code is what makes machine learning even possible these days,
+though I'm not sure how many of the kids these days can write a <a href="https://www.academia.edu/4902724/Numerical_Recipes_in_C_The_Art_of_Scientific_Computing_2nd_Ed_William_H_Press">QR decomposition in C</a>.
+I'm kidding, because I haven't done it, but I sure as heck could write it in MATLAB (at one point)
+or in Numpy or Julia now (I'll stick to just magrittr and dplyr in R).
+A lot of the work I do at MassMutual is fundamentally numerical computation,
+and the difference of a pipeline that takes hours, even minutes from one that takes seconds is a big deal.
+Seconds means we can iterate, try more options, and move faster.
+Still, a lot of numerical code is written in pure Python (no Cython, no Numba),
+for the <em>flexibility</em>.
+I'm going to argue that this is a bad idea!
+Here's a paraphrased email from a colleague:</p>
+<blockquote>
+<p>In pseudocode, this is the 'actuarial' coding dilemma I ran into months back:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">EOM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="k">for</span><span class="w"> </span><span class="nv">months</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">years</span>:
+<span class="w">    </span><span class="nv">PREM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
+<span class="w">    </span><span class="nv">BOM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">EOM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">PREM</span>
+<span class="w">    </span><span class="nv">WIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="nv">EOM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">BOM</span><span class="w"> </span>–<span class="w"> </span><span class="nv">WIT</span>
+</code></pre></div>
+
+<p>A simple example, but I think shows the BOM/EOM interdependence (there are a few other variables with a similar relationship.)
+You can’t vectorize BOM without knowing EOM, and you can’t vectorize EOM until you know BOM.
+Then you might have situations where IF WIT &gt; 0 , PREM = 0.
+Basically a lot of inter-dependence emerges.
+Now a lot of the function is not appear easily vectorizable.</p>
+</blockquote>
+<p>Well, I can vectorize this, and I did.
+Here's the non-vectorized version in Python:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">years</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">bom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">eom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">):</span>
+    <span class="n">prem</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">bom</span><span class="p">[</span><span class="n">month</span><span class="p">]</span> <span class="o">=</span> <span class="n">eom</span><span class="p">[</span><span class="n">month</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">prem</span>
+    <span class="n">wit</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">eom</span><span class="p">[</span><span class="n">month</span><span class="p">]</span> <span class="o">=</span> <span class="n">bom</span><span class="p">[</span><span class="n">month</span><span class="p">]</span> <span class="o">-</span> <span class="n">wit</span>
+</code></pre></div>
+
+<p>And here's the vectorized version:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">years</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">prem</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">wit</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">eom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">prem</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">wit</span>
+<span class="c1"># and if you still want bom as an array:</span>
+<span class="n">bom</span> <span class="o">=</span> <span class="n">eom</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">wit</span>
+</code></pre></div>
+
+<p>I also wrote the for-loop even more flexibly (read: as slow as I could think to) by using a list of dicts:</p>
+<div class="highlight"><pre><span></span><code><span class="n">years</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">prem</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">wit</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;bom&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;eom&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}]</span>
+<span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">):</span>
+    <span class="n">inner</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">inner</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;bom&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="n">month</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;eom&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">prem</span><span class="p">})</span>
+    <span class="n">inner</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;eom&#39;</span><span class="p">:</span> <span class="n">inner</span><span class="p">[</span><span class="s1">&#39;bom&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">wit</span><span class="p">})</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inner</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This one above returns a different type of thing,
+a list of dicts...not two arrays.</p>
+<p>We can also import Pandas to stuff results into for all three of the above (so they're consistent outputs, we could save to excel, etc).
+If we have Pandas loaded,
+we could use an empty dataframe for iteration,
+so one more option:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">years</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">prem</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">wit</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bom&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">),</span> <span class="s1">&#39;eom&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">years</span><span class="o">*</span><span class="mi">12</span><span class="p">)})</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">bom</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;eom&#39;</span><span class="p">]</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">eom</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">bom</span> <span class="o">-</span> <span class="n">wit</span>
+</code></pre></div>
+
+<p>With all of those types of iteration,
+and with the the option to return a dataframe as the result,
+this is what we get:</p>
+<style>td, th { padding-left: 15px; }</style>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">vectorized</th>
+<th style="text-align: left;">return_type</th>
+<th style="text-align: left;">iterate_type</th>
+<th style="text-align: left;">time</th>
+<th style="text-align: right;">slowdown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">True</td>
+<td style="text-align: left;">numpy</td>
+<td style="text-align: left;">--</td>
+<td style="text-align: left;">0.607289</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">False</td>
+<td style="text-align: left;">numpy</td>
+<td style="text-align: left;">numpy</td>
+<td style="text-align: left;">15.2983</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr>
+<td style="text-align: left;">False</td>
+<td style="text-align: left;">list(dict)</td>
+<td style="text-align: left;">dict</td>
+<td style="text-align: left;">9.2112</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr>
+<td style="text-align: left;">True</td>
+<td style="text-align: left;">pandas</td>
+<td style="text-align: left;">--</td>
+<td style="text-align: left;">37.8838</td>
+<td style="text-align: right;">62</td>
+</tr>
+<tr>
+<td style="text-align: left;">False</td>
+<td style="text-align: left;">pandas</td>
+<td style="text-align: left;">numpy</td>
+<td style="text-align: left;">47.0335</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr>
+<td style="text-align: left;">False</td>
+<td style="text-align: left;">pandas</td>
+<td style="text-align: left;">dict</td>
+<td style="text-align: left;">1717.72</td>
+<td style="text-align: right;">2828</td>
+</tr>
+<tr>
+<td style="text-align: left;">False</td>
+<td style="text-align: left;">pandas</td>
+<td style="text-align: left;">pandas</td>
+<td style="text-align: left;">77.5634</td>
+<td style="text-align: right;">127</td>
+</tr>
+<tr>
+<td style="text-align: left;">False</td>
+<td style="text-align: left;">list</td>
+<td style="text-align: left;">list</td>
+<td style="text-align: left;">1.80763</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">False</td>
+<td style="text-align: left;">numpy</td>
+<td style="text-align: left;">numpy</td>
+<td style="text-align: left;">14.6285</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr>
+<td style="text-align: left;">False</td>
+<td style="text-align: left;">list</td>
+<td style="text-align: left;">c array</td>
+<td style="text-align: left;">0.663318</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+<h2>Addendum</h2>
+<p>I also add a few <a href="https://cython.readthedocs.io/en/latest/src/tutorial/cython_tutorial.html">Cython</a> versions of the code,
+showing that you can get vectorized performance without numpy,
+by using C.
+This might indeed strike the best balance between readability (keep the for-loop!) and
+speed.</p>
+<p>Numba may also retain the same speedups (it may be as fast as Cython/Vectorized Numpy).
+In both cases (Cython/Numba),
+you have to be careful about which datatypes you're using (no dicts or pandas!).
+I think that it would be possible to make the Cython + Numpy loop just as fast
+as vectorized numpy if you are <a href="https://cython.readthedocs.io/en/latest/src/userguide/memoryviews.html#memoryviews">smarter about how to integrate them</a>.</p>
+<p>All of the code, including the Cython, is available here: <a href="https://github.com/andyreagan/vectorizing-matters">https://github.com/andyreagan/vectorizing-matters</a>.</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

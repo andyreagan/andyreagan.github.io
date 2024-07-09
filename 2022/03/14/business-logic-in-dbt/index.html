@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="dbt" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2022/03/14/business-logic-in-dbt/" rel="bookmark" title="Permalink to Business logic in DBT">Business logic in DBT</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2022-03-14T00:00:00+01:00">
+                        Mon 14 March 2022
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2022-03-14-business-logic-in-dbt.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>There are many possibilities for implementing custom logic, and this framework can help you sort through the options.</p>
+<p>I have been really enjoying using the <a href="https://www.getdbt.com/">DBT</a> to structure data pipelines,
+the framework it enforces requires you to structure your pipelines in a standardized way.
+The tool meets perfectly in the middle of data engineering and data science,
+where it provides a way for dynamic coding for the former and constrains the latter.
+As a data scientist,
+I have spent years dynamically generating complex SQL code from running python processes,
+inside and outside of data pipelines.
+Templates are a second nature for this free-flowing data science work,
+and DBT exposes this tooling for data engineers alongside a structure that works for most pipelines.</p>
+<p>The meat of data engineering is business logic:
+transformations that,
+in themselves,
+contain crucial information to unlock the data.
+For our examples here,
+let’s recode a <code>state</code> column to a <code>region</code> in the US:
+one of the four <a href="https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States#Census_Bureau-designated_regions_and_divisions">Census Bereau Designated Regions</a> of
+northeast, south, midwest, and west.
+To help us decide between the various options for structuring this pipeline,
+let’s lay out what we care about:</p>
+<ol>
+<li>Human readability: we should be able understand the logic and see where the values are coming from.</li>
+<li>Flexbility: we want to be ready for changes in this mappings, e.g. a new state joins the US or an existing state switches regions.</li>
+<li>Machine readability and DRY: this logic should be interpretable by a program, such that we don’t need to repeat hard-coded values.</li>
+</ol>
+<h2>Option 1: leave your business logic hard-coded in SQL</h2>
+<p>This is less than ideal for all of the reasons,
+but it’s likely a starting point.
+It might look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span>
+<span class="w">    </span><span class="k">state</span><span class="p">,</span>
+<span class="w">    </span><span class="k">CASE</span><span class="w"> </span>
+<span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;CT&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ME&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Northeast&#39;</span>
+<span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;IL&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;IN&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Midwest&#39;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">ELSE</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span>
+<span class="w">        </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">region</span>
+<span class="k">FROM</span><span class="w"> </span>
+<span class="w">    </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">&#39;my_table&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</code></pre></div>
+
+<p>You could only code three of the regions,
+letting the <code>ELSE</code> statement catch the fourth region.
+We’ll code all four:
+explicit beats implicit.
+With this hard-coded logic,
+every change requires a code change.
+If your logic isn’t hard-coded in SQL already,
+shoot for option 2 or 3.
+Let’s not belabor this method,
+and move forward to solutions that better on each point.</p>
+<h2>Option 2: put that logic in a table, and use a JOIN to execute it</h2>
+<p>Here’s an idea that I can get behind.
+Your code is your code:
+it creates the region column from the state column.
+If the exact mapping changes,
+the data needs to be update,
+but not your code!
+This data can be managed in many different ways,
+and even by a business stakeholder or downstream user.
+To be concrete,
+here’s what this would look like:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">state</span><span class="p">,</span>
+<span class="w">        </span><span class="n">lookup</span><span class="p">.</span><span class="n">region</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">&#39;my_table&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+<span class="w">  </span><span class="k">JOIN</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">source</span><span class="p">(</span><span class="s1">&#39;fact_schema&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;lookup_table&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span><span class="w"> </span><span class="n">lookup</span>
+<span class="w">        </span><span class="k">USING</span><span class="p">(</span><span class="k">state</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This works well with our goals, and now we need a way store the logic itself.
+I see three options:</p>
+<h3>Option 2(a): use a DBT seed csv</h3>
+<p>Seeds in dbt are csv files that dbt loads into the database, to be used downstream.
+This keeps the csv files in version control, and it’s a cool feature for this use case.
+This is really the intended use of the seed functionality within dbt,
+and I agree with their advice <a href="https://docs.getdbt.com/docs/building-a-dbt-project/seeds">in the documentation</a>:</p>
+<blockquote>
+<p>Seeds are CSV files in your dbt project (typically in your seeds directory), that dbt can load into your data warehouse using the dbt seed command.</p>
+<p>Seeds can be referenced in downstream models the same way as referencing models — by using the ref function.</p>
+<p>Because these CSV files are located in your dbt repository, they are version controlled and code reviewable. Seeds are best suited to static data which changes infrequently.</p>
+<p>Good use-cases for seeds:</p>
+<ul>
+<li>A list of mappings of country codes to country names</li>
+<li>A list of test emails to exclude from analysis</li>
+<li>A list of employee account IDs</li>
+</ul>
+</blockquote>
+<h2>Option 2(b): store it in a SQL file as a series of <code>INSERT</code>s</h2>
+<p>This option stinks,
+so I won’t say much more. T
+o be clear, what I mean is writing a <code>.sql</code> file that inserts the data directly into the table.
+You could do this within dbt,
+and here’s a hacky version to illustrate the idea as <code>lookup_table.sql</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">WITH</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="s1">&#39;CT&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">state</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Northeast&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">region</span>
+<span class="k">UNION</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="s1">&#39;ME&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">state</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Northeast&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">region</span>
+<span class="k">UNION</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="s1">&#39;IL&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">state</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Midwest&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">region</span>
+<span class="k">UNION</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="s1">&#39;IN&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">state</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Midwest&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">region</span>
+<span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">state</span><span class="p">,</span><span class="w"> </span><span class="n">region</span>
+<span class="k">FROM</span><span class="w"> </span><span class="k">data</span>
+</code></pre></div>
+
+<h2>Option 2(c): store in python/R and push directly to the database</h2>
+<p>The main problem here is that you’re breaking your project into two parts:
+the pre-dbt step and dbt step.
+While there are cases that this makes sense, we can easily accomplish this step within dbt,
+so let’s not pursue this option.</p>
+<h2>Option 3: use a DBT variable in a dynamic query</h2>
+<p>In <code>dbt_project.yml</code> you can define <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/var">variables</a>,
+and then <a href="https://docs.getdbt.com/docs/building-a-dbt-project/jinja-macros">use those in queries</a>.
+We can store our data in the yaml as a variable like:</p>
+<div class="highlight"><pre><span></span><code><span class="err">vars</span><span class="p">:</span>
+<span class="w">  </span><span class="err">s</span><span class="kc">tate</span><span class="err">_lookup</span><span class="p">:</span>
+<span class="w">    </span><span class="err">Nor</span><span class="kc">t</span><span class="err">heas</span><span class="kc">t</span><span class="p">:</span>
+<span class="w">      </span><span class="mi">-</span><span class="w"> </span><span class="err">CT</span>
+<span class="w">      </span><span class="mi">-</span><span class="w"> </span><span class="err">ME</span>
+<span class="w">    </span><span class="err">Midwes</span><span class="kc">t</span><span class="p">:</span>
+<span class="w">      </span><span class="mi">-</span><span class="w"> </span><span class="err">IL</span>
+<span class="w">      </span><span class="mi">-</span><span class="w"> </span><span class="err">IN</span>
+</code></pre></div>
+
+<p>Then we would have our SQL being generated dynamically as</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">state</span><span class="p">,</span>
+<span class="w">        </span><span class="k">CASE</span><span class="w"> </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="ss">&quot;state_lookup&quot;</span><span class="p">).</span><span class="n">items</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+<span class="w">            </span><span class="k">WHEN</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">%</span><span class="err">}</span><span class="s1">&#39;{{ t }}&#39;</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">loop</span><span class="p">.</span><span class="k">last</span><span class="w"> </span><span class="o">%</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endif</span><span class="w"> </span><span class="o">%</span><span class="err">}{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="err">}}{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+<span class="w">            </span><span class="k">ELSE</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">region</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">&#39;my_table&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</code></pre></div>
+
+<p>The middle part here is just building a comma-separated list,
+and writing a function for that would make it look nicer.
+Let’s just see that quickly with a csl filter (comma-separated-list):</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">state</span><span class="p">,</span>
+<span class="w">        </span><span class="k">CASE</span><span class="w"> </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="ss">&quot;state_lookup&quot;</span><span class="p">).</span><span class="n">items</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+<span class="w">            </span><span class="k">WHEN</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="err">{{</span><span class="w"> </span><span class="n">t</span><span class="o">|</span><span class="n">csl</span><span class="w"> </span><span class="err">}}</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="err">}}{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+<span class="w">            </span><span class="k">ELSE</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">region</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">&#39;my_table&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</code></pre></div>
+
+<p>This is readable by both human and machine (yay for yaml!),
+and it’s flexible,
+making this my favorite of any choice so far. May your data pipelines be clear, and your pager alerts be few!</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

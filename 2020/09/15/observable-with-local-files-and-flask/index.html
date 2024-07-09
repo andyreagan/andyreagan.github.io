@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="observable" />
+<meta name="tags" contents="web development" />
+<meta name="tags" contents="development environment" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2020/09/15/observable-with-local-files-and-flask/" rel="bookmark" title="Permalink to Observable with local files and Flask">Observable with local files and Flask</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-09-15T00:00:00+02:00">
+                        Tue 15 September 2020
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2020-09-15-observable-on-flask.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>We're relying heavily on <a href="https://observablehq.com/@berkeleyvis">Observable</a> for the most recent edition of Berkeley MIDS W209: Information Visualization.
+While Observable is a hosted tool, there are a handful of tricks that make is useful for enterprise applications (where data needs to reside locally).
+One of these is relying on locally accessible data: Observable runs in <em>your browser</em>, so it can access local files if you serve them or an entire local webapp or API.
+Here, we'll connect an observable front-end to a both some simple file-serving web servers and to a Python Flask server running on my laptop to demonstrate how this is possible.</p>
+<h2>Basic Flask setup</h2>
+<p>For more details, follow along with the <a href="https://flask.palletsprojects.com/en/1.1.x/quickstart/">Flask quickstart</a>.
+We'll start with the hello world app there:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># hello.py</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;Hello, World!&#39;</span>
+</code></pre></div>
+
+<p>Which we run in debug mode with</p>
+<div class="highlight"><pre><span></span><code><span class="nv">FLASK_ENV</span><span class="o">=</span>development<span class="w"> </span><span class="nv">FLASK_APP</span><span class="o">=</span>hello.py<span class="w"> </span>flask<span class="w"> </span>run
+</code></pre></div>
+
+<p>skip the <code>FLASK_ENV</code> option if you don't want debug mode.
+Now that's not doing much for us,
+so let's make a API:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;Hello, World!&#39;</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/&#39;</span><span class="p">)</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/&lt;filename&gt;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">api</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="c1"># you could go load a file</span>
+        <span class="c1"># json.loads(Path(filename).read_text())</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># maybe go query a database?</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;query_result&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]}</span>
+
+    <span class="c1"># we just need to return the dict object</span>
+    <span class="c1"># flask will treat returned dict objects as json responses</span>
+    <span class="c1"># (flask will treat returned strings, like from hello_world(), as response bodies with default headers and content type)</span>
+    <span class="k">return</span> <span class="n">d</span>
+</code></pre></div>
+
+<p>Cool, now we have an API in Flask.
+In the response header, it set the <code>Content-Type: application/json</code> (rather than the standard HTML page type of <code>Content-Type: text/html; charset=utf-8</code>; FWIW I just copied both of those from the Network tab of Chrome's Inspector tool).
+Of course you could do anything you want inside of <code>api()</code> or <code>hello_world()</code> functions,
+like run a <a href="https://www.tensorflow.org/">Tensorflow model</a> on some data that was just uploaded via POST request,
+and return the score from the model as an JSON "API" response.</p>
+<h2>CORS</h2>
+<p>The first thing we'll have to think about is <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">Cross-Origin Resource Sharing</a>.
+Web browsers protect users by not allowing a website to host the content of a different site unless that site specifically allows it.
+That means that I can't run githubb.com, show the github.com site's pages, and collect all of the details entered through my proxy site.
+The github.com pages come back with headers that don't explicitly allow my site, githubb.com, and so it's not allowed (this operates as a white list).</p>
+<p>All this to say that our local site that hosting files will need to allow specifically <code>observablehq.com</code> to use them!
+We can be a little more relaxed and just allow any site to use our locally hosted files, by allowing <code>*</code> if we want (these are only visible on our computer).</p>
+<p>Options for <a href="https://flask.palletsprojects.com/en/1.1.x/quickstart/#about-responses">CORS with Flask</a>:
+- Just return <code>(response, {'Access-Control-Allow-Origin', 'observablehq.com'})</code>.
+- Or if you're included the status, <code>(response, 200, {'Access-Control-Allow-Origin', '*'})</code>.</p>
+<p>For our hello world, that would be:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;Hello, World!&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">}</span>
+</code></pre></div>
+
+<p>Options for CORS just serving files with node <a href="https://www.npmjs.com/package/http-server">http-server</a>:
+- Just set the <code>--cors</code> flag.</p>
+<p>For CORS just serving files with <code>python3 -m http.server</code>, there is <a href="https://stackoverflow.com/a/21957017/2577988">no simple option</a>.
+You can wrap the simple server, but at this point, I'd recommend just using one of the two above.
+Since we don't need to allow <code>*</code> and we're setting the header directly, we'll just allow Observable.
+The <a href="https://docs.python.org/3/library/http.server.html">Python http.server documentation</a> shows us how we can do it (note, this is a bit simpler than the solution provided in the SO post linked to above):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">http.server</span> <span class="kn">import</span> <span class="n">HTTPServer</span><span class="p">,</span> <span class="n">SimpleHTTPRequestHandler</span>
+
+<span class="k">class</span> <span class="nc">CORSRequestHandler</span><span class="p">(</span><span class="n">SimpleHTTPRequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">end_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_header</span><span class="p">(</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;observablehq.com&#39;</span><span class="p">)</span>
+        <span class="n">SimpleHTTPRequestHandler</span><span class="o">.</span><span class="n">end_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<span class="n">httpd</span> <span class="o">=</span> <span class="n">HTTPServer</span><span class="p">((</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">8080</span><span class="p">),</span> <span class="n">CORSRequestHandler</span><span class="p">)</span>
+
+<span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</code></pre></div>
+
+<h2>SSL</h2>
+<p>Again for our own good, most browsers won't allow a site running in HTTPS mode (a site that served content encrypted by SSL) to load assets from HTTP endpoints.
+If they did, it might look like a site is secure with the "lock" icon, all while it's making unencrypted transactions with our data under the hood.
+Observable is only serving on HTTPS, so we also need to serve with HTTPS.</p>
+<p>Flask, http-server, and Python3's simple server all serve without SSL by default.
+For any of these, we can wrap them in <a href="https://ngrok.com/">ngrok</a>.
+This is probably the simplest solution for development:
+- Go create an account at <a href="https://ngrok.com/">ngrok</a>.
+- Download the executable for your platform.
+- <code>mv ngrok /usr/local/bin</code> (or somewhere on your <code>PATH</code>).
+- Set you authtoken: <code>ngrok authtoken 1h3V...</code>.
+- Run it: <code>ngrok http 8080</code>, using the port of the service you want to expose.</p>
+<p>Done! Only the final step is necessary each time you want to use it.</p>
+<p>To get started with SSL in any other option,
+first we can generate a local key pair by <a href="https://gist.github.com/cecilemuller/9492b848eb8fe46d462abeb26656c4f8">following instructions here</a>.
+First, I create a file <code>domains.ext</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">authorityKeyIdentifier</span><span class="o">=</span><span class="n">keyid</span><span class="p">,</span><span class="n">issuer</span>
+<span class="n">basicConstraints</span><span class="o">=</span><span class="nl">CA</span><span class="p">:</span><span class="k">FALSE</span>
+<span class="n">keyUsage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digitalSignature</span><span class="p">,</span><span class="w"> </span><span class="n">nonRepudiation</span><span class="p">,</span><span class="w"> </span><span class="n">keyEncipherment</span><span class="p">,</span><span class="w"> </span><span class="n">dataEncipherment</span>
+<span class="n">subjectAltName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@alt_names</span>
+<span class="o">[</span><span class="n">alt_names</span><span class="o">]</span>
+<span class="n">DNS</span><span class="mf">.1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">localhost</span>
+<span class="n">DNS</span><span class="mf">.2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fake1</span><span class="p">.</span><span class="k">local</span>
+<span class="n">DNS</span><span class="mf">.3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fake2</span><span class="p">.</span><span class="k">local</span>
+</code></pre></div>
+
+<p>Then run the following 5 commands:</p>
+<div class="highlight"><pre><span></span><code>openssl<span class="w"> </span>req<span class="w"> </span>-x509<span class="w"> </span>-nodes<span class="w"> </span>-new<span class="w"> </span>-sha256<span class="w"> </span>-days<span class="w"> </span><span class="m">1024</span><span class="w"> </span>-newkey<span class="w"> </span>rsa:2048<span class="w"> </span>-keyout<span class="w"> </span>RootCA.key<span class="w"> </span>-out<span class="w"> </span>RootCA.pem<span class="w"> </span>-subj<span class="w"> </span><span class="s2">&quot;/C=US/CN=W209-CA&quot;</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-outform<span class="w"> </span>pem<span class="w"> </span>-in<span class="w"> </span>RootCA.pem<span class="w"> </span>-out<span class="w"> </span>RootCA.crt
+openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-nodes<span class="w"> </span>-newkey<span class="w"> </span>rsa:2048<span class="w"> </span>-keyout<span class="w"> </span>localhost.key<span class="w"> </span>-out<span class="w"> </span>localhost.csr<span class="w"> </span>-subj<span class="w"> </span><span class="s2">&quot;/C=US/ST=Massachusetts/L=Amherst/O=Example-Certificates/CN=localhost.local&quot;</span>
+openssl<span class="w"> </span>x509<span class="w"> </span>-req<span class="w"> </span>-sha256<span class="w"> </span>-days<span class="w"> </span><span class="m">90</span><span class="w"> </span>-in<span class="w"> </span>localhost.csr<span class="w"> </span>-CA<span class="w"> </span>RootCA.pem<span class="w"> </span>-CAkey<span class="w"> </span>RootCA.key<span class="w"> </span>-CAcreateserial<span class="w"> </span>-extfile<span class="w"> </span>domains.ext<span class="w"> </span>-out<span class="w"> </span>localhost.crt
+open<span class="w"> </span>RootCA.crt
+</code></pre></div>
+
+<p>The last command opens the cert in Mac's Keychain Access.
+You need to double click the new key,
+open the "Trust" section,
+and always trust this CA.</p>
+<p>Options for SSL just serving files with node <a href="https://www.npmjs.com/package/http-server">http-server</a>:
+- We can just set the <code>--ssl/S</code> flag, and pass cert/key with <code>--cert</code> and <code>--key</code> options.</p>
+<div class="highlight"><pre><span></span><code>http-server<span class="w"> </span>-S<span class="w"> </span>--cert<span class="w"> </span>localhost.crt<span class="w"> </span>--key<span class="w"> </span>localhost.key
+</code></pre></div>
+
+<p>Options for SSL with Python's simple server (<a href="https://blog.anvileight.com/posts/simple-python-http-server/#python-3-x-1">ref</a>):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">http.server</span> <span class="kn">import</span> <span class="n">HTTPServer</span><span class="p">,</span> <span class="n">SimpleHTTPRequestHandler</span>
+<span class="kn">import</span> <span class="nn">ssl</span>
+
+
+<span class="n">httpd</span> <span class="o">=</span> <span class="n">HTTPServer</span><span class="p">((</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">4443</span><span class="p">),</span> <span class="n">SimpleHTTPRequestHandler</span><span class="p">)</span>
+
+<span class="n">httpd</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">httpd</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span>
+        <span class="n">keyfile</span><span class="o">=</span><span class="s2">&quot;localhost.key&quot;</span><span class="p">,</span>
+        <span class="n">certfile</span><span class="o">=</span><span class="s2">&quot;localhost.crt&quot;</span><span class="p">,</span> <span class="n">server_side</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Or we can switch to using Python <a href="https://twistedmatrix.com/trac/">Twisted</a>:</p>
+<div class="highlight"><pre><span></span><code>twistd<span class="w"> </span>-no<span class="w"> </span>web<span class="w"> </span>--path
+<span class="c1"># with SSL</span>
+twistd<span class="w"> </span>-no<span class="w"> </span>web<span class="w"> </span>--path<span class="w"> </span>–https<span class="o">=</span><span class="m">443</span><span class="w"> </span>-c<span class="w"> </span>localhost.crt<span class="w"> </span>-k<span class="w"> </span>localhost.key
+</code></pre></div>
+
+<p>Flask from the CLI:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">FLASK_ENV</span><span class="o">=</span>development<span class="w"> </span><span class="nv">FLASK_APP</span><span class="o">=</span>hello.py<span class="w"> </span>flask<span class="w"> </span>run<span class="w"> </span>--cert<span class="w"> </span>localhost.crt<span class="w"> </span>--key<span class="w"> </span>localhost.key
+</code></pre></div>
+
+<p>There is an option to generate self-signed cert on the fly,
+but it didn't work for me (<code>NET::ERR_CERT_AUTHORITY_INVALID</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="nv">FLASK_ENV</span><span class="o">=</span>development<span class="w"> </span><span class="nv">FLASK_APP</span><span class="o">=</span>hello.py<span class="w"> </span>flask<span class="w"> </span>run<span class="w"> </span>--cert<span class="o">=</span>adhoc
+</code></pre></div>
+
+<h2>All together</h2>
+<p>The simplest solution for files:
+we can serve local files to Observable with two lines (and the <code>ngrok</code> setup) with just:</p>
+<div class="highlight"><pre><span></span><code>http-server<span class="w"> </span>--cors
+ngrok<span class="w"> </span>http<span class="w"> </span><span class="m">8080</span>
+</code></pre></div>
+
+<p>and then pointing Observable to the ngrok https <a href="https://stackoverflow.com/questions/176264/what-is-the-difference-between-a-uri-a-url-and-a-urn">URI</a> it gives you.
+It should be clear how to combine any of the CORS solutions with ngrok for https.
+To combine the CORS and SSL, with the self signed certs: first generate the certs as above, then:</p>
+<h3>Node simple server (http-server)</h3>
+<div class="highlight"><pre><span></span><code>http-server<span class="w"> </span>--cors<span class="w"> </span>-S<span class="w"> </span>--cert<span class="w"> </span>localhost.crt<span class="w"> </span>--key<span class="w"> </span>localhost.key
+</code></pre></div>
+
+<h3>Python simple server</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">http.server</span> <span class="kn">import</span> <span class="n">HTTPServer</span><span class="p">,</span> <span class="n">SimpleHTTPRequestHandler</span>
+<span class="kn">import</span> <span class="nn">ssl</span>
+
+<span class="k">class</span> <span class="nc">CORSRequestHandler</span><span class="p">(</span><span class="n">SimpleHTTPRequestHandler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">end_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_header</span><span class="p">(</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;observablehq.com&#39;</span><span class="p">)</span>
+        <span class="n">SimpleHTTPRequestHandler</span><span class="o">.</span><span class="n">end_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<span class="n">httpd</span> <span class="o">=</span> <span class="n">HTTPServer</span><span class="p">((</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">8080</span><span class="p">),</span> <span class="n">CORSRequestHandler</span><span class="p">)</span>
+
+<span class="n">httpd</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">httpd</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span>
+        <span class="n">keyfile</span><span class="o">=</span><span class="s2">&quot;localhost.key&quot;</span><span class="p">,</span>
+        <span class="n">certfile</span><span class="o">=</span><span class="s2">&quot;localhost.crt&quot;</span><span class="p">,</span> <span class="n">server_side</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Then run from the command line</p>
+<div class="highlight"><pre><span></span><code>python3 script.py
+</code></pre></div>
+
+<h3>Flask</h3>
+<p>Already done!
+Just take <code>hello.py</code> with the CORS headers,
+and run it with the certs passed in.</p>
+<p>Or you can run <code>python hello.py</code> and set the certs inside the script:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ssl_context</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;localhost.crt&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost.key&#39;</span><span class="p">))</span>
+</code></pre></div>
+
+<h2>Connect to Observable</h2>
+<p>The last part is just fun now.
+Spin up an Observable notebook,
+import d3 (<code>d3 = require("d3@6")</code>),
+and load our Flask API:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">d3</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="s2">&quot;https://localhost:5000/api/&quot;</span><span class="p">)</span>
+</code></pre></div>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

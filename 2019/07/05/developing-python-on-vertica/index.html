@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="vertica" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2019/07/05/developing-python-on-vertica/" rel="bookmark" title="Permalink to Developing Python on Vertica">Developing Python on Vertica</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2019-07-05T00:00:00+02:00">
+                        Fri 05 July 2019
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2019-07-05-vertica-python.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>Vertica is a very powerful analytics database,
+and we can easily extend functionality now by building in Python functions.
+This is great and all,
+so here I'll focus on setting up a development environment for building a simple UDx.</p>
+<p>The <a href="https://www.vertica.com/docs/9.2.x/HTML/Content/Authoring/ExtendingVertica/UDx/DevEnvironment.htm">documentation from Vertica</a> is not super specific, so this may help!</p>
+<p>For the local setup, we'll be using https://github.com/jbfavre/docker-vertica/.
+I'm going to focus on the CentOS version, since it is most similar to Amazon's RHEL images.
+To get started (on OSX, you need the Docker client first):</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>pull<span class="w"> </span>jbfavre/vertica:9.2.0-7_centos-7
+</code></pre></div>
+
+<p>Also take a second to get <a href="https://www.python.org/downloads/release/python-351/">Python 3.5.1 here</a>.
+Those are the two steps that require the most bandwidth!</p>
+<p>Now, run that thing:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span>:5433<span class="w"> </span>jbfavre/vertica:9.2.0-7_centos-7
+</code></pre></div>
+
+<p>Grab the name of the running container from <code>docker ps</code> command, and set it to <code>$DOCKER_NAME</code>, and copy in our Python source:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">DOCKER_NAME</span><span class="o">=</span>suspicious_chatelet
+docker<span class="w"> </span>cp<span class="w"> </span>Downloads/Python-3.5.1.tgz<span class="w"> </span><span class="nv">$DOCKER_NAME</span>:/home/dbadmin/
+</code></pre></div>
+
+<p>Phew! We're done with the parts that are specific to a local setup.
+If you're working on a server somewhere, copy up the <code>Python-3.5.1.tgz</code>
+and put it at <code>/home/dbadmin/Python-3.5.1.tgz</code>.
+For good measure (i.e., if you copied with the root user) make sure it's owned by <code>dbadmin</code>:</p>
+<div class="highlight"><pre><span></span><code>chown<span class="w"> </span>dbadmin<span class="w"> </span>/home/dbadmin/Python-3.5.1.tgz
+</code></pre></div>
+
+<p>As root,
+install all of the dependencies that you need for Python.
+WARNING: these may not be everything that YOU need
+(see alternative dependencies in an install like <a href="https://gist.github.com/Sunlighter/87bbd2cd80971c7c0d4763ec1b5ea548">this</a>)
+or rely on the <code>python3</code> that is available with the <code>yum</code> installer directly.</p>
+<div class="highlight"><pre><span></span><code>yum<span class="w"> </span>install<span class="w"> </span>openssl-devel<span class="w"> </span>bzip2-devel<span class="w"> </span>expat-devel<span class="w"> </span>gdbm-devel<span class="w"> </span>readline-devel<span class="w"> </span>sqlite-devel
+</code></pre></div>
+
+<p>Grab a coffee.</p>
+<p>Switch to <code>dbadmin</code> user and do:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/home/dbadmin/Python-3.5.1
+./configure
+make
+make<span class="w"> </span>install
+</code></pre></div>
+
+<p>Probably another coffee for that one!</p>
+<p>If you run the above as <code>dbadmin</code>, which you should, skip the <code>make install</code> line.
+Or only do that last line as <code>root</code>.</p>
+<p>Maybe still as root, though again this should be fine (and preferable) as dbadmin user in the <code>/home/dbadmin</code> directory. If you used root for anything above other than <code>make install</code>, you might need to keep <code>root</code> user active. Here goes:</p>
+<div class="highlight"><pre><span></span><code>Python-3.5.1/python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>pyenv
+pyenv/bin/pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
+pyenv/bin/pip<span class="w"> </span>install<span class="w"> </span>requirements.txt
+</code></pre></div>
+
+<p>If you're within a firewall, you might need <code>--index-url=[your company's artifactory]</code> for the pip install lines.
+What is the <code>requirements.txt</code> line? All of the packages that your function needs,
+just like the requirements file from any python package.</p>
+<p>Finally you should be able to execute the SQL needed to build your function!
+Put your code in <code>myfunction.py</code> and then you can run <code>vsql</code> as dbadmin, and do:</p>
+<div class="highlight"><pre><span></span><code><span class="se">\s</span>et<span class="w"> </span>libfile<span class="w"> </span><span class="s1">&#39;\&#39;&#39;`pwd`&#39;</span>/myfunction.py<span class="se">\&#39;</span><span class="s1">&#39;</span>
+<span class="s1">DROP LIBRARY mylib CASCADE;</span>
+
+<span class="s1">CREATE LIBRARY mylib AS :libfile DEPENDS &#39;</span>/home/dbadmin/pyenv/lib/python3.5/site-packages/<span class="s1">&#39; LANGUAGE &#39;</span>Python<span class="s1">&#39;;</span>
+<span class="s1">CREATE FUNCTION myfunction AS NAME &#39;</span>myfunction_factory<span class="err">&#39;</span><span class="w"> </span>LIBRARY<span class="w"> </span>mylib<span class="p">;</span>
+</code></pre></div>
+
+<p>If you run into permissions issues having done all of the Python stuff as <code>root</code>,
+you can get the function to build by opening up the virtual environment permissions
+using these commands (as <code>root</code> in <code>/home/dbadmin</code>):</p>
+<div class="highlight"><pre><span></span><code>find<span class="w"> </span>pyenv<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-exec<span class="w"> </span>chmod<span class="w"> </span><span class="m">666</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-exec<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+</code></pre></div>
+
+<p>Cheers!
+I could build the python3 and package that into a Docker based off the original,
+but that would be less fun for you.</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

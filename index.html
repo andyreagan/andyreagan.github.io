@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+
+<div id="myfigure"></div>
+
+<header id="main">
+    <div class="spacer"></div>
+    <h1 class="title"><span class="first">andy </span><span class="last">reagan</span></h1>
+    <h4 class="title">full stack scientist. amateur fitness enthusiast.</h4>
+    <!-- <h4 class="title">full stack scientist. guacamole masher. amatuer fitness enthusiast.</h4>   -->
+    <!-- <h4 class="title">personal barista</h4>   -->
+    <ul id="social">
+        <li>
+            <h1><a href="mailto:me@andyreagan.com" target="_blank"><i class="fa fa-envelope-o"></i></a></h1>
+        </li>
+        <li>
+            <h1><a href="https://github.com/andyreagan" target="_blank"><i class="fa fa-github-square"></i></a></h1>
+        </li>
+        <li>
+            <h1><a href="http://strava.com/athletes/136573" target="_blank"><img height="56" src="/theme/images/icon-strava.svg"></a></h1>
+        <li>
+    </ul>
+    <br>
+    <h5 class="title"><a href="/pages/blog.html">enter site</a></h5>
+</header>
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+<script src="/theme/js/jquery-1.11.0.min.js"></script>
+<script src="/theme/js/d3.v4.js"></script>
+<script>
+    // Shorthand for $( document ).ready()
+    $(function() {
+        // let's get started
+        var w = $(window).width();
+        var h = $(window).height();
+        var mysvg = d3.select("#myfigure").append("svg").attr("width", w).attr("height", h);
+
+        var x = Math.random() * w;
+        var y = Math.random() * h;
+
+        var n = 100;
+        var data = d3.range(n).map(function() {
+            return {
+                "x": Math.random() * w,
+                "y": Math.random() * h,
+                "sx": .1 + Math.random() * .9,
+                "sy": .1 + Math.random() * .9
+            };
+        });
+
+        var simulation = d3.forceSimulation(data)
+            .force("collide", d3.forceCollide().radius(function(d) {
+                return 3;
+            }))
+            // .force("charge", d3.forceManyBody())
+            .force("x", d3.forceX(w / 2).strength(function(d) {
+                return d.sx;
+            }))
+            .force("y", d3.forceY(h / 2).strength(function(d) {
+                return d.sx;
+            }))
+            // .force("strength", function(d) { return d.s; })
+            .on("tick", ticked);
+
+        // mysvg.append("rect")
+        //     .attr("height", w)
+        //     .attr("width", h)
+        //     .attr("fill","grey");
+
+        var circles = mysvg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d) {
+                return d.x;
+            })
+            .attr("cy", function(d) {
+                return d.y;
+            })
+            .attr("r", 3);
+
+        function ticked() {
+            circles
+                .attr("cx", function(d) {
+                    return d.x;
+                })
+                .attr("cy", function(d) {
+                    return d.y;
+                });
+        }
+
+        simulation.alpha(0.3).restart();
+
+        // mysvg.on("click", function() {
+        mysvg.on("mousemove", function() {
+            var pos = d3.mouse(this);
+            // console.log(pos);
+            simulation
+                .force("x", d3.forceX(pos[0]).strength(function(d) {
+                    return d.sx;
+                }))
+                // .force("y", )
+                .force("y", d3.forceY(pos[1]).strength(function(d) {
+                    return d.sx;
+                }));
+            simulation.alpha(0.3).restart();
+        })
+    });
+</script>
+</body>
+</script>
+
+</html>

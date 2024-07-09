@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="sweat science" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2024/07/03/functional-threshold-work-rate/" rel="bookmark" title="Permalink to Functional Threshold Work Rate">Functional Threshold Work Rate</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2024-07-03T00:00:00+02:00">
+                        Wed 03 July 2024
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2024-07-03-functional-threshold-work-rate.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <blockquote>
+<p>Functional Threshold Work Rate (kcal/kg/h): The maximum Calorie output an athlete can achieve in 1 hour per kilogram of body weight.</p>
+</blockquote>
+<p>You've got inputs and outputs,
+some of which are measurable and some aren't.
+Tools like indirect calorimeters use input/output gas exchange
+to measure the human body's processes,
+while a direct calorimeter simply measures heat.</p>
+<p>Cyclists use power output.
+It's easy to measure (these days)
+and efficiency doesn't seem to vary much with training,
+so this is a decent measure of input too.
+FTP is in W/kg.
+Since kJ of output is just power and time (a Joule is a Watt·Second),
+we combine two fun facts to know that kJ of output is roughly the same as kcal of input.
+First, 
+  1 kJ = 4.184 kcal
+.
+Second, humans are about 25% efficient at taking the input calories to output work, and these two cancel!
+To this end,
+  FTWR = (W/kg) * 3600/1000/4.184
+first converting W into J by multiplying by an hour of seconds,
+converting the J to kJ,
+then convering those kJ into kcal by dividing by the conversion.
+Altogether,
+  FTWR = FTP * .86 kcal/W/h
+.</p>
+<p>Runners use pace.
+Most apps or fitness trackers (garmin, etc)
+will use the available data
+to estimate Calories burned (capital C means kcal).
+These take into account pace, gradient, and body weight (but not <a href="https://en.wikipedia.org/wiki/Running_economy#:~:text=Running%20Economy%20is%20calculated%20by,by%20kilogram%20of%20body%20weight.">efficiency</a>.
+Using these output Calorie estimates,
+it's not so straightfoward to convert into FTWR: efficiency varies by relative pace of the athlete (<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4555089/">Barnes 2015</a>).
+We're looking at a maximal effort here,
+so at 5 calories burned per liter of oxygen
+(<a href="https://pubmed.ncbi.nlm.nih.gov/18500953/">Scott 2005</a>)
+and using efficiencies in the range of 15-30% (<a href="https://pubmed.ncbi.nlm.nih.gov/29143929/">Hoogkamer 2019</a>)
+we'll just use 25% for easiest math and say:
+  FTWR = Calories burned * .25 / kg
+.
+This isn't very satisfying, still.
+If you go from pace -&gt; power (W/kg),
+you could do something like
+* 10 min/mile or 6.2 min/km: ~3.5 - 4.0 W/kg
+* 8 min/mile or 5.0 min/km: ~4.5 - 5.0 W/kg
+* 6 min/mile or 3.7 min/km: ~6.0 - 7.0 W/kg
+* ~4.5 min/mile or 2.8 min/km: ~7.5 - 8.5 W/kg
+to account for the nonlinearity, and use the cycling formula.</p>
+<p>Weight training, albeit less commonly, uses velocity.
+Newton's law: 
+  F = m·a
+,
+so while VBT trackers have velocity,
+with knowledge of the weight they also have power
+and work.
+The values likely aren't comparable to running/cycling over an hour 
+(an hour of deadlifts...).</p>
+<p>All this leads me to think that we should measure this with the <em>input</em> rather than the output.
+Or maybe don't worry about comparing between sports: cycling we can measure output, running we have to measure inputs.</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

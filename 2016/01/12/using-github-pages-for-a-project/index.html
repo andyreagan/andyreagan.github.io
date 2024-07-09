@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="github" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2016/01/12/using-github-pages-for-a-project/" rel="bookmark" title="Permalink to Using github pages for a project">Using github pages for a project</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2016-01-12T00:00:00+01:00">
+                        Tue 12 January 2016
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2016-01-12-github-pages.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>If you're unfamiliar with git, start by reading this: <a href="http://tom.preston-werner.com/2009/05/19/the-git-parable.html">the git parable</a>. It was recommended to my by Prof. Jim Bagrow, and I wasted a lot of time trying to understand git before reading it.</p>
+<p>Now, we're going to use git (and the git hosting site: github) to version control and share our project. First things first, if you don't want to share your code to world right away, since you're a student go ahead and grab the <a href="http://andyreagan.github.io/2016/01/12/using-github-pages-for-a-project/">github student pack</a> (thanks Mark for pointing this out). Among other things, it includes 5 free private repositories hosted on github.</p>
+<p>Getting right to it, if you're not using git already in your project:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>init
+</code></pre></div>
+
+<p>and then go ahead and just add everything (but don't include your huge (&gt;50MB) data files).</p>
+<p>Do your first commit, connect to github, and push your master branch up to github. If that's unclear, there are better explanations on the web than any I could offer (see the parable above).</p>
+<p>Now, create a new branch like this:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>--orphan<span class="w"> </span>gh-pages
+</code></pre></div>
+
+<p>I found that here: <a href="http://bitflop.com/tutorials/how-to-create-a-new-and-empty-branch-in-git.html">random git help</a>.</p>
+<p>And carefully remove everything in it that you don't want on the website version. (Keep stuff you're sharing, and don't remove stuff not tracked by git!). I won't fully recommend this command: <code>\rm -rf *</code>. Now, commit that branch, and push it to github:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </span><span class="s2">&quot;first commit of gh-pages branch</span>
+<span class="s2">git push origin gh-pages</span>
+</code></pre></div>
+
+<p>(Assuming you added github as origin).</p>
+<p>You now have a github pages project for your repo! Your URL (consult the <a href="https://help.github.com/articles/user-organization-and-project-pages">github docs</a> if you want to know more) is <code>http(s)://&lt;orgname&gt;.github.io/&lt;projectname&gt;</code>.</p>
+<p>You're done! Checkout master to keep working, grab files from that into gh-pages (checkout gh-pages and do <code>git checkout master myfile</code>), create an index.html in the root of your gh-pages, have fun!</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

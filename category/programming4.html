@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-2">
+<h2>Articles in the Programming category</h2>
+
+            <ol id="post-list">
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2015/07/20/make-every-for-loop-parallel-in-julia/" rel="bookmark" title="Permalink to Make every for-loop parallel in Julia">Make every for-loop parallel in Julia</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2015-07-20T00:00:00+02:00"> Mon 20 July 2015 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>If reading the <a href="http://julia.readthedocs.org/">documentation</a> is confusing, making any for-loop into a parallel loop is rediculously easy.
+Just add the parallel macro!
+If it's code that needs to execute before moving on, just pass an operator to to macro.</p>
+<div class="highlight"><pre><span></span><code><span class="c"># non-parallel loop</span>
+<span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="mi">100</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">    </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="w">    </span><span class="n">some_function …</span></code></pre></div> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2015/07/09/cross-repository-version-control-using-symbolic-links/" rel="bookmark" title="Permalink to Cross repository version control, using symbolic links">Cross repository version control, using symbolic links</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2015-07-09T00:00:00+02:00"> Thu 09 July 2015 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>So, you've been writing lots and lots of awesome code.
+As your codebase amasses, you can rely on snippets that you've already written, in different projects, by copying them around and upgrading as you go: productivity++.
+And, because you're a good person, you use <code>git</code> to version control your projects …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2015/03/10/labmtsimple-upgrades/" rel="bookmark" title="Permalink to labMTsimple: upgrades!">labMTsimple: upgrades!</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2015-03-10T00:00:00+01:00"> Tue 10 March 2015 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>As part of an ongoing effort to evaluate different sentiment analysis tools, I've pushed a handful of upgrades to labMTsimple.
+Namely:</p>
+<ol>
+<li>Python 3 compatible</li>
+<li>New module "speedy," aiming for speed (also using numpy)</li>
+<li>Class-based sentiment object</li>
+<li>ANEW, MPQA, and Liu's dictionaries are included</li>
+<li>Using "marisa-trie" and "datrie" for fast prefix …</li></ol> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2014/10/02/developing-with-hedonometerorg/" rel="bookmark" title="Permalink to Developing with hedonometer.org">Developing with hedonometer.org</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2014-10-02T00:00:00+02:00"> Thu 02 October 2014 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>~This is a draft.~</p>
+<p>Edit: 2019-12-30 this <em>was</em> a draft, I'm just going to publish it.</p>
+<p>Long story short, you'll need to clone the git repository on bitbucket (if you don't have a bitbucket account let me know and I'll move it to github, they're the same kind of thing …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2014/09/30/django-on-linode-my-deployment-strategy/" rel="bookmark" title="Permalink to Django on Linode: My Deployment Strategy">Django on Linode: My Deployment Strategy</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2014-09-30T00:00:00+02:00"> Tue 30 September 2014 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>Over the past six months, I definitely haven't figured out the best Django deployment strategy, but I've come a long way. The following is all set up on a <a href="https://www.linode.com/">linode</a> running Ubuntu 12.04.5 LTS.
+There are a few key considerations to the setup of hedonometer.org:</p>
+<ol>
+<li>We're using …</li></ol> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2014/09/24/using-labmt-simple-to-make-wordshifts/" rel="bookmark" title="Permalink to Using labMT-simple to make wordshifts">Using labMT-simple to make wordshifts</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2014-09-24T00:00:00+02:00"> Wed 24 September 2014 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>I just merged updates to the d3 wordshift plotting into labMTsimple, and combined with phantom crowbar (see previous post), it's easier than ever to use the labMT data set to compare texts.</p>
+<p>To make an html page with the shift, you'll just need to have labMT-simple installed.
+To automate the …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2014/09/19/announcing-the-phantom-crowbar/" rel="bookmark" title="Permalink to Announcing the Phantom Crowbar">Announcing the Phantom Crowbar</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2014-09-19T00:00:00+02:00"> Fri 19 September 2014 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>Extract the raw SVG (and styles) from a webpage, from the command line!</p>
+<p>Motivated by the desire to use d3 to make figures automatically.</p>
+<p>Built on top of the wonderful, and more versatile, <a href="http://nytimes.github.io/svg-crowbar/">svg-crowbar</a>.</p>
+<p>I'm testing it on hedonometer.org, and remaining issues are converting to a PDF correctly. But …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+                <li class="paper nostyle">
+                    <article class="hentry">
+                        <header>
+                            <h2 class="entry-title"><a href="https://andyreagan.github.io/2014/09/04/github-pages-with-pelican/" rel="bookmark" title="Permalink to Github pages with Pelican">Github pages with Pelican</a></h2>
+                        </header>
+                        <footer class="post-info">
+                            <abbr class="published" title="2014-09-04T00:00:00+02:00"> Thu 04 September 2014 </abbr>
+                        </footer><!-- /.post-info -->
+                        <br>
+                        <div class="entry-content"> <p>If I get this on github pages, it will be a miracle.</p>
+<p>So, I did. Here's how.</p>
+<ol>
+<li>Note the date on this post, things may have changed.</li>
+<li>Be ready with homebrew (on your Mac) and a github account.</li>
+</ol>
+<p>Install virtualenv (with pip).</p>
+<p>Create a new directory, i.e. "website", and …</p> </div><!-- /.entry-content -->
+                    </article>
+                </li>
+            </ol><!-- /#posts-list -->
+<p class="paginator">
+        <a href="https://andyreagan.github.io/category/programming3.html">&laquo;</a>
+    Page 4 / 4
+</p>
+        </div>
+        <div class="clearfix visible-xs"></div>
+        <div class="col-xs-12 col-md-2 col-md-offset-1 col-lg-3 col-lg-offset-1">
+            <br>
+            <br>
+            <br>
+            <iframe height='454' width='280' frameborder='0' allowtransparency='true' scrolling='no' src='http://www.strava.com/athletes/136573/latest-rides/beba382751062682088e6323464d7b6a5d5dd544'></iframe>
+        </div>
+    </div>
+</section><!-- /#content -->
+
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

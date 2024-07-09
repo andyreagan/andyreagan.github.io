@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="python" />
+<meta name="tags" contents="development environment" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2020/10/14/homebrew-and-pyenv-python-playing-pleasantly-in-partnership/" rel="bookmark" title="Permalink to Homebrew and Pyenv Python Playing Pleasantly in Partnership">Homebrew and Pyenv Python Playing Pleasantly in Partnership</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2020-10-14T00:00:00+02:00">
+                        Wed 14 October 2020
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2020-10-14-pyenv-homebrew.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>Like <a href="https://towardsdatascience.com/how-to-setup-a-python-environment-for-machine-learning-354d6c29a264">many</a> <a href="https://towardsdatascience.com/power-up-your-python-projects-with-visual-studio-code-401f78dd97eb">data</a> <a href="https://towardsdatascience.com/the-python-dreamteam-27f6f9f08c34">scientists</a> and <a href="https://towardsdatascience.com/guide-of-choosing-package-management-tool-for-data-science-project-809a093efd46">Python</a> <a href="https://towardsdatascience.com/how-to-setup-an-awesome-python-environment-for-data-science-or-anything-else-35d358cc95d5">developers</a> <a href="https://towardsdatascience.com/managing-virtual-environment-with-pyenv-ae6f3fb835f8">before</a> <a href="https://towardsdatascience.com/power-up-your-python-projects-with-visual-studio-code-401f78dd97eb">me</a>,
+<a href="https://towardsdatascience.com/setting-up-your-data-science-work-bench-4a8d3a28205c">I've</a> <a href="https://towardsdatascience.com/python-environment-101-1d68bda3094d">given</a> <a href="https://towardsdatascience.com/venvs-pyenvs-pipenvs-oh-my-2411149e2f43">up</a> <a href="https://towardsdatascience.com/the-top-4-virtual-environments-in-python-for-data-scientists-5db1c01fd779">on</a> managing my own Python builds and turned to <a href="https://github.com/pyenv/pyenv">pyenv</a> (links to chronological posts in Towards Data Science).
+At various points in time, I built Python versions <a href="https://www.python.org/downloads/source/">from source myself</a> or used the <a href="https://www.python.org/downloads/mac-osx/">prebuilt Framework installers</a> on OSX, all while managing the links in <code>/usr/local/bin</code> by hand.
+With either of those methods, I had no problem spinning virtual environments from any of the installed versions, but most recently my PATH and me got mixed up on whether we were using Homebrew's <code>python@3.8</code> or the Framework version I had installed.
+Enter pyenv.
+If you're looking for how to set up pyenv, <a href="https://amaral.northwestern.edu/resources/guides/pyenv-tutorial">there</a> <a href="https://opensource.com/article/20/4/pyenv">are</a> <a href="https://www.liquidweb.com/kb/how-to-install-pyenv-on-ubuntu-18-04/">no</a> <a href="https://wilsonmar.github.io/pyenv/">shortage</a> <a href="https://mungingdata.com/python/how-pyenv-works-shims/">of</a> <a href="https://realpython.com/intro-to-pyenv/">articles</a> <a href="https://medium.com/python-every-day/python-development-on-macos-with-pyenv-2509c694a808">or</a> <a href="https://medium.com/@weights_biases/pyenv-tutorial-for-machine-learning-9638e43a790f">blog</a> <a href="https://sourabhbajaj.com/mac-setup/Python/">posts</a> <a href="https://anil.io/blog/python/pyenv/using-pyenv-to-install-multiple-python-versions-tox/">on</a> <a href="https://stackabuse.com/managing-python-environments-with-direnv-and-pyenv/">how</a> <a href="https://duncanleung.com/set-up-python-pyenv-virtualenv-poetry/">to</a> <a href="https://binx.io/blog/2019/04/12/installing-pyenv-on-macos/">install</a> <a href="https://www.digitalocean.com/community/tutorials/how-to-manage-python-with-pyenv-and-direnv">it</a>, however, I'd recommend sticking to the official documentation.
+As some of these articles mention, there are many ways to get Python on your OSX systems:</p>
+<ul>
+<li>There's the built in Python 2.7.x (note: Python 2 is deprecated as of Dec 2019).</li>
+<li>Homebrew will provide a Python 3 build to satisfy it's own dependencies.</li>
+<li>You could have the Framework versions.</li>
+<li>You could have built it from source.</li>
+<li>Or as many would recommend, you can use pyenv to manage the versions.</li>
+</ul>
+<p>Your system needs the built-in, and Homebrew is really only going to keep a single version of Python 3 for you, so you need to pick between the last three if you want to manage specific versions of Python 2 or 3.
+I omitted Anaconda since I haven't needed it or taken the time to really understand how it works, but I have heard success stories for Windows users.
+Here, we'll choose pyenv to manage python versions, but in doing so, we'll initially have multiple versions of both Python 2 and Python 3 on our system (those from pyenv in addition to the builtin version 2 and homebrew version 3).
+Again, there's nothing we can do with the Python 2 builtin, OSX needs it.
+<strong>For Python 3, we can have Homebrew <em>use</em> one of pyenv's Python versions to eliminate that source of redundancy.</strong>
+Before we get started, it's worth noting that you're <a href="https://stackoverflow.com/questions/32018969/coexistence-of-homebrew-and-pyenv-on-macosx-yosemite/64364243#64364243">unlikely to experience conflicts</a> between pyenv and homebrew if you use your <code>PATH</code> like pyenv recommends, and <a href="https://docs.brew.sh/Homebrew-and-Python">Homebrew warns against it</a>; you're wading into the territory of relying on your own understanding to support this use case (as Homebrew states in their post).</p>
+<h2>Use pyenv's Python to satisfy Homebrew dependencies</h2>
+<p>These <a href="https://stackoverflow.com/questions/30499795/how-can-i-make-homebrews-python-and-pyenv-live-together">Stack Overflow answers</a> have the right idea of using symbolic links (symlinks), but from what I can tell they don't get the links quite right.
+Let's get them right!</p>
+<p>If you already have any traces of Homebrew's python3, first get rid of them (<code>brew unlink python3</code> and <code>brew uninstall python3</code>). If you already had python@3.8 from Homebrew, when uninstalling it, note the packages that depended on it (for example, <code>ffmpeg</code>), and reinstall them after.</p>
+<p>As of this post, Homebrew is expected Python 3.8.6 for it's python@3.8, so first install that version with pyenv <a href="https://github.com/pyenv/pyenv">following their documentation</a>:</p>
+<div class="highlight"><pre><span></span><code>pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.8.6
+</code></pre></div>
+
+<p>That will put (by default) the actual Python install in</p>
+<div class="highlight"><pre><span></span><code>~/.pyenv/versions/3.8.6
+</code></pre></div>
+
+<p>Now we just need to add one link, and then let brew do the rest. I'll use full paths here, so you can run this from anywhere (and remember to read <code>ln -s ... ...</code> in your head as "<u>l</u>ink -<u>s</u>ymbolic [target] [linkname]"):</p>
+<div class="highlight"><pre><span></span><code>ln<span class="w"> </span>-s<span class="w"> </span>~/.pyenv/versions/3.8.6<span class="w"> </span><span class="k">$(</span>brew<span class="w"> </span>cellar<span class="w"> </span>python<span class="k">)</span>/3.8.6
+</code></pre></div>
+
+<p>With the <code>-f</code> flag, you could have omitted the trailing <code>/3.8.6</code>, as <code>ln</code> will use the name of the target. To be as explicit as possible on the link, you should have</p>
+<div class="highlight"><pre><span></span><code>ln<span class="w"> </span>-s<span class="w"> </span>~/.pyenv/versions/3.8.6<span class="w"> </span>/usr/local/Cellar/python@3.8/3.8.6
+</code></pre></div>
+
+<p>Here's what the result should look like:</p>
+<div class="highlight"><pre><span></span><code>➜<span class="w">  </span>~<span class="w"> </span>ll<span class="w"> </span><span class="k">$(</span>brew<span class="w"> </span>--cellar<span class="w"> </span>python<span class="k">)</span>
+total<span class="w"> </span><span class="m">0</span>
+lrwxr-xr-x<span class="w">  </span><span class="m">1</span><span class="w"> </span><span class="o">[</span>my<span class="w"> </span>username<span class="o">]</span><span class="w">  </span>admin<span class="w">    </span>36B<span class="w"> </span>Oct<span class="w"> </span><span class="m">14</span><span class="w"> </span><span class="m">16</span>:52<span class="w"> </span><span class="m">3</span>.8.6<span class="w"> </span>-&gt;
+/Users/<span class="o">[</span>my<span class="w"> </span>username<span class="o">]</span>/.pyenv/versions/3.8.6
+</code></pre></div>
+
+<p>Finally, let Homebrew manage the rest of necessary linking:</p>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>link<span class="w"> </span>python3
+</code></pre></div>
+
+<p>This article was inspired by my own exploration of how to make it work and that the answer to this question on Stack Overflow went unanswered (<a href="https://stackoverflow.com/a/64364156/2577988">I answered it, I think!</a>).</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

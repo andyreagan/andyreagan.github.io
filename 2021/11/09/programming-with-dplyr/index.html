@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>andy reagan</title>
+    <meta charset="utf-8" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+
+
+<meta name="tags" contents="R" />
+<meta name="tags" contents="dplyr" />
+
+    <link rel="stylesheet" type="text/css" href="/theme/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/beemuse.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/theme/css/base.css">
+    <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"> -->
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script> -->
+</head>
+
+<body>
+
+    <section id="navbar">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/index.html">andyreagan.com</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/pages/blog.html">Blog</a></li>
+                        <li ><a href="/pages/about-me.html">About</a></li>
+                        <li ><a href="/pages/publications.html">Publications</a></li>
+                        <li ><a href="/pages/teaching.html">Teaching</a></li>
+                        <li ><a href="/pages/visualizations.html">Visualizations</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </section>
+
+<br>
+<section class="content">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-8  col-md-offset-2 col-lg-6 col-lg-offset-3">
+            <div class="paper">
+                <header>
+                    <h2 class="entry-title">
+                        <a href="https://andyreagan.github.io/2021/11/09/programming-with-dplyr/" rel="bookmark" title="Permalink to Programming with dplyr">Programming with dplyr</a></h2>
+                    
+                </header>
+                <footer class="post-info">
+                    <abbr class="published" title="2021-11-09T00:00:00+01:00">
+                        Tue 09 November 2021
+                    </abbr>
+                    &nbsp;
+                    &nbsp;
+                    <a href="https://github.com/andyreagan/andyreagan.github.io/edit/main/content/2021-11-09-programming-with-dplyr.md">Edit on Github</a>
+                </footer><!-- /.post-info -->
+                <br>
+                <div class="entry-content">
+                    <p>This post is <a href="https://towardsdatascience.com/programming-with-dplyr-a8161c03d947">published on Medium</a> and available as an <a href="https://gist.github.com/andyreagan/2a24f30a28ded04fef83d7abb0815f70">Rmd notebook</a>.</p>
+<p>With <code>dplyr</code> version 1.0, there are new ways that you can write functions.
+The <a href="https://dplyr.tidyverse.org/articles/programming.html">programming with dplyr</a> vignette with the docs is the best reference.</p>
+<p>If you're familiar with using <code>sym</code> and converting from standard to nonstandard form,
+the following progression may be useful.
+If you’re familiar with using <code>sym</code> and converting from standard to nonstandard form, the following progression should show you how to replace (and extend) your code.
+It should be mostly find-replace!
+If you have a function that takes a character vector and uses an <code>_at</code> verb, see the difference between the corresponding old option
+(here, option 1 with <code>_at</code> )
+and see how this is changed for the "Super version" at the bottom.</p>
+<h2>Old option 1: use <code>*_at</code> verbs</h2>
+<p>This is the old way of writing a dplyr function:</p>
+<div class="highlight"><pre><span></span><code><span class="n">max_by_at</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">var</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">group_by_at</span><span class="p">(</span><span class="n">by</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">summarise_at</span><span class="p">(</span><span class="n">var</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Let's try it out:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_at</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_at</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mass&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_at</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mass&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;sex&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gender&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p>That worked great, but it won't work for env variables:</p>
+<div class="highlight"><pre><span></span><code><span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_at</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="n">gender</span><span class="p">))</span>
+<span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_at</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="n">gender</span><span class="p">))</span>
+<span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_at</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<h2>Old(ish) option 2: use <code>across</code></h2>
+<p>This works for characters and character vectors, but not for env variables.
+Using <code>across</code> is a replacement for using <code>*_at</code>, and it has the same functionality:</p>
+<div class="highlight"><pre><span></span><code><span class="n">max_by_across</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">var</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">group_by</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="n">by</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">summarise</span><span class="p">(</span><span class="nf">across</span><span class="p">(</span><span class="n">var</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">),</span><span class="w"> </span><span class="n">.groups</span><span class="o">=</span><span class="s">&#39;keep&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_across</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mass&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_across</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mass&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;sex&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gender&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_across</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="n">gender</span><span class="p">))</span>
+<span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_across</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="n">gender</span><span class="p">))</span>
+<span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_across</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<h2>Old option 3: Convert from character to env var by <code>sym</code></h2>
+<div class="highlight"><pre><span></span><code><span class="n">max_by_1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">var</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">group_by</span><span class="p">(</span><span class="o">!!</span><span class="nf">sym</span><span class="p">(</span><span class="n">by</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">summarise</span><span class="p">(</span><span class="n">maximum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="o">!!</span><span class="nf">sym</span><span class="p">(</span><span class="n">var</span><span class="p">),</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>It doesn't work for passing in env variables:</p>
+<div class="highlight"><pre><span></span><code><span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_1</span><span class="p">(</span><span class="n">height</span><span class="p">))</span>
+<span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_1</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="n">gender</span><span class="p">))</span>
+</code></pre></div>
+
+<p>It does work for strings:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_1</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_1</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>But, it doesn't work for lists (so, it's less general than <code>across</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_1</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;weight&quot;</span><span class="p">)))</span>
+<span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_1</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;gender&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;sex&quot;</span><span class="p">)))</span>
+</code></pre></div>
+
+<h1>Better with braces</h1>
+<p>Check out this improved version!</p>
+<p>It works for env vars,
+so we can use it like a dplyr function with non standard eval,
+as well as pass in <code>sym</code> variables.</p>
+<div class="highlight"><pre><span></span><code><span class="n">max_by_2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">var</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">group_by</span><span class="p">({{</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="p">}})</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">summarise</span><span class="p">(</span><span class="n">maximum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">({{</span><span class="w"> </span><span class="n">var</span><span class="w"> </span><span class="p">}},</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>It does work for env variables!</p>
+<p>Which is pretty cool:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_2</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_2</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="n">gender</span><span class="p">)</span>
+</code></pre></div>
+
+<p>It does not work for strings out of the box:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_2</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_2</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>We can work around this with <code>sym</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_2</span><span class="p">(</span><span class="o">!!</span><span class="nf">sym</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p>It does not work for lists of env vars:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_2</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">mass</span><span class="p">))</span>
+<span class="n">testthat</span><span class="o">::</span><span class="nf">expect_error</span><span class="p">(</span><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_2</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">sex</span><span class="p">)))</span>
+</code></pre></div>
+
+<h1>Super version</h1>
+<p>We'll use <code>across()</code> to allow strings, lists of env vars, and even lists of strings.
+The default for <code>by=()</code> becomes an empty list and we simple wrap the <code>{{}}</code> with <code>across()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">max_by_3</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">var</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">group_by</span><span class="p">(</span><span class="nf">across</span><span class="p">({{</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="p">}}))</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">    </span><span class="nf">summarise</span><span class="p">(</span><span class="nf">across</span><span class="p">({{</span><span class="w"> </span><span class="n">var</span><span class="w"> </span><span class="p">}},</span><span class="w"> </span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;max_{.col}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">),</span><span class="w"> </span><span class="n">.groups</span><span class="o">=</span><span class="s">&#39;keep&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>It works for env variables:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="n">gender</span><span class="p">)</span>
+</code></pre></div>
+
+<p>It works for strings:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">)</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="s">&quot;gender&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>It works for lists of env variables:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">mass</span><span class="p">))</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">sex</span><span class="p">))</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">mass</span><span class="p">),</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">sex</span><span class="p">))</span>
+</code></pre></div>
+
+<p>It works for character lists:</p>
+<div class="highlight"><pre><span></span><code><span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mass&quot;</span><span class="p">))</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span><span class="w"> </span><span class="n">sex</span><span class="p">))</span>
+<span class="n">starwars</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">max_by_3</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;height&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mass&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">by</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;gender&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;sex&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Now you've seen how to write some very flexible functions using the new powers of dplyr programming.
+Enjoy!</p>
+                </div> <!-- /.entry-content -->
+            </div> <!-- /.paper -->
+        </div> <!-- /.col -->
+    </div> <!-- /.row -->
+</section><!-- /#content -->
+
+    <footer id="slidingfooter" class="body">
+        Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>. Site design by Andy Reagan.
+    </footer><!-- /#contentinfo -->
+</body>
+</script>
+
+</html>

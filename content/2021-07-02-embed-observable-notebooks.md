@@ -48,64 +48,70 @@ Make sure get “Runtime with JavaScript” so we can override the data.
 
 You should now have that snippet of code:
 
-    <div id="observablehq-chart-22ee36d2"></div>
-    <p>Credit: <a href="https://observablehq.com/@d3/line-chart-with-tooltip">Line Chart with Tooltip by D3</a></p>
-    <script type="module">
-    import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
-    import define from "https://api.observablehq.com/@d3/line-chart-with-tooltip.js?v=3";
-    new Runtime().module(define, name => {
-      if (name === "chart") return new Inspector(document.querySelector("#observablehq-chart-22ee36d2"));
-    });
-    </script>
+```html
+<div id="observablehq-chart-22ee36d2"></div>
+<p>Credit: <a href="https://observablehq.com/@d3/line-chart-with-tooltip">Line Chart with Tooltip by D3</a></p>
+<script type="module">
+import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+import define from "https://api.observablehq.com/@d3/line-chart-with-tooltip.js?v=3";
+new Runtime().module(define, name => {
+    if (name === "chart") return new Inspector(document.querySelector("#observablehq-chart-22ee36d2"));
+});
+</script>
+```
 
 Fire up an empty `index.html` next to the `data.json` that you already downloaded,
 and we’ll wrap that embed in an HTML container
 (in my Atom editor, I just type html and use the completion to get the “shell”).
 It should look like this:
 
-    <!DOCTYPE html>
-    <html lang="en" dir="ltr">
-        <head>
-            <meta charset="utf-8">
-            <title></title>
-        </head>
-        <body>
-            <div id="observablehq-chart-b01c95fe"></div>
-            <script type="module">
-            import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
-            import define from "https://api.observablehq.com/@d3/line-chart-with-tooltip.js?v=3";
-            new Runtime().module(define, name => {
-                if (name === "chart") return new Inspector(document.querySelector("#observablehq-chart-b01c95fe"));
-                return ["x","y","yAxis","bisect","  xAxis","line"].includes(name);
-            });
-            </script>
-        </body>
-    </html>
+```html
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <div id="observablehq-chart-b01c95fe"></div>
+        <script type="module">
+        import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+        import define from "https://api.observablehq.com/@d3/line-chart-with-tooltip.js?v=3";
+        new Runtime().module(define, name => {
+            if (name === "chart") return new Inspector(document.querySelector("#observablehq-chart-b01c95fe"));
+            return ["x","y","yAxis","bisect","  xAxis","line"].includes(name);
+        });
+        </script>
+    </body>
+</html>
+```
 
 Now we’ll load the data, by first loading the d3 library and using it to get the JSON file:
 
-    <!DOCTYPE html>
-    <html lang="en" dir="ltr">
-        <head>
-            <meta charset="utf-8">
-            <title></title>
-        </head>
-        <body>
-            <div id="observablehq-chart-b01c95fe"></div>
-            <script src="https://d3js.org/d3.v7.min.js"></script>
-            <script type="module">
-            import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
-            import define from "https://api.observablehq.com/@d3/line-chart-with-tooltip.js?v=3";
-            const main = new Runtime().module(define, name => {
-                if (name === "chart") return new Inspector(document.querySelector("#observablehq-chart-b01c95fe"));
-                return ["x","y","yAxis","bisect","  xAxis","line"].includes(name);
-            });
-            d3.json("data.json").then(function(d) {
-                [next bit goes here]
-            });
-            </script>
-        </body>
-    </html>
+```html
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <div id="observablehq-chart-b01c95fe"></div>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script type="module">
+        import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+        import define from "https://api.observablehq.com/@d3/line-chart-with-tooltip.js?v=3";
+        const main = new Runtime().module(define, name => {
+            if (name === "chart") return new Inspector(document.querySelector("#observablehq-chart-b01c95fe"));
+            return ["x","y","yAxis","bisect","  xAxis","line"].includes(name);
+        });
+        d3.json("data.json").then(function(d) {
+            [next bit goes here]
+        });
+        </script>
+    </body>
+</html>
+```
 
 Okay, I did more than just load d3 and the data.
 See what else?
@@ -120,8 +126,10 @@ Let’s do it,
 first making `Date` objects out of the dates and adding the axis label,
 then overriding the data:
 
-    const newData = Object.assign(d.map(({date, close}) => ({date: new Date(date), value: close})), {y: "$ Close"});
-    main.redefine("data", newData);
+```js
+const newData = Object.assign(d.map(({date, close}) => ({date: new Date(date), value: close})), {y: "$ Close"});
+main.redefine("data", newData);
+```
 
 And it should work!
 Since we’re requesting `data.json` from the local filesystem,
@@ -129,7 +137,9 @@ to view the `index.html` file you’ll need a local server
 (your browser is protecting you from malicious JS files!).
 Out of ease, I usually just spin up a python server with
 
-    python3 -m http.server
+```sh
+python3 -m http.server
+```
 
 while navigating on over to http://localhost:8000/ to see the finished product:
 

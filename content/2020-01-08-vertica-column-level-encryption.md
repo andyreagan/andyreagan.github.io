@@ -35,7 +35,7 @@ We could use the decryption key on that long string to get back the original SSN
 
 Using the `pycrypto` library, here's how we can construct a simple encryption script:
 
-```
+```python
 # encrypt_lambda.py
 
 from Crypto.PublicKey import RSA
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
 We can test this by first installing `pycrypto`, then:
 
-```
+```bash
 python3 encrypt_lambda.py 30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001 111223333
 6d0eb35fd82302731c5649773b873e3a714c14af356f8dba6b07fc8ba3c1aa9fcd9b041dfb4c359574433bc0d38a14ab12f211ad1a2ef069a791b6dee006405af9e97f1012abf0458f2ae7f4557278bce4444c2a86491d304dedf63f4328ff14e53232bd64c4174a85cb9b52d00f285df80328686c10b67634424984f47d23803ceef9ddae1ab782b4816bb935e0cf28ae2dc9e76453610a3d62a0b6261703e8f6fa8100f310758a472331b8cb76024a59f93b887a8a3f9b6e4ddbcc650f8d42c2ef17f09209e7d2d007c9688a538052520c9578c5e70c7ef0479490d27f250e2915afb1e08674587bf63679651cc67ee973593f51f5d4157644d3a8ab9f14eb
 ```
@@ -77,7 +77,7 @@ python3 encrypt_lambda.py 30820122300d06092a864886f70d01010105000382010f00308201
 For Vertica, we have to create the sdk classes,
 name this one `rsa.py`:
 
-```
+```python
 # rsa.py
 from Crypto.PublicKey import RSA
 import binascii
@@ -126,7 +126,7 @@ class encrypt_factory(vertica_sdk.ScalarFunctionFactory):
 Then we create the function on Vertica, using the SDK-friendly script above.
 
 
-```
+```sql
 \set libfile '\''`pwd`'/rsa.py\''
 DROP LIBRARY rsalib CASCADE;
 CREATE LIBRARY rsalib AS :libfile DEPENDS '/home/dbadmin/local/lib/python3.5/site-packages/' LANGUAGE 'Python';
@@ -137,13 +137,13 @@ CREATE FUNCTION encrypt AS NAME 'encrypt_factory' LIBRARY rsalib;
 
 We can test the function directly:
 
-```
+```sql
 select encrypt('30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001', '111-53-8888');
 ```
 
 You can also store keys in a table:
 
-```
+```sql
 create table public_keys (name varchar(80), key varchar(1024));
 insert into public_keys (name, key) (select 'andys key', '30820122300d06092a864886f70d01010105000382010f003082010a0282010100df91d2e51370d260a25dbc0121ce0c999f0a0896f8e44c04b6d331be91fa74a7c51bf4c7dfa49835a18116520a685d6e314dfbd047dcdf999ffcfda3770dfb24776a0dda94d6795c517c9c304a3da893a837371811a64f66bcb743d40fbb2aba4701c5f4a536b740773d672db5ec48a538cda7bebda8dc3161a14cb26e371fb9eacf5f50cf7626d5d84daf7a34d3b2bdab336d89ff640afaced9c29aa86007b7da10db05c0298e84f4662663941dbe8bbe6a18732bb0ee4af1ac561b0e47f2beefe22a4179bada94d3fb154b4cfeca29eef5b8bf1198cd11167918de5cf3c2e30c2eabdee953f6d49804f441d29a9cbaa4553c08711afe14d624a200a2b30d8d0203010001');
 select encrypt(pk.key, secrets.ssn) as encrypted_ssn from (select '111-53-8888' as ssn) secrets full outer join public_keys pk on pk.name = 'andys key';

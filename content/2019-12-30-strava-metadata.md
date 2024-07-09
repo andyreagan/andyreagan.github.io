@@ -38,7 +38,7 @@ Then you'll get an email with a link to your data.
 This part is simple,
 and to make things even easier I'll use Pandas.
 
-```
+```python
 import pandas as pd
 df = pd.read_csv("activities.csv")
 df.head()
@@ -47,7 +47,7 @@ df.head()
 Then we can pull out all of the activies with type Run,
 that contain the stroller tag, and sum up the miles all like this:
 
-```
+```python
 run = df["Activity Type"].str.contains("Run")
 stroller = df["Activity Name"].str.contains("#stroller")
 miles = (df
@@ -67,7 +67,7 @@ I had actually first written it in one line,
 as below,
 but thought the above would be clearer.
 
-```
+```python
 df.loc[df["Activity Type"].str.contains("Run") & df["Activity Name"].str.contains("#stroller"), :].Distance.astype('float').sum()/1.609
 ```
 

@@ -48,9 +48,11 @@ If we find that the centroids for the "places" are close to the exact geo locati
 
 Okay so here are the most recent numbers. these are the fields that we're looking for:
 
-    tweet["coordinates"] (ref: https://dev.twitter.com/overview/api/tweets#obj-coordinates)
-    tweet["geo"] --- this was the old place for coordinates
-    tweet["place"] (ref: https://dev.twitter.com/overview/api/places)
+```bash
+tweet["coordinates"] (ref: https://dev.twitter.com/overview/api/tweets#obj-coordinates)
+tweet["geo"] --- this was the old place for coordinates
+tweet["place"] (ref: https://dev.twitter.com/overview/api/places)
+```
 
 I did a parse for:
 
@@ -61,29 +63,31 @@ I did a parse for:
 
 Did this for both the spritzer and the main stream, here are the numbers from `wc` (the first number is the count of Tweets):
 
-    2016-02-15-00-00-any.gz
-    7815  305189 23191117
+```bash
+2016-02-15-00-00-any.gz
+7815  305189 23191117
 
-    2016-02-15-00-00-any-spritzer.gz
-    43128 1679248 127526514
+2016-02-15-00-00-any-spritzer.gz
+43128 1679248 127526514
 
-    2016-02-15-00-00-coordinates.gz
-    1029   37231 2942433
+2016-02-15-00-00-coordinates.gz
+1029   37231 2942433
 
-    2016-02-15-00-00-coordinates-only.gz
-    5     180   11608
+2016-02-15-00-00-coordinates-only.gz
+5     180   11608
 
-    2016-02-15-00-00-coordinates-only-spritzer.gz
-    30     773   69684
+2016-02-15-00-00-coordinates-only-spritzer.gz
+30     773   69684
 
-    2016-02-15-00-00-coordinates-spritzer.gz
-    5655  207164 16125655
+2016-02-15-00-00-coordinates-spritzer.gz
+5655  207164 16125655
 
-    2016-02-15-00-00-place-only.gz
-    6786  267958 20248684
+2016-02-15-00-00-place-only.gz
+6786  267958 20248684
 
-    2016-02-15-00-00-place-only-spritzer.gz
-    37473 1472084 111400859
+2016-02-15-00-00-place-only-spritzer.gz
+37473 1472084 111400859
+```
 
 Total in the spritzer is 46643 and total in the 10% feed is 398616.
 

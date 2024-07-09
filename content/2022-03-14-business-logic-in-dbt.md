@@ -37,12 +37,18 @@ This is less than ideal for all of the reasons,
 but it’s likely a starting point.
 It might look like this:
 
-    SELECT state,
-           CASE WHEN state IN ('CT', 'ME', ...) THEN 'Northeast'
-                WHEN state IN ('IL', 'IN', ...) THEN 'Midwest'
-                ...
-           ELSE NULL END AS region
-      FROM {{ ref('my_table') }}
+```sql
+SELECT 
+    state,
+    CASE 
+        WHEN state IN ('CT', 'ME', ...) THEN 'Northeast'
+        WHEN state IN ('IL', 'IN', ...) THEN 'Midwest'
+        ...
+        ELSE NULL 
+        END AS region
+FROM 
+    {{ ref('my_table') }}
+```
 
 You could only code three of the regions,
 letting the `ELSE` statement catch the fourth region.
@@ -68,11 +74,13 @@ and even by a business stakeholder or downstream user.
 To be concrete,
 here’s what this would look like:
 
-    SELECT state,
-           lookup.region
-      FROM {{ ref('my_table') }}
-      JOIN {{ source('fact_schema', 'lookup_table') }} lookup
-           USING(state)
+```sql
+SELECT state,
+        lookup.region
+  FROM {{ ref('my_table') }}
+  JOIN {{ source('fact_schema', 'lookup_table') }} lookup
+        USING(state)
+```
 
 This works well with our goals, and now we need a way store the logic itself.
 I see three options:
@@ -104,17 +112,19 @@ o be clear, what I mean is writing a `.sql` file that inserts the data directly 
 You could do this within dbt,
 and here’s a hacky version to illustrate the idea as `lookup_table.sql`:
 
-    WITH data as (
-    SELECT 'CT' as state, 'Northeast' as region
-    UNION
-    SELECT 'ME' as state, 'Northeast' as region
-    UNION
-    SELECT 'IL' as state, 'Midwest' as region
-    UNION
-    SELECT 'IN' as state, 'Midwest' as region
-    )
-    SELECT state, region
-    FROM data
+```sql
+WITH data as (
+SELECT 'CT' as state, 'Northeast' as region
+UNION
+SELECT 'ME' as state, 'Northeast' as region
+UNION
+SELECT 'IL' as state, 'Midwest' as region
+UNION
+SELECT 'IN' as state, 'Midwest' as region
+)
+SELECT state, region
+FROM data
+```
 
 ## Option 2(c): store in python/R and push directly to the database
 
@@ -129,32 +139,38 @@ In `dbt_project.yml` you can define [variables](https://docs.getdbt.com/referenc
 and then [use those in queries](https://docs.getdbt.com/docs/building-a-dbt-project/jinja-macros).
 We can store our data in the yaml as a variable like:
 
-    vars:
-      state_lookup:
-        Northeast:
-          - CT
-          - ME
-        Midwest:
-          - IL
-          - IN
+```json
+vars:
+  state_lookup:
+    Northeast:
+      - CT
+      - ME
+    Midwest:
+      - IL
+      - IN
+```
 
 Then we would have our SQL being generated dynamically as
 
-    SELECT state,
-           CASE {% for k, v in var("state_lookup").items() %}
-                WHEN state in ({% for t in v %}'{{ t }}'{% if not loop.last %}, {% endif %}{% endfor %}) THEN {{ k }}{% endfor %}
-                ELSE NULL END AS region
-      FROM {{ ref('my_table') }}
+```sql
+SELECT state,
+        CASE {% for k, v in var("state_lookup").items() %}
+            WHEN state in ({% for t in v %}'{{ t }}'{% if not loop.last %}, {% endif %}{% endfor %}) THEN {{ k }}{% endfor %}
+            ELSE NULL END AS region
+  FROM {{ ref('my_table') }}
+```
 
 The middle part here is just building a comma-separated list,
 and writing a function for that would make it look nicer.
 Let’s just see that quickly with a csl filter (comma-separated-list):
 
-    SELECT state,
-           CASE {% for k, v in var("state_lookup").items() %}
-                WHEN state in ({{ t|csl }}) THEN {{ k }}{% endfor %}
-                ELSE NULL END AS region
-      FROM {{ ref('my_table') }}
+```sql
+SELECT state,
+        CASE {% for k, v in var("state_lookup").items() %}
+            WHEN state in ({{ t|csl }}) THEN {{ k }}{% endfor %}
+            ELSE NULL END AS region
+  FROM {{ ref('my_table') }}
+```
 
 This is readable by both human and machine (yay for yaml!),
 and it’s flexible,

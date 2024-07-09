@@ -6,7 +6,7 @@ Tags: python, pyspark
 
 Well, let’s do a simple test and find out if it speeds up the process of one-hot encoding a variable in our data. There are other reasons to set it, and we’ll get to those. Starting with the very helpful code snippet from [spark-gotchas](https://github.com/awesome-spark/spark-gotchas/blob/master/06_data_preparation.md):
 
-```
+```python
 import json
 
 from pyspark import SparkContext
@@ -34,7 +34,7 @@ df_with_meta.schema[-1].metadata == meta
 
 First, I will write functions to do a one hot encoding with and without metadata. Without metadata:
 
-```
+```python
 def testWithoutMetadata(df):
     OHEncoder = OneHotEncoder(inputCol="label",
                               outputCol="label_OH")
@@ -44,7 +44,7 @@ def testWithoutMetadata(df):
 
 And with metadata:
 
-```
+```python
 def testMetadata(df):
     meta = {"ml_attr": {"name": "label_with_meta",
       "type": "nominal",
@@ -60,7 +60,7 @@ def testMetadata(df):
 You can see how in the above, I used the withMeta function from above.
 Now, the tests:
 
-```
+```python
 %%timeit -n 5 -r 5
 size = 100000
 df = spark.createDataFrame(list(zip(map(int,np.arange(size)),map(int,np.random.randint(0,3,size)))),["id", "label"])
@@ -69,7 +69,7 @@ testWithoutMetadata(df)
 
 and
 
-```
+```python
 %%timeit -n 5 -r 5
 size = 100000
 df = spark.createDataFrame(list(zip(map(int,np.arange(size)),map(int,np.random.randint(0,3,size)))),["id", "label"])

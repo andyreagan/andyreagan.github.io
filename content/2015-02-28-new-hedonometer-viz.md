@@ -18,7 +18,6 @@ Here's an image that links to full visualization:
 
 <a href="http://hedonometer.org/showcase/nyt/" target="_blank"><img src="/images/2015-02-28-new-hedonometer-viz/2015-02-28-nyt-viz-screen.png" class="img-responsive"></a>
 
-
 Most recently, we learned this past Monday that John Tierney of the NYT was going to be interviewed on CBS This Morning and I spent most of the day putting together a comparsion of the anchors.
 They sent us the complete transcript of their show since the beginning of 2015, and I put all of the tools that I've built to use in making a speedy viz.
 This is online here, with the video of Tierney being intervied at the bottom:

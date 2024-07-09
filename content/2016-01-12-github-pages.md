@@ -10,7 +10,7 @@ Now, we're going to use git (and the git hosting site: github) to version contro
 
 Getting right to it, if you're not using git already in your project:
 
-```
+```bash
 git init
 ```
 
@@ -20,7 +20,7 @@ Do your first commit, connect to github, and push your master branch up to githu
 
 Now, create a new branch like this:
 
-```
+```bash
 git checkout --orphan gh-pages
 ```
 
@@ -28,7 +28,7 @@ I found that here: [random git help](http://bitflop.com/tutorials/how-to-create-
 
 And carefully remove everything in it that you don't want on the website version. (Keep stuff you're sharing, and don't remove stuff not tracked by git!). I won't fully recommend this command: `\rm -rf *`. Now, commit that branch, and push it to github:
 
-```
+```bash
 git commit -am "first commit of gh-pages branch
 git push origin gh-pages
 ```

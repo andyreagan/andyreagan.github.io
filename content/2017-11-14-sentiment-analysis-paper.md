@@ -21,8 +21,6 @@ Using four large text corpora, we did a bake-off of sorts for dozens of tools. T
 Here is an example word shift graph for a happier-than-average day on Twitter, International Women’s Day on March 3 this year:
 <iframe src="https://hedonometer.org/embed/main/2017-03-08/" width="590" height="550" frameborder="0" scrolling="no"></iframe>
 
-<ol start="3">
-  <li>In addition, we show that a dictionary-based method will generate more meaningful word shift graphs if words are scored on a continuous scale. To interpret a sentiment score and understand the story behind the numbers, meaningful word shifts graphs are essential. The nuances in language are captured better.</li>
-</ol>
+* In addition, we show that a dictionary-based method will generate more meaningful word shift graphs if words are scored on a continuous scale. To interpret a sentiment score and understand the story behind the numbers, meaningful word shifts graphs are essential. The nuances in language are captured better.
 
 Now that you have some ideas about what to look for in a dictionary, we suggest you look at Table 1 in [our paper](https://epjdatascience.springeropen.com/articles/10.1140/epjds/s13688-017-0121-9), and go measure some happiness!

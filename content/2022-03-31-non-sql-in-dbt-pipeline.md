@@ -22,7 +22,7 @@ Many Google searches later, and I found Claire Carroll lays out the scenario ver
 
 She is not the first person to ask the [this question](https://stackoverflow.com/questions/63419289/how-to-use-python-dependency-injection-or-hooks-with-dbt), and she proposes a useful answer, to “hack” the model into the pipeline with an ephemeral model:
 
-```
+```sql
 {{ config(materialized='ephemeral') }}
 /*
 This table is created by a non-SQL process (you should probably add more info IRL),
@@ -35,14 +35,14 @@ select * from my_schema.customers_predicted_ltv
 
 I’ll add that you can make this more generic by dynamically populating the table and schema names:
 
-```
+```sql
 {{ config(materialized='ephemeral') }}
 select * {{ target.schema }}.{{ model.name }}
 ```
 
 And this is what we’re left with. You don’t _need_ this hacked-in node if you just run the pipeline up to this point, and then after it (splitting it in two), but this placeholder does allow you build the full DAG picture. Even with this in place, you’ll still need to run your pipeline in two steps anyway. First, everything up to this model, then you external process, then everything after it:
 
-```
+```sh
 dbt run +customers_predicted_ltv
 python my_process.py
 Rscript my_process.R

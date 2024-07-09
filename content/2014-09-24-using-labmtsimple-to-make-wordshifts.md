@@ -89,7 +89,6 @@ saturdayStoppedVec = stopper(saturdayFvec,labMTvector,labMTwordList,stopVal=1.0)
 # generate an html file
 # and make a static directory
 shiftHtml(labMTvector,labMTwordList,tuesdayStoppedVec,saturdayStoppedVec,"wordshift.html")
-
 ```
 
 That last call actually does quite a few things, in detail:

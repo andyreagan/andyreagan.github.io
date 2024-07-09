@@ -24,7 +24,7 @@ But, you need it to.
 Here is my super ugly solution: use the `.git/hooks/pre-commit` and `post-commit` to replace the links with the files, commit, then replaces the files back with the links!
 Only problem now is that `git` thinks that the mode has changed between every commit...too bad.
 
-```
+```bash
 # .git/hooks/pre-commit
 #!/bin/sh
 LINKED_DIR=/Users/andyreagan/work/2015/07-hedotools/js
@@ -38,7 +38,7 @@ git add js/$FILE
 done
 ```
 
-```
+```bash
 # .git/hooks/post-commit
 #!/bin/sh
 LINKED_DIR=/Users/andyreagan/work/2015/07-hedotools/js

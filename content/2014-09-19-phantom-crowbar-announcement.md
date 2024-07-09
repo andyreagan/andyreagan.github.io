@@ -27,7 +27,9 @@ Clone this repository.
 Run the `phantom-crowbar.js` with `phantomjs`, passing the webpage, the id of the svg element to grab, and the output filename.
 Here's the first line of test/run.sh:
 
-    phantomjs phantom-crowbar.js http://hedonometer.org timeseries test1.svg
+```bash
+phantomjs phantom-crowbar.js http://hedonometer.org timeseries test1.svg
+```
 
 **Testing**
 

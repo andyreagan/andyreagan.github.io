@@ -12,25 +12,33 @@ Organizing the basic structure of your computer is tremendously helpful in keepi
 In the great tradition of stealing, most of my setup is inspired by (read: copied from) my PhD Advisor [Peter Dodds](http://uvm.edu/pdodds/). Next, we’ll take a look at the project directories themselves.
 For projects that I have worked on, the strategies employed are varied (of course), but the best structure I have found has a division of labour like this:
 
-    .
+```bash
+.
+```
 
 The root directory for the project. Inside here are all of the relevant folders. Don’t set up a git repo up here, that’s one thing that have the code/paper/etc in separate folders is going to help with.
 
-    bin/
+```bash
+bin/
+```
 
 For all of the code. If it’s Python, R, MATLAB, Perl, Julia, a Jupyter notebook…it belongs here. Now that the code is in it’s own folder, you can keep it under a clean version control, share with colleagues, and publish it to github for #openscience!
 
-```
+```bash
 paper/
 ```
 
 All of the tex files!
 
-    data/
+```bash
+data/
+```
 
 The data. The code can look for `../data` to get everything it needs. Some caveats here: it’s often large (not to be included in GitHub), and not always in this directory. Code and data aren’t easy (or always sensible) to separate: YMMV.
 
-    figures/
+```bash
+figures/
+```
 
 Written to by the scripts, and read from for the paper. Also, tables go here! You might as well call it “shared”.
 And that’s it! Other folders that show up a lot at the top level include `presentations`, `media`, and `output` for non-figure code output.

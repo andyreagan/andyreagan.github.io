@@ -75,13 +75,13 @@ su root
 
 We're going to create an app called `storybreaker`, and serve it at `storybreaker.hedonometer.org`. First, make it a database:
 
-```
+```bash
 echo "create database storybreaker" | mysql --user=root --password=${DJ_DB_PASSWORD}
 ```
 
 Create a user account:
 
-```
+```bash
 useradd -d /home/storybreaker -G www-data -m -U -s /bin/bash storybreaker
 ```
 

@@ -10,7 +10,7 @@ Someone just pointed me to the `pyjanitor` package, which I don't actually think
 
 However, this is no longer the The Pandas Way, this is the The OLD Pandas Way:
 
-```
+```python
 # The Pandas Way
 # 1. Create a pandas DataFrame from the company_sales dictionary
 df = pd.DataFrame.from_dict(company_sales)
@@ -36,7 +36,7 @@ df['Google'] = [450.0, 550.0, 800.0]
 
 Then they note that “Slightly more advanced users might take advantage of the functional API” like this, but with the power of the functional API, this should now be the The Pandas Way:
 
-```
+```python
 df = (
     pd.DataFrame(company_sales)
     .drop(columns="Company1")
@@ -50,7 +50,7 @@ and that’s great! The above should be the standard for writing Pandas code.
 
 I would avoid using pyjanitor, which gives you this:
 
-```
+```python
 df = (
     pd.DataFrame.from_dict(company_sales)
     .remove_columns(['Company1'])

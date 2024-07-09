@@ -34,29 +34,41 @@ If you already have any traces of Homebrew's python3, first get rid of them (`br
 
 As of this post, Homebrew is expected Python 3.8.6 for it's python@3.8, so first install that version with pyenv [following their documentation](https://github.com/pyenv/pyenv):
 
-    pyenv install 3.8.6
+```sh
+pyenv install 3.8.6
+```
 
 That will put (by default) the actual Python install in
 
-    ~/.pyenv/versions/3.8.6
+```sh
+~/.pyenv/versions/3.8.6
+```
 
 Now we just need to add one link, and then let brew do the rest. I'll use full paths here, so you can run this from anywhere (and remember to read `ln -s ... ...` in your head as "<u>l</u>ink -<u>s</u>ymbolic [target] [linkname]"):
 
-    ln -s ~/.pyenv/versions/3.8.6 $(brew cellar python)/3.8.6
+```sh
+ln -s ~/.pyenv/versions/3.8.6 $(brew cellar python)/3.8.6
+```
 
 With the `-f` flag, you could have omitted the trailing `/3.8.6`, as `ln` will use the name of the target. To be as explicit as possible on the link, you should have
 
-    ln -s ~/.pyenv/versions/3.8.6 /usr/local/Cellar/python@3.8/3.8.6
+```sh
+ln -s ~/.pyenv/versions/3.8.6 /usr/local/Cellar/python@3.8/3.8.6
+```
 
 Here's what the result should look like:
 
-    ➜  ~ ll $(brew --cellar python)
-    total 0
-    lrwxr-xr-x  1 [my username]  admin    36B Oct 14 16:52 3.8.6 ->
-    /Users/[my username]/.pyenv/versions/3.8.6
+```sh
+➜  ~ ll $(brew --cellar python)
+total 0
+lrwxr-xr-x  1 [my username]  admin    36B Oct 14 16:52 3.8.6 ->
+/Users/[my username]/.pyenv/versions/3.8.6
+```
 
 Finally, let Homebrew manage the rest of necessary linking:
 
-    brew link python3
+```sh
+brew link python3
+```
 
 This article was inspired by my own exploration of how to make it work and that the answer to this question on Stack Overflow went unanswered ([I answered it, I think!](https://stackoverflow.com/a/64364156/2577988)).

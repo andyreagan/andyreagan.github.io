@@ -79,7 +79,9 @@ and then to [install the IRKernel](https://github.com/IRkernel/IRkernel).
 
 In one line:
 
-    Rscript -e 'install.packages("IRkernel", repos="http://cran.us.r-project.org"); IRkernel::installspec(name = "ir351", displayname = "R 3.5.1");'
+```bash
+Rscript -e 'install.packages("IRkernel", repos="http://cran.us.r-project.org"); IRkernel::installspec(name = "ir351", displayname = "R 3.5.1");'
+```
 
 Install the following Atom packages:
 

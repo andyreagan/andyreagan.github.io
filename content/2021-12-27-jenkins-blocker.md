@@ -15,7 +15,7 @@ Your job is then downstream of this "blocker" job, that will wait for completion
 of _all_ of the upstreams.
 This is weird "hack" to get a Jenkins job to wait for a set of jobs (or a single one) to be not in a running state.
 
-```
+```sh
 test -e $JOBS_TO_WAIT_FOR
 test -e $JENKINS_URI
 

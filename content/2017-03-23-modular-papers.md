@@ -8,88 +8,100 @@ Earlier this week I wrote about how to [structure an academic project directory]
 
 While templates for many academic journals are available from [ShareLaTeX](https://www.sharelatex.com/templates/journals/national-academy-of-sciences-%28pnas%29), [Overleaf](https://www.overleaf.com/gallery/tagged/academic-journal), and often the journals themselves, they share a common problem: each template is a new file with the content copied into it. One of main reasons that we use LaTeX is the clean _separation of content and style_, and having a new, single tex file for each journal violates this principle. We can overcome this by using multiple files for the content of our writing. To start, we can take a paper that has files looking like this:
 
-    emotional-arcs-EPJ-template.tex
-    bmc-mathphys.bst
-    bmcart.cls
-    everything.bib
+```bash
+emotional-arcs-EPJ-template.tex
+bmc-mathphys.bst
+bmcart.cls
+everything.bib
+```
 
 Into one that looks like this:
 
-    emotional-arcs-EPJ.tex
-    emotional-arcs.body.tex
-    emotional-arcs.abs.tex
-    bmc-mathphys.bst
-    bmcart.cls
-    everything.bib
+```bash
+emotional-arcs-EPJ.tex
+emotional-arcs.body.tex
+emotional-arcs.abs.tex
+bmc-mathphys.bst
+bmcart.cls
+everything.bib
+```
 
 We’ve taken the both and the abstract out, and included them inside the EPJ template using `\input{\filenamebase.abs}` and `\input{\filenamebase.body}` where for convenience we define the working name of the paper only once in the file with `\newcommand{filenamebase}{emotional-arcs}`.
 
 
 Immediately, we can now easily switch between formats and rely on the same body and abstract files:
 
-    emotional-arcs-EPJ.tex
-    emotional-arcs-revtex4.tex
-    emotional-arcs.body.tex
-    emotional-arcs.abs.tex
-    bmc-mathphys.bst
-    bmcart.cls
-    unsrtabbrv.bst
-    everything.bib
+```bash
+emotional-arcs-EPJ.tex
+emotional-arcs-revtex4.tex
+emotional-arcs.body.tex
+emotional-arcs.abs.tex
+bmc-mathphys.bst
+bmcart.cls
+unsrtabbrv.bst
+everything.bib
+```
 
 Expanding on this idea, we’ll end up with a directory that looks just like the first academic paper directory I ever encountered, one laid out by [Peter Dodds](http://www.uvm.edu/pdodds/):
 
-    bmc-mathphys.bst
-    bmcart.cls
-    emotional-arcs-EPJ-supp.tex
-    emotional-arcs-EPJ.tex
-    emotional-arcs-dissertation-supplementary.tex
-    emotional-arcs-dissertation.tex
-    emotional-arcs-revtex4.tex
-    emotional-arcs.abs.tex
-    emotional-arcs.acknowledgments.tex
-    emotional-arcs.author.EPJ.tex
-    emotional-arcs.author.tex
-    emotional-arcs.biblio.tex
-    emotional-arcs.body.captions.tex
-    emotional-arcs.body.figures.tex
-    emotional-arcs.body.nocite.tex
-    emotional-arcs.body.nofigures.tex
-    emotional-arcs.body.tables.tex
-    emotional-arcs.body.tex
-    emotional-arcs.coverletter.tex
-    emotional-arcs.inputs.txt
-    emotional-arcs.kwd.tex
-    emotional-arcs.nbooks.tex
-    emotional-arcs.settings.tex
-    emotional-arcs.supplementary.SOM.tex
-    emotional-arcs.supplementary.SVD-all.tex
-    emotional-arcs.supplementary.SVD.tex
-    emotional-arcs.supplementary.construction.tex
-    emotional-arcs.supplementary.extras.tex
-    emotional-arcs.supplementary.networks.tex
-    emotional-arcs.supplementary.null.tex
-    emotional-arcs.supplementary.prediction.tex
-    emotional-arcs.supplementary.ringsort.tex
-    emotional-arcs.supplementary.stories.tex
-    emotional-arcs.supplementary.tex
-    emotional-arcs.supplementary.wards-all.tex
-    emotional-arcs.supplementary.wards.tex
-    emotional-arcs.title.tex
-    everything.bib
-    makefile
-    unsrtabbrv.bst
+```bash
+bmc-mathphys.bst
+bmcart.cls
+emotional-arcs-EPJ-supp.tex
+emotional-arcs-EPJ.tex
+emotional-arcs-dissertation-supplementary.tex
+emotional-arcs-dissertation.tex
+emotional-arcs-revtex4.tex
+emotional-arcs.abs.tex
+emotional-arcs.acknowledgments.tex
+emotional-arcs.author.EPJ.tex
+emotional-arcs.author.tex
+emotional-arcs.biblio.tex
+emotional-arcs.body.captions.tex
+emotional-arcs.body.figures.tex
+emotional-arcs.body.nocite.tex
+emotional-arcs.body.nofigures.tex
+emotional-arcs.body.tables.tex
+emotional-arcs.body.tex
+emotional-arcs.coverletter.tex
+emotional-arcs.inputs.txt
+emotional-arcs.kwd.tex
+emotional-arcs.nbooks.tex
+emotional-arcs.settings.tex
+emotional-arcs.supplementary.SOM.tex
+emotional-arcs.supplementary.SVD-all.tex
+emotional-arcs.supplementary.SVD.tex
+emotional-arcs.supplementary.construction.tex
+emotional-arcs.supplementary.extras.tex
+emotional-arcs.supplementary.networks.tex
+emotional-arcs.supplementary.null.tex
+emotional-arcs.supplementary.prediction.tex
+emotional-arcs.supplementary.ringsort.tex
+emotional-arcs.supplementary.stories.tex
+emotional-arcs.supplementary.tex
+emotional-arcs.supplementary.wards-all.tex
+emotional-arcs.supplementary.wards.tex
+emotional-arcs.title.tex
+everything.bib
+makefile
+unsrtabbrv.bst
+```
 
 Wow, that’s a lot of files! And for your sake, I didn’t even include all of the automatically generated files. For starters, we can note that all five of these files are generated by a Python script from our body file:
 
-    emotional-arcs.body.captions.tex
-    emotional-arcs.body.figures.tex
-    emotional-arcs.body.nocite.tex
-    emotional-arcs.body.nofigures.tex
-    emotional-arcs.body.tables.tex
+```bash
+emotional-arcs.body.captions.tex
+emotional-arcs.body.figures.tex
+emotional-arcs.body.nocite.tex
+emotional-arcs.body.nofigures.tex
+emotional-arcs.body.tables.tex
+```
 
 That allowed us to include the figures after the main text in our EPJ template. For this procedure, on would run
 
-    python ${PYTOOLDIR}split_body.py ${PAPER}.body.tex
+```bash
+python ${PYTOOLDIR}split_body.py ${PAPER}.body.tex
+```
 
 which a line straight from the makefile. The Python code to do this is over at: [https://github.com/andyreagan/kitchentabletools-python](https://github.com/andyreagan/kitchentabletools-python).
 

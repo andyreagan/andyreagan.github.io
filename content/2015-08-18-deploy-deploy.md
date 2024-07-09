@@ -16,7 +16,6 @@ I'll try using a shell script, but this road seems dangerous.
 
 Fine tuning with documentation.
 
-
 [Ansible](http://www.ansible.com/home)
 
 [UWSGI](http://uwsgi-docs.readthedocs.org/en/latest/Python.html?highlight=virtualenv)

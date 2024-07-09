@@ -67,9 +67,10 @@ if __name__ == "__main__":
 We can make this work by splitting our data into 10, or 100, parts to limit the memory needed to read the whole CSV.
 The function is called like this:
 
-```
+```bash
 python3 score_data.py data_part_1.csv
 ```
+
 which writes the file `data_part_1_scored.csv`.
 Roughly, we expect that memory and computation time will scale linearly with the size of the data.
 If we need to score 10 billion rows, we need to split our data many thousand times,
@@ -120,7 +121,7 @@ def main_streaming(chunk_size=10000):
 Now, we only ever accept chunksize=10000 rows into the python process.
 We call our new script like:
 
-```
+```bash
 cat data_part_1.csv | python3 score_data.py > data_part_1_scored.csv
 ```
 

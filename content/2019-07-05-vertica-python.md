@@ -15,7 +15,7 @@ For the local setup, we'll be using https://github.com/jbfavre/docker-vertica/.
 I'm going to focus on the CentOS version, since it is most similar to Amazon's RHEL images.
 To get started (on OSX, you need the Docker client first):
 
-```
+```bash
 docker pull jbfavre/vertica:9.2.0-7_centos-7
 ```
 
@@ -24,13 +24,13 @@ Those are the two steps that require the most bandwidth!
 
 Now, run that thing:
 
-```
+```bash
 docker run -p 5433:5433 jbfavre/vertica:9.2.0-7_centos-7
 ```
 
 Grab the name of the running container from `docker ps` command, and set it to `$DOCKER_NAME`, and copy in our Python source:
 
-```
+```bash
 DOCKER_NAME=suspicious_chatelet
 docker cp Downloads/Python-3.5.1.tgz $DOCKER_NAME:/home/dbadmin/
 ```
@@ -40,7 +40,7 @@ If you're working on a server somewhere, copy up the `Python-3.5.1.tgz`
 and put it at `/home/dbadmin/Python-3.5.1.tgz`.
 For good measure (i.e., if you copied with the root user) make sure it's owned by `dbadmin`:
 
-```
+```bash
 chown dbadmin /home/dbadmin/Python-3.5.1.tgz
 ```
 
@@ -49,7 +49,8 @@ install all of the dependencies that you need for Python.
 WARNING: these may not be everything that YOU need
 (see alternative dependencies in an install like [this](https://gist.github.com/Sunlighter/87bbd2cd80971c7c0d4763ec1b5ea548))
 or rely on the `python3` that is available with the `yum` installer directly.
-```
+
+```bash
 yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel
 ```
 
@@ -57,7 +58,7 @@ Grab a coffee.
 
 Switch to `dbadmin` user and do:
 
-```
+```bash
 cd /home/dbadmin/Python-3.5.1
 ./configure
 make
@@ -71,7 +72,7 @@ Or only do that last line as `root`.
 
 Maybe still as root, though again this should be fine (and preferable) as dbadmin user in the `/home/dbadmin` directory. If you used root for anything above other than `make install`, you might need to keep `root` user active. Here goes:
 
-```
+```bash
 Python-3.5.1/python -m venv pyenv
 pyenv/bin/pip install -U pip
 pyenv/bin/pip install requirements.txt
@@ -84,7 +85,7 @@ just like the requirements file from any python package.
 Finally you should be able to execute the SQL needed to build your function!
 Put your code in `myfunction.py` and then you can run `vsql` as dbadmin, and do:
 
-```
+```bash
 \set libfile '\''`pwd`'/myfunction.py\''
 DROP LIBRARY mylib CASCADE;
 
@@ -96,7 +97,7 @@ If you run into permissions issues having done all of the Python stuff as `root`
 you can get the function to build by opening up the virtual environment permissions
 using these commands (as `root` in `/home/dbadmin`):
 
-```
+```bash
 find pyenv -type f -exec chmod 666 {} \;
 find . -type d -exec chmod 777 {} \;
 ```

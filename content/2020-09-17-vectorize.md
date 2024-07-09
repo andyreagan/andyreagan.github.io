@@ -44,38 +44,44 @@ Here's a paraphrased email from a colleague:
 Well, I can vectorize this, and I did.
 Here's the non-vectorized version in Python:
 
-    import numpy as np
-    years = 10
-    bom = np.zeros(years*12)
-    eom = np.zeros(years*12)
-    for month in range(1, years*12):
-        prem = 50
-        bom[month] = eom[month-1] + prem
-        wit = 5
-        eom[month] = bom[month] - wit
+```python
+import numpy as np
+years = 10
+bom = np.zeros(years*12)
+eom = np.zeros(years*12)
+for month in range(1, years*12):
+    prem = 50
+    bom[month] = eom[month-1] + prem
+    wit = 5
+    eom[month] = bom[month] - wit
+```
 
 And here's the vectorized version:
 
-    import numpy as np
-    years = 10
-    prem = 50
-    wit = 5
+```python
+import numpy as np
+years = 10
+prem = 50
+wit = 5
 
-    eom = np.arange(years*12)*prem - np.arange(years*12)*wit
-    # and if you still want bom as an array:
-    bom = eom + np.arange(years*12)*wit
+eom = np.arange(years*12)*prem - np.arange(years*12)*wit
+# and if you still want bom as an array:
+bom = eom + np.arange(years*12)*wit
+```
 
 I also wrote the for-loop even more flexibly (read: as slow as I could think to) by using a list of dicts:
 
-    years = 10
-    prem = 50
-    wit = 5
-    result = [{'bom': 0, 'eom': 0}]
-    for month in range(1, years*12):
-        inner = {}
-        inner.update({'bom': result[month-1]['eom'] + prem})
-        inner.update({'eom': inner['bom'] - wit})
-        result.append(inner)
+```python
+years = 10
+prem = 50
+wit = 5
+result = [{'bom': 0, 'eom': 0}]
+for month in range(1, years*12):
+    inner = {}
+    inner.update({'bom': result[month-1]['eom'] + prem})
+    inner.update({'eom': inner['bom'] - wit})
+    result.append(inner)
+```
 
 This one above returns a different type of thing,
 a list of dicts...not two arrays.
@@ -85,16 +91,18 @@ If we have Pandas loaded,
 we could use an empty dataframe for iteration,
 so one more option:
 
-    import numpy as np
-    import pandas as pd
-    years = 10
-    prem = 50
-    wit = 5
-    df = pd.DataFrame(data={'bom': np.zeros(years*12), 'eom': np.zeros(years*12)})
-    for i, row in df.iterrows():
-        if i > 0:
-            row.bom = df.loc[i-1, 'eom']
-            row.eom = row.bom - wit
+```python
+import numpy as np
+import pandas as pd
+years = 10
+prem = 50
+wit = 5
+df = pd.DataFrame(data={'bom': np.zeros(years*12), 'eom': np.zeros(years*12)})
+for i, row in df.iterrows():
+    if i > 0:
+        row.bom = df.loc[i-1, 'eom']
+        row.eom = row.bom - wit
+```
 
 With all of those types of iteration,
 and with the the option to return a dataframe as the result,
